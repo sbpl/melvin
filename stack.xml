@@ -16,5 +16,6 @@
   <depend stack="robot_model" /> <!-- convex_decomposition, ivcon -->
   <depend stack="ros" />
   <depend stack="ros_comm" /> <!-- topic_tools, std_msgs, roscpp -->
+  <depend stack="teleop_segbot" />
 
 </stack>

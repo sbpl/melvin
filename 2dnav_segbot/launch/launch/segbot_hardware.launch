@@ -33,7 +33,10 @@
   </node>
 
   <!-- Segway RMP -->
-  <node name="segway_rmp" pkg="segwayrmp" type="segwayrmp"/>
+  <node name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node">
+    <param name="frame_id" type="str" value="base_footprint" />
+   <remap from="~cmd_vel" to="/cmd_vel" />
+  </node>
 
   <!-- Send urdf to param server -->
   <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/segbot_without_arm.urdf.xacro'" />
