@@ -1,0 +1,20 @@
+<package>
+  <description brief="segway_robot">
+
+     segway_robot
+
+  </description>
+  <author>UPenn</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/segway_robot</url>
+  <depend package="ivcon"/>
+  <depend package="convex_decomposition"/>
+  <depend package="pr2_controller_manager"/>
+  <!-- <depend package="pr2_gazebo"/> -->
+  <depend package="base_sim_controller"/>
+
+
+</package>
+
+

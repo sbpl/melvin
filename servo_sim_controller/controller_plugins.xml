@@ -1,0 +1,5 @@
+<library path="lib/libservo_sim_controller">
+  <class name="ServoSimControllerPlugin"
+         type="servo_sim_controller_ns::ServoSimController"
+         base_class_type="pr2_controller_interface::Controller" />
+</library>

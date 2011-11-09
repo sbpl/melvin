@@ -1,0 +1,110 @@
+<launch>
+  <arg name="use_gps_" />
+  <arg name="use_tilt_laser_" />
+  <arg name="use_move_base_" />
+  <arg name="use_slam_" />
+  <arg name="map_name_" />
+  <arg name="use_sbpl_" />
+  <arg name="sbpl_planner_" />
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" if="$(arg use_move_base_)">
+    <remap from="map" to="/map" />
+    <remap from="move_base_simple/goal" to="/goal" />
+    <param name="controller_frequency" value="10.0" />
+    <param name="global_costmap/robot_base_frame" value="/base_footprint" />
+
+    <param name="base_global_planner" value="$(arg sbpl_planner_)" if="$(arg use_sbpl_)"/>
+    <param name="base_global_planner" value="navfn/NavfnROS" unless="$(arg use_sbpl_)"/>
+    <param name="$(arg sbpl_planner_)/primitive_filename" value="$(find 2dnav_segbot)/launch/params/segbot.mprim" if="$(arg use_sbpl_)"/> 
+    <rosparam file="$(find 2dnav_segbot)/launch/params/sbpl_global_params.yaml" command="load" if="$(arg use_sbpl_)"/>
+
+    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params.yaml" command="load" ns="global_costmap" unless="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params.yaml" command="load" ns="local_costmap" unless="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params_with_tilt.yaml" command="load" ns="global_costmap" if="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params_with_tilt.yaml" command="load" ns="local_costmap" if="$(arg use_tilt_laser_)"/>
+
+    <rosparam file="$(find 2dnav_segbot)/launch/params/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find 2dnav_segbot)/launch/params/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find 2dnav_segbot)/launch/params/base_local_planner_params.yaml" command="load" />
+  </node>
+
+  <!-- map -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find 2dnav_segbot)/launch/maps/$(arg map_name_) 0.05" respawn="false" unless="$(arg use_slam_)"/>
+
+  <!-- localization -->
+  <node pkg="amcl" type="amcl" name="amcl" respawn="true" unless="$(arg use_slam_)">
+    <remap from="scan" to="base_scan" />
+    <param name="base_frame_id" value="base_footprint"/>
+    <param name="odom_model_type" value="diff"/>
+    <param name="odom_alpha5" value="0.1"/>
+    <param name="transform_tolerance" value="0.2" />
+    <param name="gui_publish_rate" value="10.0"/>
+    <param name="laser_max_beams" value="30"/>
+    <param name="min_particles" value="500"/>
+    <param name="max_particles" value="5000"/>
+    <param name="kld_err" value="0.05"/>
+    <param name="kld_z" value="0.99"/>
+    <param name="odom_alpha1" value="5.0"/>
+    <param name="odom_alpha2" value="0.4"/>
+    <param name="odom_alpha3" value="0.6"/>
+    <param name="odom_alpha4" value="0.2"/>
+    <param name="laser_z_hit" value="0.5"/>
+    <param name="laser_z_short" value="0.05"/>
+    <param name="laser_z_max" value="0.05"/>
+    <param name="laser_z_rand" value="0.5"/>
+    <param name="laser_sigma_hit" value="0.2"/>
+    <param name="laser_lambda_short" value="0.1"/>
+    <param name="laser_lambda_short" value="0.1"/>
+    <param name="laser_model_type" value="likelihood_field"/>
+    <param name="laser_likelihood_max_dist" value="0.6"/>
+    <param name="update_min_d" value="0.2"/>
+    <param name="update_min_a" value="0.1"/>
+
+    <param name="odom_frame_id" value="odom" unless="$(arg use_gps_)"/>
+    <param name="odom_frame_id" value="odom_combined" if="$(arg use_gps_)"/>
+
+    <param name="resample_interval" value="1"/>
+    <param name="transform_tolerance" value="0.1"/>
+    <param name="recovery_alpha_slow" value="0.0"/>
+    <param name="recovery_alpha_fast" value="0.0"/>
+  </node>
+
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" if="$(arg use_slam_)">
+    <remap from="scan" to="base_scan"/>
+    <param name="base_frame" value="base_footprint" />
+
+    <param name="odom_frame" value="odom" unless="$(arg use_gps_)"/>
+    <param name="odom_frame" value="odom_combined" if="$(arg use_gps_)"/>
+
+    <param name="map_update_interval" value="5.0"/>
+    <param name="maxUrange" value="16.0"/>
+    <param name="sigma" value="0.05"/>
+    <param name="kernelSize" value="1"/>
+    <param name="lstep" value="0.05"/>
+    <param name="astep" value="0.05"/>
+    <param name="iterations" value="5"/>
+    <param name="lsigma" value="0.075"/>
+    <param name="ogain" value="3.0"/>
+    <param name="lskip" value="0"/>
+    <param name="srr" value="0.01"/>
+    <param name="srt" value="0.02"/>
+    <param name="str" value="0.01"/>
+    <param name="stt" value="0.02"/>
+    <param name="linearUpdate" value="0.5"/>
+    <param name="angularUpdate" value="0.436"/>
+    <param name="temporalUpdate" value="-1.0"/>
+    <param name="resampleThreshold" value="0.5"/>
+    <param name="particles" value="80"/>
+    <param name="xmin" value="-50.0"/>
+    <param name="ymin" value="-50.0"/>
+    <param name="xmax" value="50.0"/>
+    <param name="ymax" value="50.0"/>
+    <param name="delta" value="0.05"/>
+    <param name="llsamplerange" value="0.01"/>
+    <param name="llsamplestep" value="0.01"/>
+    <param name="lasamplerange" value="0.005"/>
+    <param name="lasamplestep" value="0.005"/>
+  </node>
+
+</launch>
+

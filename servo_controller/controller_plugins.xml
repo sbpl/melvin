@@ -1,0 +1,5 @@
+<library path="lib/libservo_controller">
+  <class name="ServoControllerPlugin"
+         type="servo_controller_ns::ServoController"
+         base_class_type="pr2_controller_interface::Controller" />
+</library>

@@ -1,0 +1,16 @@
+<launch>
+
+  <node name="base_servo" pkg="servo_node" type="servo_node" output="screen">
+    <param name="servoID" value="0" />
+    <param name="minAngle" value="-30" />
+    <param name="maxAngle" value="30" />
+    <param name="velocity" value="50" />
+<!--
+    <param name="servoID" value="[1, 2]" />
+    <param name="minAngle" value="[0,-30]" />
+    <param name="maxAngle" value="[0,30]" />
+    <param name="velocity" value="[50,50]" />
+-->
+  </node>
+
+</launch>

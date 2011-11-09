@@ -1,0 +1,4 @@
+base_sim_controller_name:
+    type: BaseSimControllerPlugin
+    left_wheel_joint: segway_left_wheel_joint
+    right_wheel_joint: segway_right_wheel_joint

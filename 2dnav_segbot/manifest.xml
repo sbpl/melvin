@@ -1,0 +1,20 @@
+<package>
+  <description brief="2dnav_segbot">
+
+     2dnav_segbot
+
+  </description>
+  <author>Michael Phillips/miph@seas.upenn.edu</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/2dnav_segbot</url>
+  <depend package="servo_node"/>
+  <depend package="segway_robot"/>
+  <depend package="segwayrmp"/>
+  <depend package="segbot_msgs"/>
+  <depend package="servo_controller"/>
+  <depend package="pr2_hardware_interface"/>
+
+</package>
+
+

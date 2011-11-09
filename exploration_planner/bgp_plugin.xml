@@ -1,0 +1,8 @@
+<library path="lib/libexploration_planner">
+  <class name="ExplorationPlanner" type="ExplorationPlanner" base_class_type="nav_core::BaseGlobalPlanner">
+    <description>
+      An exploration planner
+    </description>
+  </class>
+</library>
+

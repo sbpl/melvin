@@ -1,0 +1,4 @@
+servo_controller_name:
+    type: ServoControllerPlugin
+    base_servo_joint: R283_hokuyo_laser1_joint
+    tilt_servo_joint: R313_hokuyo_laser2_joint

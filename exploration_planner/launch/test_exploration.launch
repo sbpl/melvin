@@ -1,0 +1,17 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="true"/>
+
+  <include file="$(find exploration_planner)/launch/move_base/move_base_sbpl.xml"/>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find exploration_planner)/worlds/map_params.yaml" />
+  <!-- args="$(find exploration_planner)/worlds/unexplored.pgm 0.025" /> -->
+
+  <node pkg="stage" type="stageros" name="stageros" args="$(find exploration_planner)/worlds/willow.world" respawn="false" >
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+
+  <node name="fake_localization" pkg="fake_localization" type="fake_localization" respawn="false" />
+
+  <include file="$(find exploration_planner)/launch/move_base/nav_view_sbpl.xml"/>
+</launch>

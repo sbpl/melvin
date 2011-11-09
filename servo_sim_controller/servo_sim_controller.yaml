@@ -1,0 +1,10 @@
+servo_sim_controller_name:
+    type: ServoSimControllerPlugin
+    base_servo_joint: R283_hokuyo_laser1_joint
+    tilt_servo_joint: R313_hokuyo_laser2_joint
+    base_servo_min_ang: 0
+    base_servo_max_ang: 0
+    base_servo_vel: 0.18
+    tilt_servo_min_ang: -0.52
+    tilt_servo_max_ang: 0.52
+    tilt_servo_vel: 0.18

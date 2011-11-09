@@ -1,0 +1,605 @@
+<?xml version="1.0"?>
+<robot name="hand"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" 
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:xacro="http://ros.org/wiki/fixme"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">>  
+
+<!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR REVOLUTE AND CONTINUOUS JOINTS -->
+
+  <!-- Hand -->
+
+  <!-- Links -->
+  <link name="hand_base">
+    <inertial>
+        <origin xyz="0 0.0 0.0" rpy="0 0 0" />
+        <mass value="0.35"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/hand_base.stl" />
+        </geometry>
+        <material name="White" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/hand_base_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="spreader_f1">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/spread_joint.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/spread_joint_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="spreader_f2">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/spread_joint.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/spread_joint_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="proximal_knuckle_f1">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/proximal_knuckle.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/proximal_knuckle_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="proximal_knuckle_f2">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/proximal_knuckle.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/proximal_knuckle_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="proximal_knuckle_f3">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/proximal_knuckle.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/proximal_knuckle_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="proximal_link_f1">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.1"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/proximal_link.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/proximal_link_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="proximal_link_f2">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.1"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/proximal_link.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/proximal_link_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="proximal_link_f3">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.1"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/proximal_link.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/proximal_link_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="distal_knuckle_f1">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/distal_knuckle.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/distal_knuckle_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="distal_knuckle_f2">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/distal_knuckle.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/distal_knuckle_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="distal_knuckle_f3">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/distal_knuckle.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/distal_knuckle_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="finger_tip_f1">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/finger_tip.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/finger_tip_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="finger_tip_f2">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/finger_tip.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/finger_tip_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="finger_tip_f3">
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.05"/>
+        <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>
+
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry name="hand_base-geom">
+          <mesh filename="package://segway_robot/meshes/finger_tip.stl" />
+        </geometry>
+        <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="arm_base_collision_geom">
+      <mesh filename="package://segway_robot/meshes/convex/finger_tip_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <!-- Joints -->
+  <joint name="hand_base_joint" type="fixed">
+    <origin xyz="0 0.116 0" rpy="0 0 0" />
+    <child link="hand_base" />
+    <parent link="wrist_pitch"/>
+  </joint>
+
+  <joint name="spreader_joint_f1" type="revolute">
+    <origin xyz="0.031 0.003 0" rpy="0 0 0" />
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="3.14" effort="50" velocity="50"/>
+    <child link="spreader_f1" />
+    <parent link="hand_base"/>
+  </joint>
+
+  <joint name="spreader_joint_f2" type="revolute">
+    <origin xyz="-0.031 0.003 0" rpy="0 0 0" />
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14" upper="0" effort="50" velocity="50"/>
+    <child link="spreader_f2" />
+    <parent link="hand_base"/>
+  </joint>
+
+  <joint name="proximal_knuckle_joint_f1" type="fixed">
+    <origin xyz="0 0.034 0.05" rpy="0 3.14 0" />
+    <child link="proximal_knuckle_f1" />
+    <parent link="spreader_f1"/>
+  </joint>
+
+  <joint name="proximal_knuckle_joint_f2" type="fixed">
+    <origin xyz="0 0.034 0.05" rpy="0 3.14 0" />
+    <child link="proximal_knuckle_f2" />
+    <parent link="spreader_f2"/>
+  </joint>
+
+  <joint name="proximal_knuckle_joint_f3" type="fixed">
+    <origin xyz="0 0.037 -0.05" rpy="0 0 0" />
+    <child link="proximal_knuckle_f3" />
+    <parent link="hand_base"/>
+  </joint>
+
+  <joint name="proximal_link_joint_f1" type="revolute">
+    <origin xyz="0 0 0" rpy="-1.57 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.57" upper="0.873" effort="50" velocity="50"/>
+    <child link="proximal_link_f1" />
+    <parent link="proximal_knuckle_f1"/>
+  </joint>
+
+  <joint name="proximal_link_joint_f2" type="revolute">
+    <origin xyz="0 0 0" rpy="-1.57 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.57" upper="0.873" effort="50" velocity="50"/>
+    <child link="proximal_link_f2" />
+    <parent link="proximal_knuckle_f2"/>
+  </joint>
+
+  <joint name="proximal_link_joint_f3" type="revolute">
+    <origin xyz="0 0 0" rpy="-1.57 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.57" upper="0.873" effort="50" velocity="50"/>
+    <child link="proximal_link_f3" />
+    <parent link="proximal_knuckle_f3"/>
+  </joint>
+
+  <joint name="distal_knuckle_joint_f1" type="revolute">
+    <origin xyz="0 0 0.071" rpy="1.57 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.785" upper="0" effort="50" velocity="50"/>
+    <child link="distal_knuckle_f1" />
+    <parent link="proximal_link_f1"/>
+  </joint>
+
+  <joint name="distal_knuckle_joint_f2" type="revolute">
+    <origin xyz="0 0 0.071" rpy="1.57 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.785" upper="0" effort="50" velocity="50"/>
+    <child link="distal_knuckle_f2" />
+    <parent link="proximal_link_f2"/>
+  </joint>
+
+  <joint name="distal_knuckle_joint_f3" type="revolute">
+    <origin xyz="0 0 0.071" rpy="1.57 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.785" upper="0" effort="50" velocity="50"/>
+    <child link="distal_knuckle_f3" />
+    <parent link="proximal_link_f3"/>
+  </joint>
+
+  <joint name="finger_tip_joint_f1" type="fixed">
+    <origin xyz="0 -0.009 0.01" rpy="-1.57 3.14 0" />
+    <child link="finger_tip_f1" />
+    <parent link="distal_knuckle_f1"/>
+  </joint>
+
+  <joint name="finger_tip_joint_f2" type="fixed">
+    <origin xyz="0 -0.009 0.01" rpy="-1.57 3.14 0" />
+    <child link="finger_tip_f2" />
+    <parent link="distal_knuckle_f2"/>
+  </joint>
+
+  <joint name="finger_tip_joint_f3" type="fixed">
+    <origin xyz="0 -0.009 0.01" rpy="-1.57 3.14 0" />
+    <child link="finger_tip_f3" />
+    <parent link="distal_knuckle_f3"/>
+  </joint>
+
+  <!-- Gazebo data -->
+  <gazebo reference="hand_base">
+    <material value="Gazebo/White"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="spreader_f1">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="spreader_f2">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="proximal_knuckle_f1">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="proximal_knuckle_f2">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="proximal_knuckle_f3">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="proximal_link_f1">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="proximal_link_f2">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="proximal_link_f3">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="distal_knuckle_f1">
+    <material value="Gazebo/White"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="distal_knuckle_f2">
+    <material value="Gazebo/White"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="distal_knuckle_f3">
+    <material value="Gazebo/White"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="finger_tip_f1">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="finger_tip_f2">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="finger_tip_f3">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <!-- Transmits the joints -->
+  <transmission name="spreader_joint_f1_trans" type="SimpleTransmission">
+    <actuator name="spreader_joint_f1_motor"/>
+    <joint name="spreader_joint_f1"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="spreader_joint_f2_trans" type="SimpleTransmission">
+    <actuator name="spreader_joint_f2_motor"/>
+    <joint name="spreader_joint_f2"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="proximal_link_joint_f1_trans" type="SimpleTransmission">
+    <actuator name="proximal_link_joint_f1_motor"/>
+    <joint name="proximal_link_joint_f1"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="proximal_link_joint_f2_trans" type="SimpleTransmission">
+    <actuator name="proximal_link_joint_f2_motor"/>
+    <joint name="proximal_link_joint_f2"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="proximal_link_joint_f3_trans" type="SimpleTransmission">
+    <actuator name="proximal_link_joint_f3_motor"/>
+    <joint name="proximal_link_joint_f3"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="distal_knuckle_joint_f1_trans" type="SimpleTransmission">
+    <actuator name="distal_knuckle_joint_f1_motor"/>
+    <joint name="distal_knuckle_joint_f1"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="distal_knuckle_joint_f2_trans" type="SimpleTransmission">
+    <actuator name="distal_knuckle_joint_f2_motor"/>
+    <joint name="distal_knuckle_joint_f2"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="distal_knuckle_joint_f3_trans" type="SimpleTransmission">
+    <actuator name="distal_knuckle_joint_f3_motor"/>
+    <joint name="distal_knuckle_joint_f3"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+</robot>

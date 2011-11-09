@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot name="segbot"
+	xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+
+	<!-- include gazebo defs-->
+	<include filename="$(find segway_robot)/defs/gazebo.urdf" />
+	
+	<!-- include base defs-->
+	<include filename="$(find segway_robot)/defs/base.urdf" />
+	
+	<!-- include arm defs-->
+	<include filename="$(find segway_robot)/defs/arm.urdf" />
+
+	<!-- include hand defs-->
+	<include filename="$(find segway_robot)/defs/hand.urdf" />
+
+	<!-- include sensors defs-->
+	<include filename="$(find segway_robot)/defs/sensors.urdf" />
+	
+</robot>

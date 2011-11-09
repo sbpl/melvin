@@ -1,0 +1,13 @@
+uint32 left
+uint32 right
+uint32 foreaft
+uint32 yaw
+int16 pitch
+int16 roll
+int16 left_dot
+int16 right_dot
+int16 yaw_dot
+int16 pitch_dot
+int16 roll_dot
+uint16 frames
+uint16 battery

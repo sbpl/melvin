@@ -1,0 +1,4 @@
+<launch>
+  <machine name="controller" address="melvin-controller.bounceme.net" ros-root="$(env ROS_ROOT)" ros-package-path="$(env ROS_PACKAGE_PATH)"  default="true" />
+  <machine name="server" address="melvin-server.bounceme.net" ros-root="/opt/ros/cturtle/ros" ros-package-path="/home/demo/ros:/opt/ros/pr2_teleop:/opt/ros/sbpl:/opt/ros/sbpl_lattice_planner:/opt/ros/cturtle/stacks" default="never" user="demo" password="mlcl46$^"/>
+</launch>

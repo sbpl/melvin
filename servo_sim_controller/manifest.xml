@@ -1,0 +1,21 @@
+<package>
+  <description brief="servo_sim_controller">
+
+     servo_sim_controller
+
+  </description>
+  <author>Penn</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/servo_sim_controller</url>
+  <depend package="pr2_controller_interface"/>
+  <depend package="pr2_mechanism_model"/>
+  <depend package="pluginlib"/>
+  <depend package="tf"/>
+  <export>
+    <pr2_controller_interface plugin="${prefix}/controller_plugins.xml" />
+  </export>
+
+</package>
+
+

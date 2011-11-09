@@ -1,0 +1,5 @@
+<library path="lib/libbase_sim_controller">
+  <class name="BaseSimControllerPlugin"
+         type="base_sim_controller_ns::BaseSimController"
+         base_class_type="pr2_controller_interface::Controller" />
+</library>

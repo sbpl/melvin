@@ -1,0 +1,511 @@
+<?xml version="1.0"?>
+<robot name="segway_bot"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" 
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:xacro="http://ros.org/wiki/fixme"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">>  
+
+  <material name="Blue">
+    <color rgba="0.0 0.0 0.8 1.0"/>
+  </material>
+  <material name="Green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+  <material name="Red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+  <material name="Purple">
+    <color rgba="0.8 0.0 0.8 1.0"/>
+  </material>
+
+<!--
+  <link name="random_point">        
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1"/>
+      <inertia ixx="1"  ixy="0"  ixz="0" iyy="13373.64" iyz="0" izz="19610.64" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0.15 0.1 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.01 0.01 0.01" />
+      </geometry>
+      <material name="Purple" />
+    </visual>    
+  </link>
+  -->
+
+  <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin,
+       navigation stack dedpends on this frame -->
+  <link name="base_footprint">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0"
+               iyy="0.01" iyz="0.0" izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.01 0.01 0.01" />
+      </geometry>
+      
+      <material name="Green" />
+    </visual>
+    <collision>
+      <!-- represent base collision with a simple rectangular model, positioned by base_size_z s.t. top
+           surface of the collision box matches the top surface of the PR2 base -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="base_link">        
+    <inertial>
+      <origin xyz="0 -0.3 0" rpy="0 0 0" />
+      <mass value="90.72"/>
+      <inertia ixx="1.2285"  ixy="0"  ixz="0" iyy="1.961064" iyz="0" izz="1.337364" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_base_geom">
+        <mesh filename="package://segway_robot_old/meshes/segway_base.stl" />
+      </geometry>
+      <material name="Blue" />
+    </visual>    
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_base_collision_geom">
+      <mesh filename="package://segway_robot_old/meshes/convex/segway_base_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="segway_left_wheel">        
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="3.87"/>
+      <inertia ixx="0.0852"  ixy="0"  ixz="0" iyy="0.0852" iyz="0" izz="0.1654" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_left_wheel_geom">
+        <mesh filename="package://segway_robot_old/meshes/segway_wheel.stl" />
+      </geometry>
+      <material name="Red" />
+    </visual>    
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_left_wheel_collision_geom">
+      <cylinder radius="0.24" length="0.09"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="segway_right_wheel">        
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="3.87"/>
+      <inertia ixx="0.0852"  ixy="0"  ixz="0" iyy="0.0852" iyz="0" izz="0.1654" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_right_wheel_geom">
+        <mesh filename="package://segway_robot_old/meshes/segway_wheel.stl" />
+      </geometry>
+      <material name="Red" />
+    </visual>    
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_right_wheel_collision_geom">
+      <cylinder radius="0.24" length="0.09"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="segway_trailer">
+    <inertial>
+      <origin xyz="0.15 0.075 0" rpy="0 0 0" />
+      <mass value="34.54"/>
+      <inertia ixx="0.288"  ixy="0"  ixz="0" iyy="0.547" iyz="0" izz="0.446" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_trailer-geom">	  
+          <mesh filename="package://segway_robot_old/meshes/trailer.stl" />
+      </geometry>
+      <material name="Green" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_trailer_collision_geom">
+        <mesh filename="package://segway_robot_old/meshes/convex/trailer_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="segway_trailer_wheel_caster">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1.2"/>
+      <inertia ixx="0.01"  ixy="0"  ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_trailer_wheel_caster-geom">	  
+          <mesh filename="package://segway_robot_old/meshes/trailer_wheel_caster.stl" />
+      </geometry>
+      <material name="Blue" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_trailer_wheel_caster_collision_geom">
+        <mesh filename="package://segway_robot_old/meshes/convex/trailer_wheel_caster_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="segway_trailer_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="2.5"/>
+      <inertia ixx="0.042"  ixy="0"  ixz="0" iyy="0.042" iyz="0" izz="0.082" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_trailer_wheel-geom">	  
+          <mesh filename="package://segway_robot_old/meshes/trailer_wheel.stl" />
+      </geometry>
+      <material name="Red" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_trailer_wheel_collision_geom">
+        <!-- <mesh filename="package://segway_robot_old/meshes/convex/trailer_wheel_convex.stlb" /> -->
+        <cylinder radius="0.127" length="0.08"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="segway_laser_assemble">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="2.27"/>
+      <inertia ixx="0.01"  ixy="0"  ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_laser_assemble-geom">
+          <mesh filename="package://segway_robot_old/meshes/laser_assemble.stl" />
+      </geometry>
+      <material name="Red" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_laser_assemble_collision_geom">
+      <mesh filename="package://segway_robot_old/meshes/convex/laser_assemble_convex.stlb" />
+      </geometry>
+    </collision>
+
+  </link>
+
+<!--
+    <link name="segway_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1"/>
+      <inertia ixx="100"  ixy="0"  ixz="0" iyy="100" iyz="0" izz="100" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_arm-geom">
+          <mesh filename="package://segway_robot_old/meshes/arm.stl"/>
+      </geometry>
+      <material name="Red" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry name="segway_arm_collision_geom">
+      <mesh filename="package://segway_robot_old/meshes/convex/arm_convex.stlb"/>
+      </geometry>
+    </collision>
+
+  </link>
+-->
+<!--
+  <joint name="random_point_joint" type="fixed" >
+    <origin xyz="0 0 0" rpy="0 0 0"/>    
+    <parent link="segway_trailer" />
+    <child link="random_point" />
+  </joint>
+  -->
+
+  <joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0 0 0.55" rpy="1.57 0 3.14" />
+    <child link="base_link" />
+    <parent link="base_footprint"/>
+  </joint>
+  
+  <!--
+  <joint name="segway_base_joint" type="floating" >
+    <origin xyz="0 0 0.2" rpy="1.57 0 3.14"/>    
+    <parent link="world" />
+    <child link="base_footprint" />
+  </joint>
+  -->
+  
+  
+  <joint name="segway_left_wheel_joint" type="continuous" >
+    <origin xyz="-0.031 -0.353 0.272" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <parent link="base_link" />
+    <child link="segway_left_wheel" />
+    <calibration reference_position="0.0"/>
+  </joint>
+
+  <joint name="segway_right_wheel_joint" type="continuous" >
+    <origin xyz="-0.031 -0.353 -0.272" rpy="0 3.14 0"/>    
+    <axis xyz="0 0 1"/>
+    <parent link="base_link" />
+    <child link="segway_right_wheel" />
+    <calibration reference_position="0.0"/>
+  </joint>
+
+  <joint name="segway_trailer_joint" type="fixed">    
+    <origin xyz="0.162 -0.233 0.002" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="segway_trailer" />
+    <calibration reference_position="0.0"/>
+  </joint>
+
+  <joint name="segway_trailer_wheel_caster_joint" type="continuous">    
+    <origin xyz="0.244 -0.038 0.002" rpy="0 0 0" />
+    <axis xyz="0 1 0"/>
+    <parent link="segway_trailer" />
+    <child link="segway_trailer_wheel_caster" />
+    <calibration reference_position="0.0"/>
+  </joint>
+
+  <joint name="segway_trailer_wheel_joint" type="continuous">    
+    <origin xyz="0.076 -0.187 0.002" rpy="0 0 0" />
+    <axis xyz="0 0 1"/>
+    <parent link="segway_trailer_wheel_caster" />
+    <child link="segway_trailer_wheel" />
+    <calibration reference_position="0.0"/>
+  </joint>
+
+  <joint name="segway_laser_assemble_joint" type="fixed">    
+    <origin xyz="-0.236 -0.192 0.002" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="segway_laser_assemble" />
+    <calibration reference_position="0.0"/>
+  </joint>
+
+
+<!--
+  <joint name="segway_trailer_joint" type="fixed">    
+    <origin xyz="-0.025 -0.35 0.27" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="segway_trailer" />
+  </joint>
+
+  <joint name="segway_arm_joint" type="fixed">    
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="segway_arm" />
+  </joint>
+-->
+
+  <!-- Needed by gazebo -->
+  <gazebo reference="base_link">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="segway_left_wheel">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="segway_right_wheel">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="segway_trailer">
+    <material value="Gazebo/Green"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="segway_trailer_wheel_caster">
+    <material value="Gazebo/Blue"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="segway_trailer_wheel">
+    <material value="Gazebo/Red"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <gazebo reference="segway_laser_assemble">
+    <material value="Gazebo/Green"/>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+  <!-- Transmits the joints -->
+  <transmission name="segway_left_wheel_trans" type="SimpleTransmission">
+    <actuator name="segway_left_wheel_motor"/>
+    <joint name="segway_left_wheel_joint"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="segway_right_wheel_trans" type="SimpleTransmission">
+    <actuator name="segway_right_wheel_motor"/>
+    <joint name="segway_right_wheel_joint"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="segway_trailer_wheel_caster_trans" type="SimpleTransmission">
+    <actuator name="segway_trailer_wheel_caster_motor"/>
+    <joint name="segway_trailer_wheel_caster_joint"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+  <transmission name="segway_trailer_wheel_trans" type="SimpleTransmission">
+    <actuator name="segway_trailer_wheel_motor"/>
+    <joint name="segway_trailer_wheel_joint"/>
+    <mechanicalReduction>1.0</mechanicalReduction>
+  </transmission>
+
+<!--
+  <gazebo reference="segway_arm">
+    <material value="Gazebo/Green"/>
+  </gazebo>
+-->
+
+<!--
+  <gazebo>
+    <controller:ros_p3d name="my_box_controller" plugin="libros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100.0</updateRate>
+      <bodyName>my_box</bodyName>
+      <topicName>my_box_pose_ground_truth</topicName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <frameName>my_box</frameName>
+      <interface:position name="my_box_p3d_position_iface" />
+    </controller:ros_p3d>
+  </gazebo>
+-->
+
+  <gazebo>
+    <controller:gazebo_ros_controller_manager name="gazebo_ros_controller_manager" plugin="libgazebo_ros_controller_manager.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>1000.0</updateRate>
+      <interface:audio name="gazebo_ros_controller_manager_dummy_iface" />
+    </controller:gazebo_ros_controller_manager>
+  </gazebo>
+
+
+  <!-- Laser -->
+  <!-- Joint to world. Simply change the name and parent link when attaching to own robot -->
+  <joint name="base_laser_joint" type="fixed">
+      <origin xyz="-0.4 0 0" rpy="-1.57 0 3.14" />
+      <parent link="segway_laser_assemble"/>
+      <child link="base_laser_link"/>
+    </joint>
+
+  <!--			 Laser body. Neglegibe geometry 			-->
+  <link name="base_laser_link" type="laser">
+
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.000 0.000 0.000" />
+        </geometry>
+        <material name="Red" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size=".000 .000 .00" />
+        </geometry>
+      </collision>
+
+    </link>
+
+<!-- 			Actual laser		 -->
+<gazebo reference="base_laser_link">    
+      <sensor:ray name="base_laser">
+        <rayCount>640</rayCount>
+        <rangeCount>640</rangeCount>
+        <laserCount>1</laserCount>
+
+        <origin>0.0 0.0 0.0</origin>
+        <displayRays>false</displayRays>
+
+        <minAngle>-130</minAngle>
+        <maxAngle> 130</maxAngle>
+
+        <minRange>0.05</minRange>
+        <maxRange>30.0</maxRange>
+        <resRange>0.01</resRange>
+        <updateRate>20.0</updateRate>
+        <controller:gazebo_ros_laser name="gazebo_ros_base_laser_controller" plugin="libgazebo_ros_laser.so">
+          <gaussianNoise>0.005</gaussianNoise>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>20.0</updateRate>
+          <topicName>scan</topicName>
+          <frameName>base_laser_link</frameName>
+          <interface:laser name="gazebo_ros_base_laser_iface"/>
+        </controller:gazebo_ros_laser>
+      </sensor:ray>
+</gazebo>
+
+<gazebo>
+  <controller:gazebo_ros_p3d name="p3d_base_controller" plugin="libgazebo_ros_p3d.so">
+    <alwaysOn>true</alwaysOn>
+    <updateRate>100.0</updateRate>
+    <bodyName>base_footprint</bodyName>
+    <topicName>base_pose_ground_truth</topicName>
+    <gaussianNoise>0.01</gaussianNoise>
+    <frameName>map</frameName>
+    <xyzOffsets>25.7 25.7 0</xyzOffsets> <!-- initialize odometry for fake localization-->
+    <rpyOffsets>0 0 0</rpyOffsets>
+    <interface:position name="p3d_base_position"/>
+  </controller:gazebo_ros_p3d>
+  <canonicalBody>base_footprint</canonicalBody>
+</gazebo>
+
+
+</robot>
+

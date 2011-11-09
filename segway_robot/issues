@@ -1,0 +1,5 @@
+1) Weights for the Barret Arm components come from openrave robot description
+2) No weight values are available for the Barret Hand
+3) Joint limit values for effort and velocity need to be calculated
+4) In order to not use the world identifier as the base parent, a base_footprint has been added and acts as the base coordinate system
+
