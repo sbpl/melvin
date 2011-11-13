@@ -49,7 +49,7 @@
   <node name="controller_loop" pkg="2dnav_segbot" type="controller_manager" args="-x robot_description"/> 
 
   <!-- PS3 Controller for teleop -->
-  <include file="$(find 2dnav_segbot)/launch/launch/segbot_teleop.launch" if="$(arg use_teleop_)" />
+  <include file="$(find teleop_segbot)/teleop_joystick.launch" if="$(arg use_teleop_)" />
 
   <!-- Bring up the GPS -->
   <include file="$(find gps_for_ekf)/launch/gps_for_ekf_node.launch" if="$(arg use_gps_)" />
