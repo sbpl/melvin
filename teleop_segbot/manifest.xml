@@ -1,0 +1,20 @@
+<package>
+  <description brief="Teleoperate the segbot">
+  This package contains launch files for starting joystick control of
+  the segbot. This is based on the code from teleop_pr2 by Kevin Watts
+  </description>
+  <author>Bradford Neuman</author>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/pr2_teleop</url>
+  <review status="unreviewed" notes=""/>
+  <depend package="joy" />
+  <depend package="std_msgs" />
+  <depend package="geometry_msgs" />
+  <depend package="sensor_msgs" />
+  <depend package="pr2_controllers_msgs" />
+  <depend package="roscpp" />
+  <depend package="topic_tools" />
+  <platform os="ubuntu" version="9.04"/>
+  <platform os="ubuntu" version="9.10"/>
+  <platform os="ubuntu" version="10.04"/>
+</package>

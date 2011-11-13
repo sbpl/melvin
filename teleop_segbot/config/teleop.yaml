@@ -1,0 +1,22 @@
+# Axes
+axis_vx: 1
+axis_vy: 2 # not used on segbot
+axis_vw: 0
+axis_pan: 0
+axis_tilt: 3
+
+# base velocities
+max_vw: 0.8
+max_vx: 0.5
+max_vy: 0.5
+max_vw_run: 1.4
+max_vx_run: 1.0
+max_vy_run: 1.0
+
+
+# Buttons have changed for PS3 controller mapping 
+# With joystick remapper, this works with all joysticks on "/joy" 
+run_button: 11
+deadman_button: 10
+send_goal_button: 13
+cancel_goal_button: 14

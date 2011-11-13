@@ -1,0 +1,27 @@
+<launch>
+
+  <param name="/use_sim_time" value="true"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find sbpl_dynamic_uncertain_env_global_planner)/config/nsh.yaml" />
+
+  <node pkg="stage" type="stageros" name="stageros" args="$(find sbpl_dynamic_uncertain_env_global_planner)/maps/newell_simon3_5cm1_empty.world" respawn="false" >
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+
+  <include file="$(find sbpl_dynamic_uncertain_env_global_planner)/config/move_base_sbpl.xml"/>
+  <node name="fake_localization" pkg="fake_localization" type="fake_localization" respawn="false" />
+
+
+  <node pkg="ps3joy" type="ps3joy.py" name="ps3joy" output="screen" />
+
+  <node pkg="joy" type="joy_node" name="joy_node" output="screen" >
+    <param name="dev" value="/dev/input/js0" />
+  </node>
+
+  <node pkg="teleop_segbot" type="teleop_segbot" name="teleop_segbot" output="screen">
+<!--     <remap from="cmd_vel" to="base_controller/command" /> -->
+    <rosparam file="$(find teleop_segbot)/config/teleop.yaml" command="load" />
+  </node>
+
+
+
+</launch>
