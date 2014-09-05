@@ -37,7 +37,7 @@
 #include <math.h>
 #include <fcntl.h>
 #include "ros/ros.h"
-#include "joy/Joy.h"
+#include "sensor_msgs/Joy.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "sensor_msgs/JointState.h"
@@ -192,23 +192,23 @@ class TeleopSegbot
   }
 
   /** Callback for joy topic **/
-  void joy_cb(const joy::Joy::ConstPtr& joy_msg)
+  void joy_cb(const sensor_msgs::Joy::ConstPtr& joy_msg)
   {
     //Record this message reciept
     last_recieved_joy_message_time_ = ros::Time::now();
 
-    deadman_ = (((unsigned int)deadman_button < joy_msg->get_buttons_size()) && joy_msg->buttons[deadman_button]);
+    deadman_ = (((unsigned int)deadman_button < joy_msg->buttons.size()) && joy_msg->buttons[deadman_button]);
 
 
     // send or cancel goal even without deadman switch
     // check for next goal
-    if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->get_buttons_size()) && joy_msg->buttons[send_goal_button]) ) {
+    if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[send_goal_button]) ) {
       ROS_INFO("sending stored goal!");
       //has_next_goal = false;
       true_goal_pub_.publish(next_goal_);
     }
 
-    if((((unsigned int)cancel_goal_button < joy_msg->get_buttons_size()) && joy_msg->buttons[cancel_goal_button]) ) {
+    if((((unsigned int)cancel_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[cancel_goal_button]) ) {
       ROS_INFO("canceling goal!");
       actionlib_msgs::GoalID gid;
       gid.stamp = ros::Time::now();
@@ -217,22 +217,22 @@ class TeleopSegbot
     }
 
     // dpad: urdl = 4 5 6 7
-    if((((unsigned int)4 < joy_msg->get_buttons_size()) && joy_msg->buttons[4]) ) {
+    if((((unsigned int)4 < joy_msg->buttons.size()) && joy_msg->buttons[4]) ) {
       std_msgs::Int16 m;
       m.data = 0;
       dpad_pub_.publish(m);
     }
-    if((((unsigned int)5 < joy_msg->get_buttons_size()) && joy_msg->buttons[5]) ) {
+    if((((unsigned int)5 < joy_msg->buttons.size()) && joy_msg->buttons[5]) ) {
       std_msgs::Int16 m;
       m.data = 1;
       dpad_pub_.publish(m);
     }
-    if((((unsigned int)6 < joy_msg->get_buttons_size()) && joy_msg->buttons[6]) ) {
+    if((((unsigned int)6 < joy_msg->buttons.size()) && joy_msg->buttons[6]) ) {
       std_msgs::Int16 m;
       m.data = 2;
       dpad_pub_.publish(m);
     }
-    if((((unsigned int)7 < joy_msg->get_buttons_size()) && joy_msg->buttons[7]) ) {
+    if((((unsigned int)7 < joy_msg->buttons.size()) && joy_msg->buttons[7]) ) {
       std_msgs::Int16 m;
       m.data = 3;
       dpad_pub_.publish(m);
@@ -243,20 +243,20 @@ class TeleopSegbot
       return;
   
     // Base
-    bool running = (((unsigned int)run_button < joy_msg->get_buttons_size()) && joy_msg->buttons[run_button]);
+    bool running = (((unsigned int)run_button < joy_msg->buttons.size()) && joy_msg->buttons[run_button]);
     double vx = running ? max_vx_run : max_vx;
     double vy = running ? max_vy_run : max_vy;
     double vw = running ? max_vw_run : max_vw;
 
-    if((axis_vx >= 0) && (((unsigned int)axis_vx) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vx >= 0) && (((unsigned int)axis_vx) < joy_msg->axes.size()) && !cmd_head)
       req_vx = joy_msg->axes[axis_vx] * vx;
     else
       req_vx = 0.0;
-    if((axis_vy >= 0) && (((unsigned int)axis_vy) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vy >= 0) && (((unsigned int)axis_vy) < joy_msg->axes.size()) && !cmd_head)
       req_vy = joy_msg->axes[axis_vy] * vy;
     else
       req_vy = 0.0;
-    if((axis_vw >= 0) && (((unsigned int)axis_vw) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vw >= 0) && (((unsigned int)axis_vw) < joy_msg->axes.size()) && !cmd_head)
       req_vw = joy_msg->axes[axis_vw] * vw;
     else
       req_vw = 0.0;
