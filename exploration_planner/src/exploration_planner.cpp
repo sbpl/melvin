@@ -195,11 +195,11 @@ bool ExplorationPlanner::makePlan(const geometry_msgs::PoseStamped& start,
 
   //create a message for the plan 
   nav_msgs::Path gui_path;
-  gui_path.set_poses_size(gplan_path.size());
+  gui_path.poses.resize(gplan_path.size());
   gui_path.header.frame_id = costmap_ros_->getGlobalFrameID();
   gui_path.header.stamp = plan_time;
 
-  int trim_size;
+  unsigned trim_size;
   if(gplan_path.size() > 20)
     trim_size = gplan_path.size() - 20;
   else
@@ -214,7 +214,7 @@ bool ExplorationPlanner::makePlan(const geometry_msgs::PoseStamped& start,
     pose.pose.position.y = gplan_path[i].yy + cost_map_.getOriginY();
     pose.pose.position.z = start.pose.position.z;
 
-    btQuaternion temp;
+    tf::Quaternion temp;
     temp.setEulerZYX(gplan_path[i].theta,0,0);
     pose.pose.orientation.x = temp.getX();
     pose.pose.orientation.y = temp.getY();
