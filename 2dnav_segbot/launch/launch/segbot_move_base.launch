@@ -12,7 +12,8 @@
     <remap from="move_base_simple/goal" to="/goal" />
     <param name="controller_frequency" value="10.0" />
     <param name="global_costmap/robot_base_frame" value="/base_footprint" />
-
+     
+    <param name="recovery_behavior_enabled" value="false"/>
     <param name="base_global_planner" value="$(arg sbpl_planner_)" if="$(arg use_sbpl_)"/>
     <param name="base_global_planner" value="navfn/NavfnROS" unless="$(arg use_sbpl_)"/>
     <param name="$(arg sbpl_planner_)/primitive_filename" value="$(find 2dnav_segbot)/launch/params/segbot.mprim" if="$(arg use_sbpl_)"/> 

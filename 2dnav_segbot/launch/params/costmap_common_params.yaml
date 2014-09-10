@@ -10,13 +10,13 @@ transform_tolerance: 0.3
 obstacle_range: 3.0
 max_obstacle_height: 2.0
 raytrace_range: 5.0
-footprint: [[0.23, 0.325], [.41,-0.00], [0.23, -0.325], [-0.27, -0.325], [-0.46, -0.175], [-0.575, -0.10], [-0.575, 0.1], [-0.466, 0.175], [-0.27, 0.325]]
+#footprint: [[0.23, 0.325], [.41,-0.00], [0.23, -0.325], [-0.27, -0.325], [-0.46, -0.175], [-0.575, -0.10], [-0.575, 0.1], [-0.466, 0.175], [-0.27, 0.325]]
 #footprint: [[0.29, 0.31], [0.36, 0.05], [0.93, 0.05], [0.93, -0.05], [0.36, -0.05], [0.29, -0.31], [-0.29, -0.31], [-0.52, -0.15], [-1.05, -0.05], [-1.05,0.05], [-0.52, 0.15], [-0.29, 0.31]] 
-#robot_radius: 0.46
+robot_radius: 0.5
 footprint_padding: 0.00
-inflation_radius: 0.55
+inflation_radius: 0.6
 cost_scaling_factor: 10.0
-lethal_cost_threshold: 100
+lethal_cost_threshold: 50
 observation_sources: base_scan
 base_scan: {data_type: LaserScan, expected_update_rate: 0.4,
 observation_persistence: 0.0, marking: true, clearing: true, max_obstacle_height: 1.0, min_obstacle_height: 0.08}
