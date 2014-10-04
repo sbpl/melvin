@@ -68,6 +68,12 @@ class TeleopSegbot
   int axis_vx, axis_vy, axis_vw, axis_pan, axis_tilt;
   int deadman_button, run_button, send_goal_button, cancel_goal_button;
   bool deadman_no_publish_, torso_publish_, head_publish_;
+  
+  double prev_vx;
+  double prev_vy;
+  double prev_vw;
+  double acc_trans_limit;
+  double acc_rot_limit;
 
   bool deadman_, cmd_head;
   bool use_mux_, last_deadman_;
@@ -99,7 +105,7 @@ class TeleopSegbot
     deadman_(false), cmd_head(false), 
     use_mux_(false), last_deadman_(false),
     cancel_goal_(false), send_goal_(false),
-    has_next_goal(false), n_private_("~")
+    has_next_goal(false), n_private_("~"), acc_trans_limit(100.0), acc_rot_limit(100.0)
   { }
 
   void init()
@@ -129,6 +135,9 @@ class TeleopSegbot
     n_private_.param("run_button", run_button, 0);
     n_private_.param("send_goal_button", send_goal_button, 0);
     n_private_.param("cancel_goal_button", cancel_goal_button, 0);
+    
+    n_private_.param("acc_trans_limit", acc_trans_limit, acc_trans_limit);
+    n_private_.param("acc_rot_limit", acc_rot_limit, acc_rot_limit);
 
     double joy_msg_timeout;
     n_private_.param("joy_msg_timeout", joy_msg_timeout, 0.5); //default to 0.5 seconds timeout
@@ -178,7 +187,12 @@ class TeleopSegbot
       ros::NodeHandle mux_nh("mux");
       mux_client_ = mux_nh.serviceClient<topic_tools::MuxSelect>("select");
     }
-
+    
+    //set previous velocities to 0
+    prev_vx = 0;
+    prev_vy = 0;
+    prev_vw = 0;
+    
     ROS_DEBUG("done controller init!");
   }
 
@@ -238,7 +252,6 @@ class TeleopSegbot
       dpad_pub_.publish(m);
     }
 
-
     if (!deadman_)
       return;
   
@@ -266,7 +279,14 @@ class TeleopSegbot
     req_vx = max(min(req_vx, vx), -vx);
     req_vy = max(min(req_vy, vy), -vy);
     req_vw = max(min(req_vw, vw), -vw);
-
+    
+    //Restrain velocities with respect to acceleration limits
+    double temp_vx = vx;
+    double temp_vy = vy;
+    double temp_vw = vw;
+    printf("original velocites vx %f vy %f vw %f.....", temp_vx, temp_vy, temp_vw);
+    restrain_velocities_from_acceleration_limits(temp_vx,temp_vy,temp_vw);
+    printf("modulated with respect to acc limits %f, %f : vx %f vy %f vw %f\n", acc_trans_limit, acc_rot_limit, temp_vx, temp_vy, temp_vw);
   }
 
 
@@ -323,6 +343,49 @@ class TeleopSegbot
 
     //make sure we store the state of our last deadman
     last_deadman_ = deadman_;
+  }
+  
+  void restrain_velocities_from_acceleration_limits(double & vx, double & vy, double vw)
+  {   
+    // get sign and magntitudes of input velocities
+    double v_trans = sqrt(vx*vx + vy*vw);
+    double vx_rat  =  vx / v_trans;
+    double vy_rat = vy / v_trans;
+    double vw_sign = get_sign(vw);
+    
+    // get differences of velocites and time
+    double vx_diff = vx - prev_vx;
+    double vy_diff = vx - prev_vy;
+    double vw_diff = vw - prev_vw;
+    ros::Duration d = ros::Time::now() - last_recieved_joy_message_time_;
+    double t_diff = d.toSec();
+    double v_trans_diff = sqrt(vx_diff*vx_diff + vy_diff*vy_diff);
+    double v_rot_diff = vw_diff;
+
+    // calculate linear and angular accelerations
+    double current_a_trans = v_trans_diff / t_diff;
+    double current_a_rot = v_rot_diff / t_diff;
+    
+    // Restrain translational velocity if acceleration above limit
+    if(abs(current_a_trans) > acc_trans_limit)
+    {
+	double v_trans = acc_trans_limit * t_diff;
+	vx = vx_rat * v_trans;
+	vy = vy_rat * v_trans;
+    }
+    
+    // Restrain rotational velocity if acceleration above limit
+    if(abs(current_a_rot) > acc_rot_limit)
+    {
+	double v_rot = acc_rot_limit * t_diff;
+	vw = vw_sign * v_rot;
+    }    
+  }
+  
+  template<typename T>
+  T get_sign(T value)
+  {
+      return (value < 0) ? -1 : 1;
   }
 
 };

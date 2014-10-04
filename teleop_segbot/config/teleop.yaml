@@ -13,6 +13,9 @@ max_vw_run: 0.3
 max_vx_run: 0.8
 max_vy_run: 0.8
 
+#acc limits, point is to prevent kickback
+acc_trans_limit: 100.0
+acc_rot_limit: 100.0
 
 # Buttons have changed for PS3 controller mapping 
 # With joystick remapper, this works with all joysticks on "/joy" 
