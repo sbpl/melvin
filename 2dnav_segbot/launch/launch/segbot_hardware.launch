@@ -3,6 +3,11 @@
   <arg name="use_servos_"/>
   <arg name="use_teleop_"/>
   <arg name="use_gps_"/>
+  <arg name="use_camera_"/>
+
+  <node pkg="usb_cam" type="usb_cam_node" name="usb_cam" respawn="true" if="$(arg use_camera_)">
+    <param name="pixel_format" value ="yuyv"/>
+  </node>
   
   <!-- <include file="$(find segway_robot)/segbot.machine" /> -->
 
@@ -25,17 +30,23 @@
   </node>
 
   <!-- Servos -->
-  <node name="base_servo" pkg="servo_node" type="servo_node" if="$(arg use_servos_)">
-    <param name="servoID" value="0" />
-    <param name="minAngle" value="-30" />
-    <param name="maxAngle" value="30" />
-    <param name="velocity" value="50" />
+  <node name="servo_node" pkg="servo_node" type="servo_node" if="$(arg use_servos_)" >
+    <param name="device_name" value="/dev/ttyUSB0" />
+    <param name="baud_rate" value="57600" />
+    <rosparam param="servoID">[1,2]</rosparam>
+    <rosparam param="minAngle">[-10,-37]</rosparam>
+    <rosparam param="maxAngle">[-10,23]</rosparam>
+    <rosparam param="velocity">[30,30]</rosparam>
   </node>
 
   <!-- Segway RMP -->
-  <node name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node">
+  <node name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node" output="screen">
+    <param name="interface_type" type="str" value="serial" /> 
+    <param name="serial_port" type="str" value="/dev/ttyUSB1" /> 
     <param name="frame_id" type="str" value="base_footprint" />
-   <remap from="~cmd_vel" to="/cmd_vel" />
+    <remap from="~cmd_vel" to="/cmd_vel" />
+    <param name="linear_odom_scale" type="double" value="0.9" />
+    <param name="angular_odom_scale" type="double" value="0.89" />
   </node>
 
   <!-- Send urdf to param server -->
