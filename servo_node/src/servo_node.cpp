@@ -15,31 +15,32 @@ enum { DYNAMIXEL_STATE_UNINITIALIZED,
      };
 
 ServoNode::ServoNode() : nh("~"){
-  dev = (char*)"/dev/ttyUSB0";
-  baudRate = 57600;
 
-  XmlRpc::XmlRpcValue temp;
+// dev = (char*)"/dev/ttyUSB0";
+//  baudRate = 57600;
+
+  std::string device_name;
+  nh.getParam("device_name", dev);
+  nh.getParam("baud_rate", baudRate);
+  ROS_INFO("connecting to device %s with baud rate %d\n", dev.c_str(), baudRate); 
+
+  std::vector<double> temp;
 
   //Get servo IDs
   nh.getParam("servoID", temp);
-  //ROS_ASSERT(temp.getType() == XmlRpc::XmlRpcValue::TypeArray);
-  if(true || temp.size() == 0){
-    //ROS_ERROR("No Servo IDs specified");
-    //exit(1);
+  if(temp.size() == 0){
     moduleId.push_back(1);
     moduleId.push_back(2);
   }
   else{
     for(int i=0; i<temp.size(); i++) {
-      ROS_ASSERT(temp[i].getType() == XmlRpc::XmlRpcValue::TypeInt);
-      moduleId.push_back(static_cast<int>(temp[i]));
-    }  
-  }
+      moduleId.push_back(temp[i]);
+    }
+  }  
 
   //Get min angle for each servo
   nh.getParam("minAngle", temp);
-  //ROS_ASSERT(temp.getType() == XmlRpc::XmlRpcValue::TypeArray);
-  if(true || temp.size() == 0){
+  if(temp.size() == 0){
     //for(unsigned int i=0; i<moduleId.size(); i++)
       minAngle.push_back(0.0);
       minAngle.push_back(-10.0);//was -30
@@ -50,7 +51,6 @@ ServoNode::ServoNode() : nh("~"){
   }
   else{
     for(int i=0; i<temp.size(); i++) {
-      ROS_ASSERT(temp[i].getType() == XmlRpc::XmlRpcValue::TypeDouble);
       minAngle.push_back(static_cast<double>(temp[i]));
     }
   }
@@ -58,7 +58,7 @@ ServoNode::ServoNode() : nh("~"){
   //Get max angle for each servo
   nh.getParam("maxAngle", temp);
   //ROS_ASSERT(temp.getType() == XmlRpc::XmlRpcValue::TypeArray);
-  if(true || temp.size() == 0){
+  if(temp.size() == 0){
     //for(unsigned int i=0; i<moduleId.size(); i++)
       maxAngle.push_back(0.0);
       maxAngle.push_back(10.0);//was 0
@@ -69,15 +69,13 @@ ServoNode::ServoNode() : nh("~"){
   }
   else{
     for(int i=0; i<temp.size(); i++) {
-      ROS_ASSERT(temp[i].getType() == XmlRpc::XmlRpcValue::TypeDouble);
       maxAngle.push_back(static_cast<double>(temp[i]));
     }
   }
 
   //Get velocity for each servo
   nh.getParam("velocity", temp);
-  //ROS_ASSERT(temp.getType() == XmlRpc::XmlRpcValue::TypeArray);
-  if(true || temp.size() == 0){
+  if(temp.size() == 0){
     for(unsigned int i=0; i<moduleId.size(); i++)
       vel.push_back(90.0);
   }
@@ -87,12 +85,16 @@ ServoNode::ServoNode() : nh("~"){
   }
   else{
     for(int i=0; i<temp.size(); i++) {
-      ROS_ASSERT(temp[i].getType() == XmlRpc::XmlRpcValue::TypeDouble);
       vel.push_back(static_cast<double>(temp[i]));
     }
   }
 
   ROS_INFO("Loaded parameters...");
+
+  for(size_t i = 0; i < moduleId.size(); i++)
+  {
+    ROS_INFO("%d: id %d min angle %f max angle %f velocity %f\n", i,moduleId[i], minAngle[i], maxAngle[i], vel[i]); 
+  }
 
   reversePoint = 5; //degrees away from the goal to start reversing
   for(unsigned int i=0; i<moduleId.size(); i++){
@@ -118,7 +120,7 @@ int ServoNode::initialize(){
   ROS_INFO("Begin init...");
   for(unsigned int i=0; i<moduleId.size(); i++){
     //open the serial port
-    if (dynamixel[i].Connect(dev,baudRate,moduleId[i])){
+    if (dynamixel[i].Connect(dev.c_str(),baudRate,moduleId[i])){
       ROS_ERROR("servo_node: module %d could not connect\n",i);
       return -1;
     }
