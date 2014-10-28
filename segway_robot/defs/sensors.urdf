@@ -71,7 +71,7 @@
   <!-- Laser tilt laser -->
   <!-- Joint to world. Simply change the name and parent link when attaching to own robot -->
   <joint name="tilt_laser_joint" type="fixed">
-      <origin xyz="-0.056 0.020 0" rpy="-1.57 0 3.14" />
+      <origin xyz="-0.056 -0.020 0" rpy="-1.57 0 3.14" />
       <parent link="R313_hokuyo_laser2"/>
       <child link="tilt_laser_link"/>
     </joint>
