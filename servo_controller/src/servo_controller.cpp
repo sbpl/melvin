@@ -16,7 +16,9 @@ bool ServoController::init(pr2_mechanism_model::RobotState *robot,
     ROS_ERROR("ServoController could not find joint named '%s'", base_servo_name.c_str());
     return false;
   }
-  baseServoAngle_sub = nh_.subscribe<segbot_msgs::ServoAngle>("/servoAngle1", 1, &ServoController::cmdCallback, this);
+  std::string baseServoAngleName;
+  n.getParam("base_servo_angle_name", baseServoAngleName);
+  baseServoAngle_sub = nh_.subscribe<segbot_msgs::ServoAngle>(baseServoAngleName, 1, &ServoController::baseCmdCallback, this);
   baseAngle = 0;
 
   std::string tilt_servo_name;
@@ -29,9 +31,10 @@ bool ServoController::init(pr2_mechanism_model::RobotState *robot,
     ROS_ERROR("ServoController could not find joint named '%s'", tilt_servo_name.c_str());
     return false;
   }
-  tiltServoAngle_sub = nh_.subscribe<segbot_msgs::ServoAngle>("/servoAngle2", 1, &ServoController::cmdCallback, this);
+  std::string tiltServoAngleName;
+  n.getParam("tilt_servo_angle_name", tiltServoAngleName);
+  tiltServoAngle_sub = nh_.subscribe<segbot_msgs::ServoAngle>(tiltServoAngleName.c_str(), 1, &ServoController::tiltCmdCallback, this);
   tiltAngle = 0;
-
   return true;
 }
 
@@ -53,14 +56,15 @@ void ServoController::update(){
 void ServoController::stopping(){
 }
 
-// Callback for joystick subscription
-void ServoController::cmdCallback(const segbot_msgs::ServoAngleConstPtr& msg){
-  if(msg->id == 0)
-    baseAngle = msg->angle;
-  else
-    tiltAngle = msg->angle;
+void ServoController::baseCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg)
+{
+  baseAngle = msg->angle;
 }
 
+void ServoController::tiltCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg)
+{
+  tiltAngle = msg->angle;
+}
 
 /// Register controller to pluginlib
 PLUGINLIB_REGISTER_CLASS(ServoControllerPlugin, 
