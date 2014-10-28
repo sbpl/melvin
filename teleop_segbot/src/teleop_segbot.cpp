@@ -281,12 +281,13 @@ class TeleopSegbot
     req_vw = max(min(req_vw, vw), -vw);
     
     //Restrain velocities with respect to acceleration limits
-    double temp_vx = vx;
-    double temp_vy = vy;
-    double temp_vw = vw;
-    printf("original velocites vx %f vy %f vw %f.....", temp_vx, temp_vy, temp_vw);
-    restrain_velocities_from_acceleration_limits(temp_vx,temp_vy,temp_vw);
-    printf("modulated with respect to acc limits %f, %f : vx %f vy %f vw %f\n", acc_trans_limit, acc_rot_limit, temp_vx, temp_vy, temp_vw);
+    restrain_velocities_from_acceleration_limits(req_vx,req_vy,req_vw);
+
+    //save previously commanded velocities
+    prev_vx = req_vx;
+    prev_vy = req_vy;
+    prev_vw = req_vw;
+
   }
 
 
@@ -345,23 +346,20 @@ class TeleopSegbot
     last_deadman_ = deadman_;
   }
   
-  void restrain_velocities_from_acceleration_limits(double & vx, double & vy, double vw)
-  {   
-    // get sign and magntitudes of input velocities
-    double v_trans = sqrt(vx*vx + vy*vw);
-    double vx_rat  =  vx / v_trans;
-    double vy_rat = vy / v_trans;
-    double vw_sign = get_sign(vw);
-    
+  void restrain_velocities_from_acceleration_limits(double & vx, double & vy, double & vw)
+  {  
     // get differences of velocites and time
     double vx_diff = vx - prev_vx;
-    double vy_diff = vx - prev_vy;
+    double vy_diff = vy - prev_vy;
     double vw_diff = vw - prev_vw;
     ros::Duration d = ros::Time::now() - last_recieved_joy_message_time_;
     double t_diff = d.toSec();
     double v_trans_diff = sqrt(vx_diff*vx_diff + vy_diff*vy_diff);
     double v_rot_diff = vw_diff;
-
+    double vx_diff_rat = vx_diff / v_trans_diff;
+    double vy_diff_rat = vy_diff / v_trans_diff;
+    double v_rot_diff_sign = get_sign(v_rot_diff);
+ 
     // calculate linear and angular accelerations
     double current_a_trans = v_trans_diff / t_diff;
     double current_a_rot = v_rot_diff / t_diff;
@@ -370,15 +368,16 @@ class TeleopSegbot
     if(abs(current_a_trans) > acc_trans_limit)
     {
 	double v_trans = acc_trans_limit * t_diff;
-	vx = vx_rat * v_trans;
-	vy = vy_rat * v_trans;
+	vx = vx_diff_rat * v_trans + prev_vx;
+	vy = vy_diff_rat * v_trans + prev_vy;
     }
-    
+   
     // Restrain rotational velocity if acceleration above limit
     if(abs(current_a_rot) > acc_rot_limit)
     {
 	double v_rot = acc_rot_limit * t_diff;
-	vw = vw_sign * v_rot;
+        double b_vw = vw;
+	vw = v_rot_diff_sign * v_rot + prev_vw;
     }    
   }
   
