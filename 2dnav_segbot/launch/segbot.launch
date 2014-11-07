@@ -5,10 +5,11 @@
   <param name="max_yawspeed" value="2.1"/>  
 
   <!-- HARDWARE -->
-  <arg name="use_tilt_laser" value="false"/>
-  <arg name="use_servos"     value="false"/>
+  <arg name="use_tilt_laser" value="true"/>
+  <arg name="use_servos"     value="true"/>
   <arg name="use_gps"        value="false"/>
   <arg name="use_camera"     value="true"/>
+  <arg name="use_segway_rmp" value="false"/>
 
   <!-- NAVIGATION -->
   <arg name="use_move_base"  value="true"/>
@@ -38,6 +39,7 @@
     <arg name="use_gps_" value="$(arg use_gps)" />
     <arg name="use_teleop_" value="$(arg use_teleop)" />
     <arg name="use_camera_" value="$(arg use_camera)" />
+    <arg name="use_segway_rmp_" value="$(arg use_segway_rmp)" />
   </include>
   <include file="$(find 2dnav_segbot)/launch/launch/segbot_move_base.launch"> 
     <arg name="use_tilt_laser_" value="$(arg use_tilt_laser)" />
