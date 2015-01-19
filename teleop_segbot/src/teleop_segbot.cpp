@@ -74,6 +74,7 @@ class TeleopSegbot
   double prev_vw;
   double acc_trans_limit;
   double acc_rot_limit;
+  double acc_timeout_limit;
 
   bool deadman_, cmd_head;
   bool use_mux_, last_deadman_;
@@ -84,7 +85,9 @@ class TeleopSegbot
   bool has_next_goal;
 
   ros::Time last_recieved_joy_message_time_;
+  ros::Time last_recieved_deadman_time_;
   ros::Duration joy_msg_timeout_;
+  ros::Duration joy_deadman_dt_;
 
   ros::NodeHandle n_, n_private_;
   ros::Publisher vel_pub_;
@@ -102,10 +105,11 @@ class TeleopSegbot
     pan_step(0.02), tilt_step(0.015),
     //deadman_no_publish_(deadman_no_publish), 
     deadman_no_publish_(true),  //HACK!!! TODO: fix
+    acc_trans_limit(100.0), acc_rot_limit(100.0), acc_timeout_limit(0.25),
     deadman_(false), cmd_head(false), 
     use_mux_(false), last_deadman_(false),
     cancel_goal_(false), send_goal_(false),
-    has_next_goal(false), n_private_("~"), acc_trans_limit(100.0), acc_rot_limit(100.0)
+    has_next_goal(false), n_private_("~")
   { }
 
   void init()
@@ -138,6 +142,7 @@ class TeleopSegbot
     
     n_private_.param("acc_trans_limit", acc_trans_limit, acc_trans_limit);
     n_private_.param("acc_rot_limit", acc_rot_limit, acc_rot_limit);
+    n_private_.param("acc_timeout_limit", acc_timeout_limit, 0.25);
 
     double joy_msg_timeout;
     n_private_.param("joy_msg_timeout", joy_msg_timeout, 0.5); //default to 0.5 seconds timeout
@@ -208,11 +213,18 @@ class TeleopSegbot
   /** Callback for joy topic **/
   void joy_cb(const sensor_msgs::Joy::ConstPtr& joy_msg)
   {
-    //Record this message reciept
-    last_recieved_joy_message_time_ = ros::Time::now();
 
     deadman_ = (((unsigned int)deadman_button < joy_msg->buttons.size()) && joy_msg->buttons[deadman_button]);
-
+    
+    //Record time between deadman presses
+    if(deadman_)
+    {
+      joy_deadman_dt_ = ros::Time::now() -  last_recieved_deadman_time_;
+      last_recieved_deadman_time_= ros::Time::now();
+    }
+    
+    //Record this message reciept
+    last_recieved_joy_message_time_ = ros::Time::now();
 
     // send or cancel goal even without deadman switch
     // check for next goal
@@ -279,6 +291,15 @@ class TeleopSegbot
     req_vx = max(min(req_vx, vx), -vx);
     req_vy = max(min(req_vy, vy), -vy);
     req_vw = max(min(req_vw, vw), -vw);
+
+    //reset prev commanded velocities if timeout exceeded
+    if(joy_deadman_dt_.toSec() >= acc_timeout_limit)
+    {
+      prev_vx = 0;
+      prev_vy = 0;
+      prev_vw = 0;
+      return;
+    }
     
     //Restrain velocities with respect to acceleration limits
     restrain_velocities_from_acceleration_limits(req_vx,req_vy,req_vw);
@@ -352,8 +373,8 @@ class TeleopSegbot
     double vx_diff = vx - prev_vx;
     double vy_diff = vy - prev_vy;
     double vw_diff = vw - prev_vw;
-    ros::Duration d = ros::Time::now() - last_recieved_joy_message_time_;
-    double t_diff = d.toSec();
+
+    double t_diff = joy_deadman_dt_.toSec();
     double v_trans_diff = sqrt(vx_diff*vx_diff + vy_diff*vy_diff);
     double v_rot_diff = vw_diff;
     double vx_diff_rat = vx_diff / v_trans_diff;
@@ -376,7 +397,6 @@ class TeleopSegbot
     if(abs(current_a_rot) > acc_rot_limit)
     {
 	double v_rot = acc_rot_limit * t_diff;
-        double b_vw = vw;
 	vw = v_rot_diff_sign * v_rot + prev_vw;
     }    
   }

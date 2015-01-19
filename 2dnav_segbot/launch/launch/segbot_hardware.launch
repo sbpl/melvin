@@ -6,15 +6,14 @@
   <arg name="use_camera_"/>
   <arg name="use_segway_rmp_"/>
 
-  <node pkg="usb_cam" type="usb_cam_node" name="usb_cam" respawn="true" if="$(arg use_camera_)">
+  <node pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true" if="$(arg use_camera_)">
     <param name="pixel_format" value ="yuyv"/>
   </node>
   
   <!-- <include file="$(find segway_robot)/segbot.machine" /> -->
 
-  <!-- Base Laser -->
   <node name="base_laser" pkg="hokuyo_node" type="hokuyo_node">
-    <param name="port" value="/dev/ttyACM0" />
+    <param name="port" value="/dev/ttyACM1" />
     <param name="frame_id" value="/base_laser_link" />
     <param name="min_ang" value="-1.57" />
     <param name="max_ang" value="1.57" />
@@ -23,27 +22,27 @@
 
   <!-- Tilt Laser -->
   <node name="tilt_laser" pkg="hokuyo_node" type="hokuyo_node" if="$(arg use_tilt_laser_)">
-    <param name="port" value="/dev/ttyACM1" />
+    <param name="port" value="/dev/ttyACM0" />
     <param name="frame_id" value="tilt_laser_link" />
-    <param name="min_ang" value="-1.05" />
-    <param name="max_ang" value="1.05" />
+    <param name="min_ang" value="-1.00" />
+    <param name="max_ang" value="1.00" />
     <remap from="scan" to="tilt_scan"/>
   </node>
 
   <!-- Servos -->
   <node name="servo_node" pkg="servo_node" type="servo_node" if="$(arg use_servos_)" >
-    <param name="device_name" value="/dev/ttyUSB0" />
+    <param name="device_name" value="/dev/ttyUSB1" />
     <param name="baud_rate" value="57600" />
     <rosparam param="servoID">[1,2]</rosparam>
-    <rosparam param="minAngle">[-10,-67]</rosparam>
-    <rosparam param="maxAngle">[-10,53]</rosparam>
-    <rosparam param="velocity">[10,100]</rosparam>
+    <rosparam param="minAngle">[-10,-57]</rosparam>
+    <rosparam param="maxAngle">[-10,43]</rosparam>
+    <rosparam param="velocity">[10,20]</rosparam>
   </node>
 
   <!-- Segway RMP -->
   <node name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node" output="screen" if="$(arg use_segway_rmp_)" >
     <param name="interface_type" type="str" value="serial" /> 
-    <param name="serial_port" type="str" value="/dev/ttyUSB1" /> 
+    <param name="serial_port" type="str" value="/dev/ttyUSB0" /> 
     <param name="frame_id" type="str" value="base_footprint" />
     <remap from="~cmd_vel" to="/cmd_vel" />
     <param name="linear_odom_scale" type="double" value="0.9" />
