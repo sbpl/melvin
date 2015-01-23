@@ -8,6 +8,8 @@
 
   <node pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true" if="$(arg use_camera_)">
     <param name="pixel_format" value ="yuyv"/>
+<param name="image_height" value ="240"/>
+<param name="image_width" value ="320"/>
   </node>
   
   <!-- <include file="$(find segway_robot)/segbot.machine" /> -->
@@ -34,8 +36,8 @@
     <param name="device_name" value="/dev/ttyUSB1" />
     <param name="baud_rate" value="57600" />
     <rosparam param="servoID">[1,2]</rosparam>
-    <rosparam param="minAngle">[-10,-57]</rosparam>
-    <rosparam param="maxAngle">[-10,43]</rosparam>
+    <rosparam param="minAngle">[-8,-57]</rosparam>
+    <rosparam param="maxAngle">[-8,43]</rosparam>
     <rosparam param="velocity">[10,20]</rosparam>
   </node>
 
