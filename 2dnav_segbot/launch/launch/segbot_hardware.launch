@@ -7,7 +7,6 @@
   <arg name="use_segway_rmp_"/>
 
   <node pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true" if="$(arg use_camera_)">
-    <param name="pixel_format" value ="yuyv"/>
   </node>
   
   <!-- <include file="$(find segway_robot)/segbot.machine" /> -->
