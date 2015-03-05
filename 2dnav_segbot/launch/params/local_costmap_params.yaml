@@ -1,5 +1,7 @@
 local_costmap:
   #Independent settings for the local costmap
+  footprint_padding: 0.1
+  inflation_radius: 1.5
   publish_voxel_map: true
   global_frame: /map
   robot_base_frame: /base_footprint
