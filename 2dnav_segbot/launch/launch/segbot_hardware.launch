@@ -12,7 +12,7 @@
   <!-- <include file="$(find segway_robot)/segbot.machine" /> -->
 
   <node name="base_laser" pkg="hokuyo_node" type="hokuyo_node">
-    <param name="port" value="/dev/ttyACM0" />
+    <param name="port" value="/dev/sensors/hokuyo_H0901182" />
     <param name="frame_id" value="/base_laser_link" />
     <param name="min_ang" value="-1.57" />
     <param name="max_ang" value="1.57" />
@@ -31,7 +31,7 @@
 
   <!-- Servos -->
   <node name="servo_node" pkg="servo_node" type="servo_node" if="$(arg use_servos_)" >
-    <param name="device_name" value="/dev/ttyUSB1" />
+    <param name="device_name" value="/dev/servo" />
     <param name="baud_rate" value="57600" />
     <rosparam param="servoID">[1,2]</rosparam>
     <rosparam param="minAngle">[-8,-57]</rosparam>
@@ -42,7 +42,7 @@
   <!-- Segway RMP -->
   <node name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node" output="screen" if="$(arg use_segway_rmp_)" >
     <param name="interface_type" type="str" value="serial" /> 
-    <param name="serial_port" type="str" value="/dev/ttyUSB0" /> 
+    <param name="serial_port" type="str" value="/dev/segway_rmp" /> 
     <param name="frame_id" type="str" value="base_footprint" />
     <remap from="~cmd_vel" to="/cmd_vel" />
     <param name="linear_odom_scale" type="double" value="0.9" />
