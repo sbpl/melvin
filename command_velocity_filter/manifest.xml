@@ -1,0 +1,19 @@
+<package>
+  <description brief="Filters command velocites for segbot">
+   This node filters out jerky command velocities meant for segbot by publishing smoother versions of them, while obeying desginated acceleration limits. 
+  </description>
+  <author>Brian MacAllister</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/command_velocity_filter</url>
+  
+  <depend package="std_msgs" />
+  <depend package="geometry_msgs" />
+  <depend package="sensor_msgs" />
+  <depend package="pr2_controllers_msgs" />
+  <depend package="roscpp" />
+  <depend package="topic_tools" />
+
+</package>
+
+
