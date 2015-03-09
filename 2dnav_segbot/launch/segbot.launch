@@ -1,21 +1,31 @@
 <launch>
+  
+  <!-- LIMITS -->
+  <param name="max_xspeed" value="4.0"/>
+  <param name="max_yawspeed" value="2.1"/>  
 
   <!-- HARDWARE -->
-  <arg name="use_tilt_laser" value="false"/>
-  <arg name="use_servos"     value="false"/>
+  <arg name="use_tilt_laser" value="true"/>
+  <arg name="use_servos"     value="true"/>
   <arg name="use_gps"        value="false"/>
+  <arg name="use_camera"     value="true"/>
+  <arg name="use_segway_rmp" value="false"/>
 
   <!-- NAVIGATION -->
   <arg name="use_move_base"  value="true"/>
   <arg name="use_teleop"     value="true"/>
 
   <!-- MAP (map_name only applies if we are not using slam) -->
-  <arg name="use_slam"       value="false"/>
-  <arg name="map_name"       value="newell_simon_5cm.pgm"/>
+  <arg name="use_slam"       value="true"/>
+  <arg name="map_name"       value="basement_map.pgm"/>
+
+  <!-- SLAM TYPE (if slam enabled which one/ones do you want to run) -->
+  <arg name="use_gmapping"  value="false"/>
+  <arg name="use_hector_mapping" value="true"/>
 
   <!-- PLANNER (sbpl_planner only applied if we are using sbpl) -->
   <!-- sbpl_planner options are: SBPLLatticePlanner -->
-  <arg name="use_sbpl"       value="true"/>
+  <arg name="use_sbpl"       value="false"/>
   <arg name="sbpl_planner"   value="SBPLLatticePlanner"/>
 
 
@@ -28,12 +38,16 @@
     <arg name="use_servos_" value="$(arg use_servos)" />
     <arg name="use_gps_" value="$(arg use_gps)" />
     <arg name="use_teleop_" value="$(arg use_teleop)" />
+    <arg name="use_camera_" value="$(arg use_camera)" />
+    <arg name="use_segway_rmp_" value="$(arg use_segway_rmp)" />
   </include>
   <include file="$(find 2dnav_segbot)/launch/launch/segbot_move_base.launch"> 
     <arg name="use_tilt_laser_" value="$(arg use_tilt_laser)" />
     <arg name="use_gps_" value="$(arg use_gps)" />
     <arg name="use_move_base_" value="$(arg use_move_base)" />
     <arg name="use_slam_" value="$(arg use_slam)" />
+    <arg name="use_gmapping_" value="$(arg use_gmapping)" />
+    <arg name="use_hector_mapping_" value="$(arg use_hector_mapping)" />
     <arg name="map_name_" value="$(arg map_name)" />
     <arg name="use_sbpl_" value="$(arg use_sbpl)" />
     <arg name="sbpl_planner_" value="$(arg sbpl_planner)" />

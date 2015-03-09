@@ -17,7 +17,8 @@ namespace servo_controller_ns{
 
       ros::Subscriber baseServoAngle_sub;
       ros::Subscriber tiltServoAngle_sub;
-      void cmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
+      void baseCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
+      void tiltCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
 
 		public:
 		  bool init(pr2_mechanism_model::RobotState *robot, ros::NodeHandle &n);

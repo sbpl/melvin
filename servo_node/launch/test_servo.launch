@@ -1,10 +1,12 @@
 <launch>
 
   <node name="base_servo" pkg="servo_node" type="servo_node" output="screen">
-    <param name="servoID" value="0" />
-    <param name="minAngle" value="-30" />
-    <param name="maxAngle" value="30" />
-    <param name="velocity" value="50" />
+    <param name="device_name" value="/dev/ttyUSB0" />
+    <param name="baud_rate" value="57600" />
+    <rosparam param="servoID">[1,2]</rosparam>
+    <rosparam param="minAngle">[-10,-7]</rosparam>
+    <rosparam param="maxAngle">[-10,-7]</rosparam>
+    <rosparam param="velocity">[50,50]</rosparam>
 <!--
     <param name="servoID" value="[1, 2]" />
     <param name="minAngle" value="[0,-30]" />

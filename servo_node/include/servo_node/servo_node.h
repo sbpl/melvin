@@ -20,7 +20,7 @@ class ServoNode{
     vector<ros::Publisher> angle_pub;
     ros::NodeHandle nh;
 
-    char* dev;
+    std::string dev;
     int baudRate;
     vector<int> moduleId;
 

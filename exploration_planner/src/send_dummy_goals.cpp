@@ -17,7 +17,7 @@ void sendGoal(){
   goal.pose.position.x = 0;
   goal.pose.position.y = 0;
   goal.pose.position.z = 0;
-  btQuaternion temp;
+  tf::Quaternion temp;
   temp.setEulerZYX(0,0,0);
   goal.pose.orientation.x = temp.getX();
   goal.pose.orientation.y = temp.getY();

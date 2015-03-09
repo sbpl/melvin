@@ -37,7 +37,7 @@
 #include <math.h>
 #include <fcntl.h>
 #include "ros/ros.h"
-#include "joy/Joy.h"
+#include "sensor_msgs/Joy.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "sensor_msgs/JointState.h"
@@ -68,6 +68,13 @@ class TeleopSegbot
   int axis_vx, axis_vy, axis_vw, axis_pan, axis_tilt;
   int deadman_button, run_button, send_goal_button, cancel_goal_button;
   bool deadman_no_publish_, torso_publish_, head_publish_;
+  
+  double prev_vx;
+  double prev_vy;
+  double prev_vw;
+  double acc_trans_limit;
+  double acc_rot_limit;
+  double acc_timeout_limit;
 
   bool deadman_, cmd_head;
   bool use_mux_, last_deadman_;
@@ -78,7 +85,9 @@ class TeleopSegbot
   bool has_next_goal;
 
   ros::Time last_recieved_joy_message_time_;
+  ros::Time last_recieved_deadman_time_;
   ros::Duration joy_msg_timeout_;
+  ros::Duration joy_deadman_dt_;
 
   ros::NodeHandle n_, n_private_;
   ros::Publisher vel_pub_;
@@ -96,6 +105,7 @@ class TeleopSegbot
     pan_step(0.02), tilt_step(0.015),
     //deadman_no_publish_(deadman_no_publish), 
     deadman_no_publish_(true),  //HACK!!! TODO: fix
+    acc_trans_limit(100.0), acc_rot_limit(100.0), acc_timeout_limit(0.25),
     deadman_(false), cmd_head(false), 
     use_mux_(false), last_deadman_(false),
     cancel_goal_(false), send_goal_(false),
@@ -129,6 +139,10 @@ class TeleopSegbot
     n_private_.param("run_button", run_button, 0);
     n_private_.param("send_goal_button", send_goal_button, 0);
     n_private_.param("cancel_goal_button", cancel_goal_button, 0);
+    
+    n_private_.param("acc_trans_limit", acc_trans_limit, acc_trans_limit);
+    n_private_.param("acc_rot_limit", acc_rot_limit, acc_rot_limit);
+    n_private_.param("acc_timeout_limit", acc_timeout_limit, 0.25);
 
     double joy_msg_timeout;
     n_private_.param("joy_msg_timeout", joy_msg_timeout, 0.5); //default to 0.5 seconds timeout
@@ -178,7 +192,12 @@ class TeleopSegbot
       ros::NodeHandle mux_nh("mux");
       mux_client_ = mux_nh.serviceClient<topic_tools::MuxSelect>("select");
     }
-
+    
+    //set previous velocities to 0
+    prev_vx = 0;
+    prev_vy = 0;
+    prev_vw = 0;
+    
     ROS_DEBUG("done controller init!");
   }
 
@@ -192,23 +211,30 @@ class TeleopSegbot
   }
 
   /** Callback for joy topic **/
-  void joy_cb(const joy::Joy::ConstPtr& joy_msg)
+  void joy_cb(const sensor_msgs::Joy::ConstPtr& joy_msg)
   {
+
+    deadman_ = (((unsigned int)deadman_button < joy_msg->buttons.size()) && joy_msg->buttons[deadman_button]);
+    
+    //Record time between deadman presses
+    if(deadman_)
+    {
+      joy_deadman_dt_ = ros::Time::now() -  last_recieved_deadman_time_;
+      last_recieved_deadman_time_= ros::Time::now();
+    }
+    
     //Record this message reciept
     last_recieved_joy_message_time_ = ros::Time::now();
 
-    deadman_ = (((unsigned int)deadman_button < joy_msg->get_buttons_size()) && joy_msg->buttons[deadman_button]);
-
-
     // send or cancel goal even without deadman switch
     // check for next goal
-    if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->get_buttons_size()) && joy_msg->buttons[send_goal_button]) ) {
+    if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[send_goal_button]) ) {
       ROS_INFO("sending stored goal!");
       //has_next_goal = false;
       true_goal_pub_.publish(next_goal_);
     }
 
-    if((((unsigned int)cancel_goal_button < joy_msg->get_buttons_size()) && joy_msg->buttons[cancel_goal_button]) ) {
+    if((((unsigned int)cancel_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[cancel_goal_button]) ) {
       ROS_INFO("canceling goal!");
       actionlib_msgs::GoalID gid;
       gid.stamp = ros::Time::now();
@@ -217,46 +243,45 @@ class TeleopSegbot
     }
 
     // dpad: urdl = 4 5 6 7
-    if((((unsigned int)4 < joy_msg->get_buttons_size()) && joy_msg->buttons[4]) ) {
+    if((((unsigned int)4 < joy_msg->buttons.size()) && joy_msg->buttons[4]) ) {
       std_msgs::Int16 m;
       m.data = 0;
       dpad_pub_.publish(m);
     }
-    if((((unsigned int)5 < joy_msg->get_buttons_size()) && joy_msg->buttons[5]) ) {
+    if((((unsigned int)5 < joy_msg->buttons.size()) && joy_msg->buttons[5]) ) {
       std_msgs::Int16 m;
       m.data = 1;
       dpad_pub_.publish(m);
     }
-    if((((unsigned int)6 < joy_msg->get_buttons_size()) && joy_msg->buttons[6]) ) {
+    if((((unsigned int)6 < joy_msg->buttons.size()) && joy_msg->buttons[6]) ) {
       std_msgs::Int16 m;
       m.data = 2;
       dpad_pub_.publish(m);
     }
-    if((((unsigned int)7 < joy_msg->get_buttons_size()) && joy_msg->buttons[7]) ) {
+    if((((unsigned int)7 < joy_msg->buttons.size()) && joy_msg->buttons[7]) ) {
       std_msgs::Int16 m;
       m.data = 3;
       dpad_pub_.publish(m);
     }
 
-
     if (!deadman_)
       return;
   
     // Base
-    bool running = (((unsigned int)run_button < joy_msg->get_buttons_size()) && joy_msg->buttons[run_button]);
+    bool running = (((unsigned int)run_button < joy_msg->buttons.size()) && joy_msg->buttons[run_button]);
     double vx = running ? max_vx_run : max_vx;
     double vy = running ? max_vy_run : max_vy;
     double vw = running ? max_vw_run : max_vw;
 
-    if((axis_vx >= 0) && (((unsigned int)axis_vx) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vx >= 0) && (((unsigned int)axis_vx) < joy_msg->axes.size()) && !cmd_head)
       req_vx = joy_msg->axes[axis_vx] * vx;
     else
       req_vx = 0.0;
-    if((axis_vy >= 0) && (((unsigned int)axis_vy) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vy >= 0) && (((unsigned int)axis_vy) < joy_msg->axes.size()) && !cmd_head)
       req_vy = joy_msg->axes[axis_vy] * vy;
     else
       req_vy = 0.0;
-    if((axis_vw >= 0) && (((unsigned int)axis_vw) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vw >= 0) && (((unsigned int)axis_vw) < joy_msg->axes.size()) && !cmd_head)
       req_vw = joy_msg->axes[axis_vw] * vw;
     else
       req_vw = 0.0;
@@ -266,6 +291,23 @@ class TeleopSegbot
     req_vx = max(min(req_vx, vx), -vx);
     req_vy = max(min(req_vy, vy), -vy);
     req_vw = max(min(req_vw, vw), -vw);
+
+    //reset prev commanded velocities if timeout exceeded
+    if(joy_deadman_dt_.toSec() >= acc_timeout_limit)
+    {
+      prev_vx = 0;
+      prev_vy = 0;
+      prev_vw = 0;
+      return;
+    }
+    
+    //Restrain velocities with respect to acceleration limits
+    restrain_velocities_from_acceleration_limits(req_vx,req_vy,req_vw);
+
+    //save previously commanded velocities
+    prev_vx = req_vx;
+    prev_vy = req_vy;
+    prev_vw = req_vw;
 
   }
 
@@ -323,6 +365,46 @@ class TeleopSegbot
 
     //make sure we store the state of our last deadman
     last_deadman_ = deadman_;
+  }
+  
+  void restrain_velocities_from_acceleration_limits(double & vx, double & vy, double & vw)
+  {  
+    // get differences of velocites and time
+    double vx_diff = vx - prev_vx;
+    double vy_diff = vy - prev_vy;
+    double vw_diff = vw - prev_vw;
+
+    double t_diff = joy_deadman_dt_.toSec();
+    double v_trans_diff = sqrt(vx_diff*vx_diff + vy_diff*vy_diff);
+    double v_rot_diff = vw_diff;
+    double vx_diff_rat = vx_diff / v_trans_diff;
+    double vy_diff_rat = vy_diff / v_trans_diff;
+    double v_rot_diff_sign = get_sign(v_rot_diff);
+ 
+    // calculate linear and angular accelerations
+    double current_a_trans = v_trans_diff / t_diff;
+    double current_a_rot = v_rot_diff / t_diff;
+    
+    // Restrain translational velocity if acceleration above limit
+    if(abs(current_a_trans) > acc_trans_limit)
+    {
+	double v_trans = acc_trans_limit * t_diff;
+	vx = vx_diff_rat * v_trans + prev_vx;
+	vy = vy_diff_rat * v_trans + prev_vy;
+    }
+   
+    // Restrain rotational velocity if acceleration above limit
+    if(abs(current_a_rot) > acc_rot_limit)
+    {
+	double v_rot = acc_rot_limit * t_diff;
+	vw = v_rot_diff_sign * v_rot + prev_vw;
+    }    
+  }
+  
+  template<typename T>
+  T get_sign(T value)
+  {
+      return (value < 0) ? -1 : 1;
   }
 
 };
