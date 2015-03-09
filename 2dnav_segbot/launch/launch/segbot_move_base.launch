@@ -12,9 +12,9 @@
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" if="$(arg use_move_base_)">
     <remap from="map" to="/map" />
     <remap from="move_base_simple/goal" to="/goal" />
-    <param name="controller_frequency" value="10.0" />
-    <param name="global_costmap/robot_base_frame" value="/base_footprint" />
-     
+    <param name="controller_frequency" value="20.0" />
+    <param name="global_costmap/robot_base_frame" value="/base_footprint" />     
+
     <param name="recovery_behavior_enabled" value="false"/>
     <param name="base_global_planner" value="$(arg sbpl_planner_)" if="$(arg use_sbpl_)"/>
     <param name="base_global_planner" value="navfn/NavfnROS" unless="$(arg use_sbpl_)"/>
@@ -29,6 +29,9 @@
     <rosparam file="$(find 2dnav_segbot)/launch/params/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find 2dnav_segbot)/launch/params/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find 2dnav_segbot)/launch/params/base_local_planner_params.yaml" command="load" />
+
+    <remap from ="cmd_vel" to="raw_cmd_vel" />
+
   </node>
 
   <!-- map -->

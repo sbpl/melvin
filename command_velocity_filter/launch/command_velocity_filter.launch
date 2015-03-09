@@ -1,6 +1,6 @@
 <launch>
 
-<node pkg="command_velocity_filter" type="command_velocity_filter" respawn="false" name="command_velocity_filter_node" output="screen"  >
+<node pkg="command_velocity_filter" type="command_velocity_filter" respawn="false" name="command_velocity_filter_node"  >
 
 <rosparam file = "$(find command_velocity_filter)/config/command_velocity_filter_config.yaml" command="load"  />
 
