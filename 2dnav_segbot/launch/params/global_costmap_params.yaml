@@ -9,6 +9,6 @@ global_costmap:
   rolling_window: false
   track_unknown_space: true
   unknown_cost_value: 255
-  unknown_threshold: 8
-  mark_threshold: 1
-  map_type: costmap
+  unknown_threshold: 9
+  mark_threshold: 0
+  map_type: voxel
