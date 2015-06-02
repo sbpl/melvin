@@ -2,8 +2,8 @@
 
 robot_base_frame: base_footprint
 transform_tolerance: 0.3
-obstacle_range: 3.0                 # see comment in defaults region
-raytrace_range: 5.0                 # see comment in defaults region
+obstacle_range: 3.0
+raytrace_range: 5.0
 
 footprint: [
     [ 0.55,  0.16],
@@ -44,8 +44,8 @@ global_frame: /map
 #update_frequency: 5.0              # overridden
 #publish_frequency: 0.0             # overridden
 max_obstacle_height: 2.0
-#obstacle_range: 2.5                # doesn't look like the global version of this parameter does anything
-#raytrace_range: 3.0                # doesn't look like the global version of this parameter does anything
+#obstacle_range: 2.5
+#raytrace_range: 3.0
 cost_scaling_factor: 10.0
 #inflation_radius: 0.55             # overridden
 #footprint: []
