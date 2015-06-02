@@ -1,0 +1,7 @@
+<launch>
+    <!-- node 'stageros' of type 'stageros' in pkg 'stage' -->
+    <node name="stageros" type="stageros" pkg="stage"
+            args="$(find segbot_stage)/worlds/basement.world">
+        <param name="base_watchdog_timeout" value="0.2"/> <!-- default -->
+    </node>
+</launch>

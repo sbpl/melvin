@@ -1,0 +1,6 @@
+<launch>
+    <node name="amcl" type="amcl" pkg="amcl">
+        <remap from="scan" to="base_scan"/>
+        <rosparam command="load" file="$(find segbot_stage)/config/amcl.yaml"/>
+    </node>
+</launch>

@@ -1,0 +1,4 @@
+<launch>
+    <node name="teleop" type="teleop_pr2_keyboard" pkg="pr2_teleop"/>
+</launch>
+

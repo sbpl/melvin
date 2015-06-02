@@ -1,0 +1,33 @@
+### modifications ###
+
+base_global_planner: SBPLLatticePlanner
+
+### explicit defaults ###
+
+#base_global_planner: navfn/NavfnROS
+base_local_planner: base_local_planner/TrajectoryPlannerROS
+recovery_behaviors: [
+    {
+        name: conservative_reset,
+        type: clear_costmap_recovery/ClearCostmapRecovery
+    },
+    {
+        name: rotate_recovery,
+        type: rotate_recovery/RotateRecovery
+    },
+    {
+        name: aggressive_reset,
+        type: clear_costmap_recovery/ClearCostmapRecovery
+    }
+]
+controller_frequency: 20.0
+planner_patience: 15.0
+controller_patience: 15.0
+conservative_reset_dist: 3.0
+recovery_behavior_enabled: true
+clearing_rotation_allowed: true
+shutdown_costmaps: false
+oscillation_timeout: 0.0
+oscillation_distance: 0.5
+planner_frequency: 0.0
+#clearing_radius: # inherits local_costmap/circumscribed_radius by default

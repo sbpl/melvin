@@ -1,0 +1,23 @@
+# image: path to the image file containing the occupancy data; can be absolute,
+# or relative to the location of the YAML file
+image: ../worlds/basement.bmp   
+
+# resolution of the map, meters/pixel
+resolution: 0.02
+
+# the 2d pose of the lower-left pixel in the map, as (x, y, yaw) with yaw as
+# counterclockwise rotation. many parts of the system currently ignore yaw
+origin: [ -5.0, -5.0, 0.0 ]
+
+# pixels with occupancy probability greater than this threshold are considered
+# completely occupied
+occupied_thresh: 0.65
+
+# pixels with occupancy probability less than this threshold are considered
+# completely free
+free_thresh: 0.196
+
+# whether the white/black free/occupied semantics should be reversed
+# (interpretation of thresholds is unaffected)
+negate: 0
+
