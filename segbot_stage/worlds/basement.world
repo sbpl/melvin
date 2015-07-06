@@ -218,7 +218,7 @@ define segbot position
 
     drive "diff"
 
-    localization "odom"
+    localization "gps"
     odom_error [ 0.01 0.01 0.0 0.01 ]
 
     gui_move 0
@@ -240,5 +240,6 @@ floorplan
 
 segbot
 (
-    pose [ 1.868 -0.268 0.000 0.325 ]
+#    pose [ 1.868 -0.268 0.000 0.325 ]
+    pose [ 0.000 0.000 0.000 0.000 ]
 )
