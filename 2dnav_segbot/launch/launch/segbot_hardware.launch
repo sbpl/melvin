@@ -68,6 +68,9 @@
   <!-- PS3 Controller for teleop -->
   <include file="$(find teleop_segbot)/teleop_joystick.launch" if="$(arg use_teleop_)" />
 
+  <!-- Commanded Velocity Filter -->
+  <include file="$(find command_velocity_filter)/launch/command_velocity_filter.launch" />
+
   <!-- Bring up the GPS -->
   <include file="$(find gps_for_ekf)/launch/gps_for_ekf_node.launch" if="$(arg use_gps_)" />
 
