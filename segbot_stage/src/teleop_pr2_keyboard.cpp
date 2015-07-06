@@ -2,10 +2,10 @@
  * teleop_pr2_keyboard
  * Copyright (c) 2008, Willow Garage, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -14,7 +14,7 @@
  *     * Neither the name of the <ORGANIZATION> nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@
 #define KEYCODE_A 0x61
 #define KEYCODE_D 0x64
 #define KEYCODE_S 0x73
-#define KEYCODE_W 0x77 
+#define KEYCODE_W 0x77
 #define KEYCODE_Q 0x71
 #define KEYCODE_E 0x65
 
@@ -64,7 +64,7 @@ class TeleopPR2Keyboard
 
   public:
   void init()
-  { 
+  {
     cmd.linear.x = cmd.linear.y = cmd.angular.z = 0;
 
     vel_pub_ = n_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
@@ -76,7 +76,7 @@ class TeleopPR2Keyboard
     n_private.param("yaw_run_rate", yaw_rate_run, 1.5);
 
   }
-  
+
   ~TeleopPR2Keyboard()   { }
   void keyboardLoop();
 
@@ -165,7 +165,7 @@ void TeleopPR2Keyboard::keyboardLoop()
       dirty = true;
       break;
 
-      // Running 
+      // Running
     case KEYCODE_W_CAP:
       cmd.linear.x = run_vel;
       dirty = true;
@@ -190,14 +190,14 @@ void TeleopPR2Keyboard::keyboardLoop()
       cmd.angular.z = - yaw_rate_run;
       dirty = true;
       break;
+    default:
+      break;
     }
 
-    
+
     if (dirty == true)
     {
       vel_pub_.publish(cmd);
     }
-
-
   }
 }
