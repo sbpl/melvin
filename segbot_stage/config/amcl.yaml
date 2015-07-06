@@ -35,7 +35,7 @@ initial_pose_a: 0.0
 initial_cov_xx: 0.25                # 0.5^2
 initial_cov_yy: 0.25                # 0.5^2
 initial_cov_aa: 0.068538919452009   # (pi/12)^2
-#gui_publish_rate: -1.0             # (disabled)
+gui_publish_rate: -1.0             # (disabled)
 save_pose_rate: 0.5
 use_map_topic: false
 first_map_only: false
