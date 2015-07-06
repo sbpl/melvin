@@ -1,10 +1,10 @@
 ### modifications ###
 
-base_global_planner: SBPLLatticePlanner
+#base_global_planner: SBPLLatticePlanner
 
 ### explicit defaults ###
 
-#base_global_planner: navfn/NavfnROS
+base_global_planner: navfn/NavfnROS
 base_local_planner: base_local_planner/TrajectoryPlannerROS
 recovery_behaviors: [
     {

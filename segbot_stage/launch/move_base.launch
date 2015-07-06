@@ -8,6 +8,12 @@
         <rosparam file="$(find segbot_stage)/config/sbpl_global_params.yaml"
                 command="load"/>
 
+        <rosparam file="$(find segbot_stage)/config/base_local_planner_params.yaml"
+                command="load"/>
+
+        <rosparam file="$(find segbot_stage)/config/navfn_params.yaml"
+                command="load"/>
+
         <rosparam file="$(find segbot_stage)/config/costmap_common.yaml"
                 command="load" ns="global_costmap"/>
         <rosparam file="$(find segbot_stage)/config/costmap_common.yaml"
