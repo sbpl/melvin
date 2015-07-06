@@ -7,10 +7,10 @@ local_costmap:
     rolling_window: true
     publish_voxel_map: true
 
-    width: 6.0
+    width:  6.0
     height: 6.0
 
-    footprint_padding: 0.1
+    footprint_padding: 0.05
 
 ### explicit defaults ###
 
