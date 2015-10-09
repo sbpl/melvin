@@ -19,4 +19,3 @@ target_link_libraries(teleop_keyboard ${catkin_LIBRARIES})
 
 add_executable(teleop_joystick src/teleop_joystick.cpp)
 target_link_libraries(teleop_joystick ${sdl_LIBRARIES} ${catkin_LIBRARIES})
-

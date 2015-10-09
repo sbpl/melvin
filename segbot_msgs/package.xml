@@ -1,0 +1,16 @@
+<package format="2">
+    <name>segbot_msgs</name>
+    <version>0.0.0</version>
+    <description>segbot_msgs</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author>Michael Phillips</author>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    
+    <depend>std_msgs</depend>
+
+    <build_depend>message_generation</build_depend>
+
+    <exec_depend>message_runtime</exec_depend>
+</package>
