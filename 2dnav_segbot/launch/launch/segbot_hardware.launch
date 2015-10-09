@@ -66,7 +66,7 @@
   <node name="controller_loop" pkg="2dnav_segbot" type="controller_manager" args="-x robot_description"/> 
 
   <!-- PS3 Controller for teleop -->
-  <include file="$(find teleop_segbot)/teleop_joystick.launch" if="$(arg use_teleop_)" />
+  <include file="$(find teleop_segbot)/launch/teleop_joystick.launch" if="$(arg use_teleop_)" />
 
   <!-- Commanded Velocity Filter -->
   <include file="$(find command_velocity_filter)/launch/command_velocity_filter.launch" />
