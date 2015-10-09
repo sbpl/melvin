@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
     <name>melvin</name>
     <version>0.0.0</version>
     <description>Melvin the Segbot</description>
@@ -9,21 +9,22 @@
 
     <buildtool_depend>catkin</buildtool_depend>
 
-    <!-- <run_depend>servo_sim_controller</run_depend> -->
-    <!-- <run_depend>segbot_msgs</run_depend> -->
-    <!-- <run_depend>segbot_stage</run_depend> -->
-    <!-- <run_depend>segbot_ipc</run_depend> -->
-    <!-- <run_depend>servo_node</run_depend> -->
-    <!-- <run_depend>2dnav_segbot</run_depend> -->
-    <!-- <run_depend>command_velocity_filter</run_depend> -->
-    <!-- <run_depend>gps_for_ekf</run_depend> -->
-    <!-- <run_depend>exploration_planner</run_depend> -->
-    <!-- <run_depend>base_sim_controller</run_depend> -->
-    <!-- <run_depend>servo_controller</run_depend> -->
-    <!-- <run_depend>segway_robot</run_depend> -->
-    <run_depend>teleop_segbot</run_depend>
+    <!-- <exec_depend>servo_sim_controller</exec_depend> -->
+    <!-- <exec_depend>segbot_msgs</exec_depend> -->
+    <!-- <exec_depend>segbot_stage</exec_depend> -->
+    <!-- <exec_depend>segbot_ipc</exec_depend> -->
+    <!-- <exec_depend>servo_node</exec_depend> -->
+    <!-- <exec_depend>2dnav_segbot</exec_depend> -->
+    <!-- <exec_depend>command_velocity_filter</exec_depend> -->
+    <!-- <exec_depend>gps_for_ekf</exec_depend> -->
+    <!-- <exec_depend>exploration_planner</exec_depend> -->
+    <!-- <exec_depend>base_sim_controller</exec_depend> -->
+    <!-- <exec_depend>servo_controller</exec_depend> -->
+    <!-- <exec_depend>segway_robot</exec_depend> -->
+    <exec_depend>teleop_segbot</exec_depend>
 
     <export>
         <metapackage />
+        <architecture_independent />
     </export>
 </package>

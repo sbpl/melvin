@@ -1,4 +1,20 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-rosbuild_init()
-rosbuild_add_executable(bin/teleop_segbot src/teleop_segbot.cpp)
+cmake_minimum_required(VERSION 2.8.3)
+project(teleop_segbot)
+
+find_package(
+    catkin REQUIRED
+    COMPONENTS
+        joy
+        std_msgs
+        geometry_msgs
+        sensor_msgs
+        pr2_controllers_msgs
+        roscpp
+        topic_tools)
+
+catkin_package()
+
+include_directories(${catkin_INCLUDE_DIRS})
+
+add_executable(teleop_segbot src/teleop_segbot.cpp)
+target_link_libraries(teleop_segbot ${catkin_LIBRARIES})
