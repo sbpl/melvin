@@ -1,40 +1,33 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(exploration_planner)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++0x ")
+find_package(sbpl REQUIRED)
 
-rosbuild_init()
+find_package(
+    catkin REQUIRED
+    COMPONENTS actionlib_msgs costmap_2d nav_core nav_msgs pluginlib roscpp tf)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+catkin_package(
+    INCLUDE_DIRS
+        include
+    LIBRARIES
+        ${PROJECT_NAME}
+    CATKIN_DEPENDS
+        roscpp
+        costmap_2d
+        nav_core
+    DEPENDS
+        sbpl)
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
+include_directories(${SBPL_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS})
+include_directories(include)
 
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+add_library(${PROJECT_NAME} src/exploration_planner.cpp src/global_planner.cpp src/astarpoint.cpp src/raycaster.cpp src/filetransfer.cpp)
+target_link_libraries(${PROJECT_NAME} ${SBPL_LIBRARIES} ${catkin_LIBRARIES})
 
-rosbuild_add_library(${PROJECT_NAME} src/exploration_planner.cpp src/global_planner.cpp src/astarpoint.cpp src/raycaster.cpp src/filetransfer.cpp)
-rosbuild_add_executable(send_goals src/send_dummy_goals.cpp)
-
-#sbpl
-FIND_PACKAGE(sbpl REQUIRED )
-INCLUDE_DIRECTORIES(${SBPL_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${SBPL_LIBRARIES})
+add_executable(send_goals src/send_dummy_goals.cpp)
+target_link_libraries(send_goals ${catkin_LIBRARIES})

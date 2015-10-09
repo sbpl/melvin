@@ -1,0 +1,29 @@
+<package format="2">
+    <name>exploration_planner</name>
+    <version>0.0.0</version>
+    <description>sbpl_lattice_planner</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author>Michael Phillips</author>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>actionlib_msgs</depend>
+    <depend>costmap_2d</depend>
+    <depend>nav_core</depend>
+    <depend>nav_msgs</depend>
+    <depend>pluginlib</depend>
+    <depend>roscpp</depend>
+    <depend>tf</depend>
+
+    <exec_depend>fake_localization</exec_depend>
+    <exec_depend>map_server</exec_depend>
+    <exec_depend>move_base</exec_depend>
+    <exec_depend>rqt_nav_view</exec_depend>
+    <exec_depend>stage_ros</exec_depend>
+    <exec_depend>topic_tools</exec_depend>
+
+    <export>
+        <nav_core plugin="${prefix}/bgp_plugin.xml" />
+    </export>
+</package>
