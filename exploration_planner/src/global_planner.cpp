@@ -229,7 +229,7 @@ double GPLAN::return_path(int x_target, int y_target, const int dijkstra[],
 	//cout << "start return path " << endl;
 	Traj_pt_s current;
 	vector<Traj_pt_s> inv_traj;
-	int x_val, y_val, best_x_val, best_y_val;
+	int x_val, y_val, best_x_val = 0, best_y_val = 0;
 	double cost = 0;
 	x_val = current.x = x_target;
 	y_val = current.y = y_target;
@@ -336,7 +336,7 @@ void GPLAN::sample_point(int &x_target, int &y_target, const int dijkstra[],
 	// 	// convolve map to get gain from each point
 	// combine maps to get benefit from each point + cost
 	//cout << "      start sample_point" << endl;
-	static int prev_x = 0, prev_y = 0;
+//	static int prev_x = 0, prev_y = 0;
 //	cout << "  start sample point ";
 	x_target = -1;
 	y_target = -1;
@@ -460,8 +460,12 @@ bool GPLAN::calc_all_IG(unsigned int IG_map[]) {
 		IG_map[coverage_size_x * j] = 0;
 	}
 
-	int lowest_IG = (int)1e7, highest_IG = 0, highx = 0, highy = 0, lowx = 0, lowy =
-			0;
+	unsigned int lowest_IG = (int)1e7;
+    unsigned int highest_IG = 0;
+    unsigned int highx = 0;
+    unsigned int highy = 0;
+//    unsigned int lowx = 0;
+//    unsigned int lowy = 0;
 
 	//calc remaining values
 	for (int j = 1; j < coverage_size_y; j++) {
@@ -481,8 +485,8 @@ bool GPLAN::calc_all_IG(unsigned int IG_map[]) {
 			//cout << IG_map[i+coverage_size_x*j] << "::" << i << "," << j << endl;
 			if (IG_map[i + coverage_size_x * j] < lowest_IG) {
 				lowest_IG = IG_map[i + coverage_size_x * j];
-				lowx = i;
-				lowy = j;
+//				lowx = i;
+//				lowy = j;
 			}
 			if (IG_map[i + coverage_size_x * j] > highest_IG) {
 				highest_IG = IG_map[i + coverage_size_x * j];
@@ -495,7 +499,7 @@ bool GPLAN::calc_all_IG(unsigned int IG_map[]) {
 	if (DISPLAY_OUTPUT) {cout << " highest IG is " << highest_IG << " at " << highx << "," << highy
 		<< " of " << HIGH_IG_THRES << endl;}
 
-	if (highest_IG < HIGH_IG_THRES) {
+	if ((int)highest_IG < HIGH_IG_THRES) {
 		return false;
 	} else
 		return true;
@@ -796,10 +800,15 @@ void GPLAN::global_planner(float goal_x, float goal_y, float goal_theta) {
 
 	if (goal_x != -1) {
 		// set goal
-		double dist;
-		if (DISPLAY_OUTPUT) {cout << "determining path to assigned goal" << endl;}
-		dist = return_path((int) (goal_x / cost_cell_size), (int) (goal_y
-				/ cost_cell_size), dijkstra, traj);
+//		double dist;
+		if (DISPLAY_OUTPUT) {
+            cout << "determining path to assigned goal" << endl;
+        }
+		/*dist = */return_path(
+                (int) (goal_x / cost_cell_size),
+                (int) (goal_y / cost_cell_size),
+                dijkstra,
+                traj);
 
 	} else {
 		//find good point
@@ -839,7 +848,7 @@ void GPLAN::global_planner(float goal_x, float goal_y, float goal_theta) {
 
 			// determine gain from each possible goal point
 			double temp_score = 0;
-			for (int current_loc = 1; current_loc < test_traj.size(); current_loc++) {
+			for (int current_loc = 1; current_loc < (int)test_traj.size(); current_loc++) {
 				//cout << "test loc " <<  test_traj[current_loc].x << "," << test_traj[current_loc].y << endl;
 				// determine the direction of travel in each axis
 				int x_dir = test_traj[current_loc].x - test_traj[current_loc
@@ -899,7 +908,7 @@ void GPLAN::global_planner(float goal_x, float goal_y, float goal_theta) {
 	traj[0].xx = traj[0].x * cost_cell_size;
 	traj[0].yy = traj[0].y * cost_cell_size;
 
-	for (int current_loc = 1; current_loc < traj.size(); current_loc++) {
+	for (int current_loc = 1; current_loc < (int)traj.size(); current_loc++) {
 		//cout << "loc " <<  traj[current_loc].x << "," << traj[current_loc].y << endl;
 		// determine the direction of travel in each axis
 		int x_dir = traj[current_loc].x - traj[current_loc - 1].x + 1;
@@ -922,35 +931,35 @@ void GPLAN::global_planner(float goal_x, float goal_y, float goal_theta) {
 			traj[current_loc].yy = traj[current_loc].y * cost_cell_size;
 
 			// if r is greater than margin*l then keep the head pointed to the right otherwise check for left, otherwise sweep fully
-			float angle_swept = 0; // how far does sensor need to sweep
+//			float angle_swept = 0; // how far does sensor need to sweep
 			int cells_to_see = 0; // how many cells should be detected at this location
-			int flag;
+//			int flag;
 			if (traj_score_r[current_loc] > LR_MARGIN
 					* traj_score_l[current_loc]) {
 				traj[current_loc].right_pan = traj[current_loc].theta
 						- ANGLE_120;
 				traj[current_loc].left_pan = traj[current_loc].theta + ANGLE_45;
-				angle_swept = ANGLE_120 + ANGLE_45;
+//				angle_swept = ANGLE_120 + ANGLE_45;
 				cells_to_see = traj_score_r[current_loc];
-				flag = 1;
+//				flag = 1;
 			} else if (traj_score_l[current_loc] > LR_MARGIN
 					* traj_score_r[current_loc]) {
 				traj[current_loc].right_pan = traj[current_loc].theta
 						- ANGLE_45;
 				traj[current_loc].left_pan = traj[current_loc].theta
 						+ ANGLE_120;
-				angle_swept = ANGLE_120 + ANGLE_45;
+//				angle_swept = ANGLE_120 + ANGLE_45;
 				cells_to_see = traj_score_l[current_loc];
-				flag = 3;
+//				flag = 3;
 			} else {
 				traj[current_loc].right_pan = traj[current_loc].theta
 						- ANGLE_120;
 				traj[current_loc].left_pan = traj[current_loc].theta
 						+ ANGLE_120;
-				angle_swept = ANGLE_120 + ANGLE_120;
+//				angle_swept = ANGLE_120 + ANGLE_120;
 				cells_to_see = traj_score_l[current_loc]
 						+ traj_score_r[current_loc];
-				flag = 2;
+//				flag = 2;
 			}
 
 			// ensure angle values are within range
@@ -1304,7 +1313,7 @@ bool GPLAN::gplan_init(GP_MAP_DATA * gp_map_data_p,
 			MAX_VELOCITY, MAX_TURN_RATE, sensor_height, sensor_radius);
 
 	// establish sensor endpoints
-	int sensor_int_radius = (int) (sensor_radius / cost_cell_size);
+//	int sensor_int_radius = (int) (sensor_radius / cost_cell_size);
 	rasterCircle((int) (sensor_radius / cost_cell_size));
 
 	//determine start and stop vector numbers for each direction
@@ -1370,10 +1379,12 @@ bool GPLAN::gplan_init(GP_MAP_DATA * gp_map_data_p,
 	return val;
 }
 
-bool GPLAN::gplan_init(GP_MAP_DATA * gp_map_data_p,
-		GP_ROBOT_PARAMETER * gp_robot_parameter_p,
-		GP_FULL_UPDATE * gp_full_update_p,
-		GP_PLANNER_PARAMETER * gp_planner_param_p) {
+bool GPLAN::gplan_init(
+    GP_MAP_DATA* gp_map_data_p,
+    GP_ROBOT_PARAMETER* gp_robot_parameter_p,
+    GP_FULL_UPDATE* gp_full_update_p,
+    GP_PLANNER_PARAMETER* gp_planner_param_p)
+{
 	// function to initialize map and robot data, read in initial full map, and set highlevel planning parameters
 	gplan_init(gp_map_data_p, gp_robot_parameter_p, gp_full_update_p);
 
@@ -1384,8 +1395,15 @@ bool GPLAN::gplan_init(GP_MAP_DATA * gp_map_data_p,
 	VIEW_PROB_FACTOR = gp_planner_param_p->VIEW_PROB_FACTOR; // retards calculated speed based on likelihood of observation
 	WRITE_FILES = gp_planner_param_p->WRITE_FILES; // flag to write files out
 	DISPLAY_OUTPUT = gp_planner_param_p->DISPLAY_OUTPUT; // flag to display any output
-	if (abs(gp_planner_param_p->SENSORWIDTH) < 2*M_PI) {SENSORWIDTH = gp_planner_param_p->SENSORWIDTH;}
-	if ((gp_planner_param_p->DIST_GAIN >=0) && (gp_planner_param_p->DIST_GAIN <=1)) {DIST_GAIN = gp_planner_param_p->DIST_GAIN;}
+	if (abs(gp_planner_param_p->SENSORWIDTH) < 2*M_PI) {
+        SENSORWIDTH = gp_planner_param_p->SENSORWIDTH;
+    }
+
+	if ((gp_planner_param_p->DIST_GAIN >=0) && (gp_planner_param_p->DIST_GAIN <=1)) {
+        DIST_GAIN = gp_planner_param_p->DIST_GAIN;
+    }
+
+    return true;
 }
 
 vector<Traj_pt_s> GPLAN::gplan_plan(GP_POSITION_UPDATE * gp_position_update_p,
