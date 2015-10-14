@@ -18,3 +18,4 @@ include_directories(include)
 
 add_library(servo_controller src/servo_controller.cpp)
 target_link_libraries(servo_controller ${catkin_LIBRARIES})
+add_dependencies(servo_controller ${catkin_EXPORTED_TARGETS})
