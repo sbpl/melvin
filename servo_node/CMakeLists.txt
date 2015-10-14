@@ -17,3 +17,4 @@ add_executable(
     src/SerialDevice.cpp 
     src/servo_node.cpp)
 target_link_libraries(servo_node ${catkin_LIBRARIES})
+add_dependencies(servo_node ${catkin_EXPORTED_TARGETS})
