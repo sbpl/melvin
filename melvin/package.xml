@@ -14,7 +14,7 @@
     <exec_depend>segbot_stage</exec_depend>
     <exec_depend>segbot_ipc</exec_depend>
     <exec_depend>servo_node</exec_depend>
-    <exec_depend>2dnav_segbot</exec_depend>
+    <exec_depend>segbot_2dnav</exec_depend>
     <exec_depend>command_velocity_filter</exec_depend>
     <exec_depend>gps_for_ekf</exec_depend>
     <exec_depend>exploration_planner</exec_depend>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(2dnav_segbot)
+project(segbot_2dnav)
 
 set(CMAKE_BUILD_TYPE Release)
 

@@ -33,7 +33,7 @@
   
 
   <!-- DON'T MODIFY -->
-  <include file="$(find 2dnav_segbot)/launch/launch/segbot_hardware.launch"> 
+  <include file="$(find segbot_2dnav)/launch/launch/segbot_hardware.launch"> 
     <arg name="use_tilt_laser_" value="$(arg use_tilt_laser)" />
     <arg name="use_servos_" value="$(arg use_servos)" />
     <arg name="use_gps_" value="$(arg use_gps)" />
@@ -41,7 +41,7 @@
     <arg name="use_camera_" value="$(arg use_camera)" />
     <arg name="use_segway_rmp_" value="$(arg use_segway_rmp)" />
   </include>
-  <include file="$(find 2dnav_segbot)/launch/launch/segbot_move_base.launch"> 
+  <include file="$(find segbot_2dnav)/launch/launch/segbot_move_base.launch"> 
     <arg name="use_tilt_laser_" value="$(arg use_tilt_laser)" />
     <arg name="use_gps_" value="$(arg use_gps)" />
     <arg name="use_move_base_" value="$(arg use_move_base)" />
