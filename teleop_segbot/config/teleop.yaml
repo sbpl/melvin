@@ -10,8 +10,9 @@ max_vw: 0.3
 max_vx: 0.5
 max_vy: 0.5
 max_vw_run: 0.3
-max_vx_run: 0.8
-max_vy_run: 0.8
+max_vx_run: 1.0
+max_vy_run: 1.0
+
 
 #acc limits, point is to prevent kickback
 acc_trans_limit: 0.6
