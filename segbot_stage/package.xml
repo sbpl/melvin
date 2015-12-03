@@ -1,0 +1,21 @@
+<package format="2">
+    <name>segbot_stage</name>
+    <version>0.0.0</version>
+    <description>segbot_stage</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author email="andrew.dornbush@gmail.com">Andrew Dornbush</author>
+    <license>TODO</license>
+    
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>geometry_msgs</depend>
+    <depend>roscpp</depend>
+    <depend>sdl</depend>
+    <depend>spellbook_ros</depend>
+
+    <exec_depend>amcl</exec_depend>
+    <exec_depend>map_server</exec_depend>
+    <exec_depend>move_base</exec_depend>
+    <exec_depend>pr2_teleop</exec_depend>
+    <exec_depend>stage_ros</exec_depend>
+</package>

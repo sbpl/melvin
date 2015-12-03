@@ -67,8 +67,8 @@ void ExplorationPlanner::initialize(std::string name, costmap_2d::Costmap2DROS* 
     private_nh.param("angular_velocity", angular_velocity, 3.14);
     
     costmap_ros_ = costmap_ros;
-    costmap_ros_->clearRobotFootprint();
-    costmap_ros_->getCostmapCopy(cost_map_);
+//    costmap_ros_->clearRobotFootprint(); // TODO: temporarily removed during indigo migration
+    cost_map_ = *costmap_ros_->getCostmap();
 
     std::vector<geometry_msgs::Point> footprint = costmap_ros_->getRobotFootprint();
 
@@ -79,15 +79,15 @@ void ExplorationPlanner::initialize(std::string name, costmap_2d::Costmap2DROS* 
 
     GP_MAP_DATA map_data;
     map_data.timestamp = ros::Time::now().toSec();
-    map_data.cost_size_x = costmap_ros_->getSizeInCellsX();
-    map_data.cost_size_y = costmap_ros_->getSizeInCellsY();
-    map_data.elev_size_x = costmap_ros_->getSizeInCellsX();
-    map_data.elev_size_y = costmap_ros_->getSizeInCellsY();
-    map_data.coverage_size_x = costmap_ros_->getSizeInCellsX();
-    map_data.coverage_size_y = costmap_ros_->getSizeInCellsY();
-    map_data.cost_cell_size = costmap_ros_->getResolution();
-    map_data.elev_cell_size = costmap_ros_->getResolution();
-    map_data.coverage_cell_size = costmap_ros_->getResolution();
+    map_data.cost_size_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+    map_data.cost_size_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+    map_data.elev_size_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+    map_data.elev_size_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+    map_data.coverage_size_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+    map_data.coverage_size_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+    map_data.cost_cell_size = costmap_ros_->getCostmap()->getResolution();
+    map_data.elev_cell_size = costmap_ros_->getCostmap()->getResolution();
+    map_data.coverage_cell_size = costmap_ros_->getCostmap()->getResolution();
 
     GP_ROBOT_PARAMETER robot_params;
     robot_params.MAX_VELOCITY = linear_velocity; // maximum velocity in m/s
@@ -110,20 +110,20 @@ void ExplorationPlanner::initialize(std::string name, costmap_2d::Costmap2DROS* 
 
     GP_FULL_UPDATE full_update;
     full_update.timestamp = ros::Time::now().toSec();
-    full_update.sent_cover_x = costmap_ros_->getSizeInCellsX();
-    full_update.sent_cover_y = costmap_ros_->getSizeInCellsY();
-    full_update.sent_cost_x = costmap_ros_->getSizeInCellsX();
-    full_update.sent_cost_y = costmap_ros_->getSizeInCellsY();
-    full_update.sent_elev_x = costmap_ros_->getSizeInCellsX();
-    full_update.sent_elev_y = costmap_ros_->getSizeInCellsY();
-    full_update.coverage_map = new unsigned char[costmap_ros_->getSizeInCellsX()*costmap_ros_->getSizeInCellsY()];
-    full_update.cost_map = new unsigned char[costmap_ros_->getSizeInCellsX()*costmap_ros_->getSizeInCellsY()];
-    full_update.elev_map = new int16_t[costmap_ros_->getSizeInCellsX()*costmap_ros_->getSizeInCellsY()];
-    for(unsigned int x=0; x < costmap_ros_->getSizeInCellsX(); x++){
-      for(unsigned int y=0; y < costmap_ros_->getSizeInCellsY(); y++){
-        full_update.coverage_map[x + costmap_ros_->getSizeInCellsX()*y] = (cost_map_.getCost(x,y) == costmap_2d::NO_INFORMATION ? 0: 249);
-        full_update.cost_map[x + costmap_ros_->getSizeInCellsX()*y] = (cost_map_.getCost(x,y) >= costmap_2d::LETHAL_OBSTACLE ? 250 : 0);
-        full_update.elev_map[x + costmap_ros_->getSizeInCellsX()*y] = (cost_map_.getCost(x,y) >= costmap_2d::LETHAL_OBSTACLE ? 1000 : 0);
+    full_update.sent_cover_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+    full_update.sent_cover_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+    full_update.sent_cost_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+    full_update.sent_cost_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+    full_update.sent_elev_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+    full_update.sent_elev_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+    full_update.coverage_map = new unsigned char[costmap_ros_->getCostmap()->getSizeInCellsX()*costmap_ros_->getCostmap()->getSizeInCellsY()];
+    full_update.cost_map = new unsigned char[costmap_ros_->getCostmap()->getSizeInCellsX()*costmap_ros_->getCostmap()->getSizeInCellsY()];
+    full_update.elev_map = new int16_t[costmap_ros_->getCostmap()->getSizeInCellsX()*costmap_ros_->getCostmap()->getSizeInCellsY()];
+    for(unsigned int x=0; x < costmap_ros_->getCostmap()->getSizeInCellsX(); x++){
+      for(unsigned int y=0; y < costmap_ros_->getCostmap()->getSizeInCellsY(); y++){
+        full_update.coverage_map[x + costmap_ros_->getCostmap()->getSizeInCellsX()*y] = (cost_map_.getCost(x,y) == costmap_2d::NO_INFORMATION ? 0: 249);
+        full_update.cost_map[x + costmap_ros_->getCostmap()->getSizeInCellsX()*y] = (cost_map_.getCost(x,y) >= costmap_2d::LETHAL_OBSTACLE ? 250 : 0);
+        full_update.elev_map[x + costmap_ros_->getCostmap()->getSizeInCellsX()*y] = (cost_map_.getCost(x,y) >= costmap_2d::LETHAL_OBSTACLE ? 1000 : 0);
       }
     }
       
@@ -142,10 +142,10 @@ bool ExplorationPlanner::makePlan(const geometry_msgs::PoseStamped& start,
   plan.clear();
 
   ROS_INFO("[exploration_planner] getting fresh copy of costmap");
-  costmap_ros_->clearRobotFootprint();
+//  costmap_ros_->clearRobotFootprint();
   ROS_INFO("[exploration_planner] robot footprint cleared");
 
-  costmap_ros_->getCostmapCopy(cost_map_);
+  cost_map_ = *costmap_ros_->getCostmap();
 
   ROS_INFO("[exploration_planner] getting start point (%g,%g) goal point (%g,%g)",
            start.pose.position.x, start.pose.position.y,goal.pose.position.x, goal.pose.position.y);
@@ -165,12 +165,12 @@ bool ExplorationPlanner::makePlan(const geometry_msgs::PoseStamped& start,
 
   GP_SHORT_UPDATE short_update;
   short_update.timestamp = ros::Time::now().toSec();
-  short_update.sent_cover_x = costmap_ros_->getSizeInCellsX();
-  short_update.sent_cover_y = costmap_ros_->getSizeInCellsY();
-  short_update.sent_cost_x = costmap_ros_->getSizeInCellsX();
-  short_update.sent_cost_y = costmap_ros_->getSizeInCellsY();
-  short_update.sent_elev_x = costmap_ros_->getSizeInCellsX();
-  short_update.sent_elev_y = costmap_ros_->getSizeInCellsY();
+  short_update.sent_cover_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+  short_update.sent_cover_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+  short_update.sent_cost_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+  short_update.sent_cost_y = costmap_ros_->getCostmap()->getSizeInCellsY();
+  short_update.sent_elev_x = costmap_ros_->getCostmap()->getSizeInCellsX();
+  short_update.sent_elev_y = costmap_ros_->getCostmap()->getSizeInCellsY();
   short_update.x_cover_start = 0;
   short_update.y_cover_start = 0;
   short_update.x_cost_start = 0;

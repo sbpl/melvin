@@ -1,0 +1,14 @@
+<package format="2">
+    <name>gps_for_ekf</name>
+    <version>0.0.0</version>
+    <description>gps_for_ekf</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author>Ben Cohen</author>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>gps_common</depend>
+    <depend>nav_msgs</depend>
+    <depend>roscpp</depend>
+</package>

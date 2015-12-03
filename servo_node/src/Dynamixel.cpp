@@ -6,8 +6,12 @@
 //akushley@seas.upenn.edu
 
 #include <servo_node/Dynamixel.h>
+
 #include <time.h>
 #include <math.h>
+
+#include <unistd.h>
+
 #include <servo_node/ErrorMessage.h>
 
 //#define DYNAMIXEL_DEBUG

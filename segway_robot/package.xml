@@ -1,0 +1,16 @@
+<package format="2">
+    <name>segway_robot</name>
+    <version>0.0.0</version>
+    <description>segway_robot</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author>UPenn</author>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>base_sim_controller</depend>
+    <depend>convex_decomposition</depend>
+    <depend>ivcon</depend>
+    <depend>pr2_controller_manager</depend>
+    <!-- <depend>pr2_gazebo</depend> -->
+</package>

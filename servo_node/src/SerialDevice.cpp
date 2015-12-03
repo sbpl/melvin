@@ -33,8 +33,11 @@
 */
 
 #include <servo_node/SerialDevice.h>
+
 #include <stdlib.h>
 #include <stdio.h>
+      
+#include <unistd.h>
 
 //constructor
 SerialDevice::SerialDevice()

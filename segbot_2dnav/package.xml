@@ -1,0 +1,18 @@
+<package format="2">
+    <name>segbot_2dnav</name>
+    <version>0.0.0</version>
+    <description>segbot_2dnav</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author>Michael Phillips/miph@seas.upenn.edu</author>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>pr2_controller_manager</depend>
+    <depend>pr2_hardware_interface</depend>
+    <depend>segbot_msgs</depend>
+    <depend>segway_rmp</depend>
+    <depend>segway_robot</depend>
+    <depend>servo_controller</depend>
+    <depend>servo_node</depend>
+</package>

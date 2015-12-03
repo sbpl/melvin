@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>melvin</name>
+    <version>0.0.0</version>
+    <description>Melvin the Segbot</description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <exec_depend>servo_sim_controller</exec_depend>
+    <exec_depend>segbot_msgs</exec_depend>
+    <exec_depend>segbot_stage</exec_depend>
+    <exec_depend>segbot_ipc</exec_depend>
+    <exec_depend>servo_node</exec_depend>
+    <exec_depend>segbot_2dnav</exec_depend>
+    <exec_depend>command_velocity_filter</exec_depend>
+    <exec_depend>gps_for_ekf</exec_depend>
+    <exec_depend>exploration_planner</exec_depend>
+    <exec_depend>base_sim_controller</exec_depend>
+    <exec_depend>servo_controller</exec_depend>
+    <exec_depend>segway_robot</exec_depend>
+    <exec_depend>teleop_segbot</exec_depend>
+
+    <export>
+        <metapackage />
+        <architecture_independent />
+    </export>
+</package>

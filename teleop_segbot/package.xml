@@ -1,0 +1,21 @@
+<package format="2">
+    <name>teleop_segbot</name>
+    <version>0.0.0</version>
+    <description>
+        This package contains launch files for starting joystick control of
+        the segbot. This is based on the code from teleop_pr2 by Kevin Watts
+    </description>
+    <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+    <author>Bradford Neuman</author>
+    <license>TODO</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>joy</depend>
+    <depend>std_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>sensor_msgs</depend>
+    <depend>pr2_controllers_msgs</depend>
+    <depend>roscpp</depend>
+    <depend>topic_tools</depend>
+</package>

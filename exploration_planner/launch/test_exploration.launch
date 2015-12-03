@@ -7,7 +7,7 @@
   <node name="map_server" pkg="map_server" type="map_server" args="$(find exploration_planner)/worlds/map_params.yaml" />
   <!-- args="$(find exploration_planner)/worlds/unexplored.pgm 0.025" /> -->
 
-  <node pkg="stage" type="stageros" name="stageros" args="$(find exploration_planner)/worlds/willow.world" respawn="false" >
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(find exploration_planner)/worlds/willow.world" respawn="false" >
     <param name="base_watchdog_timeout" value="0.2"/>
   </node>
 

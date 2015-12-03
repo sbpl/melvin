@@ -93,7 +93,7 @@ ServoNode::ServoNode() : nh("~"){
 
   for(size_t i = 0; i < moduleId.size(); i++)
   {
-    ROS_INFO("%d: id %d min angle %f max angle %f velocity %f\n", i,moduleId[i], minAngle[i], maxAngle[i], vel[i]); 
+    ROS_INFO("%zu: id %d min angle %f max angle %f velocity %f\n", i,moduleId[i], minAngle[i], maxAngle[i], vel[i]); 
   }
 
   reversePoint = 5; //degrees away from the goal to start reversing
