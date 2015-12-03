@@ -1,7 +1,7 @@
 <package format="2">
-    <name>2dnav_segbot</name>
+    <name>segbot_2dnav</name>
     <version>0.0.0</version>
-    <description>2dnav_segbot</description>
+    <description>segbot_2dnav</description>
     <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
     <author>Michael Phillips/miph@seas.upenn.edu</author>
     <license>TODO</license>

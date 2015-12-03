@@ -63,7 +63,7 @@
   <node pkg="pr2_controller_manager" type="spawner" args="servo_controller_name" name="servo_controller_spawner"/>
 
   <!-- Controller loop -->
-  <node name="controller_loop" pkg="2dnav_segbot" type="controller_manager" args="-x robot_description"/> 
+  <node name="controller_loop" pkg="segbot_2dnav" type="controller_manager" args="-x robot_description"/> 
 
   <!-- PS3 Controller for teleop -->
   <include file="$(find teleop_segbot)/launch/teleop_joystick.launch" if="$(arg use_teleop_)" />

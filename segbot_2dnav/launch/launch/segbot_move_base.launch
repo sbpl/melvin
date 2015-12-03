@@ -19,24 +19,24 @@
     <param name="recovery_behavior_enabled" value="false"/>
     <param name="base_global_planner" value="$(arg sbpl_planner_)" if="$(arg use_sbpl_)"/>
     <param name="base_global_planner" value="navfn/NavfnROS" unless="$(arg use_sbpl_)"/>
-    <param name="$(arg sbpl_planner_)/primitive_filename" value="$(find 2dnav_segbot)/launch/params/segbot.mprim" if="$(arg use_sbpl_)"/> 
-    <rosparam file="$(find 2dnav_segbot)/launch/params/sbpl_global_params.yaml" command="load" if="$(arg use_sbpl_)"/>
+    <param name="$(arg sbpl_planner_)/primitive_filename" value="$(find segbot_2dnav)/launch/params/segbot.mprim" if="$(arg use_sbpl_)"/> 
+    <rosparam file="$(find segbot_2dnav)/launch/params/sbpl_global_params.yaml" command="load" if="$(arg use_sbpl_)"/>
 
-    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params.yaml" command="load" ns="global_costmap" unless="$(arg use_tilt_laser_)"/>
-    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params.yaml" command="load" ns="local_costmap" unless="$(arg use_tilt_laser_)"/>
-    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params_with_tilt.yaml" command="load" ns="global_costmap" if="$(arg use_tilt_laser_)"/>
-    <rosparam file="$(find 2dnav_segbot)/launch/params/costmap_common_params_with_tilt.yaml" command="load" ns="local_costmap" if="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find segbot_2dnav)/launch/params/costmap_common_params.yaml" command="load" ns="global_costmap" unless="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find segbot_2dnav)/launch/params/costmap_common_params.yaml" command="load" ns="local_costmap" unless="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find segbot_2dnav)/launch/params/costmap_common_params_with_tilt.yaml" command="load" ns="global_costmap" if="$(arg use_tilt_laser_)"/>
+    <rosparam file="$(find segbot_2dnav)/launch/params/costmap_common_params_with_tilt.yaml" command="load" ns="local_costmap" if="$(arg use_tilt_laser_)"/>
 
-    <rosparam file="$(find 2dnav_segbot)/launch/params/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find 2dnav_segbot)/launch/params/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find 2dnav_segbot)/launch/params/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find segbot_2dnav)/launch/params/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find segbot_2dnav)/launch/params/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find segbot_2dnav)/launch/params/base_local_planner_params.yaml" command="load" />
 
     <remap from ="cmd_vel" to="raw_cmd_vel" />
 
   </node>
 
   <!-- map -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find 2dnav_segbot)/launch/maps/$(arg map_name_) 0.05" respawn="false" unless="$(arg use_slam_)"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find segbot_2dnav)/launch/maps/$(arg map_name_) 0.05" respawn="false" unless="$(arg use_slam_)"/>
 
   <!-- localization -->
   <node pkg="amcl" type="amcl" name="amcl" respawn="true" unless="$(arg use_slam_)">
