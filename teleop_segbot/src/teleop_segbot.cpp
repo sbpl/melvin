@@ -228,19 +228,19 @@ class TeleopSegbot
 
     // send or cancel goal even without deadman switch
     // check for next goal
-    if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[send_goal_button]) ) {
-      ROS_INFO("sending stored goal!");
-      //has_next_goal = false;
-      true_goal_pub_.publish(next_goal_);
-    }
+    //if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[send_goal_button]) ) {
+    //  ROS_INFO("sending stored goal!");
+    //  //has_next_goal = false;
+    //  true_goal_pub_.publish(next_goal_);
+    //}
 
-    if((((unsigned int)cancel_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[cancel_goal_button]) ) {
-      ROS_INFO("canceling goal!");
-      actionlib_msgs::GoalID gid;
-      gid.stamp = ros::Time::now();
-      //gid.id = "";
-      goal_cancel_pub_.publish(gid);
-    }
+    //if((((unsigned int)cancel_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[cancel_goal_button]) ) {
+    //  ROS_INFO("canceling goal!");
+    //  actionlib_msgs::GoalID gid;
+    //  gid.stamp = ros::Time::now();
+    //  //gid.id = "";
+    //  goal_cancel_pub_.publish(gid);
+    //}
 
     // dpad: urdl = 4 5 6 7
     if((((unsigned int)4 < joy_msg->buttons.size()) && joy_msg->buttons[4]) ) {
@@ -266,7 +266,23 @@ class TeleopSegbot
 
     if (!deadman_)
       return;
-  
+    
+    // send or cancel goal only with deadman switch
+    // check for next goal
+    if( has_next_goal && (((unsigned int)send_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[send_goal_button]) ) {
+      ROS_INFO("sending stored goal!");
+      //has_next_goal = false;
+      true_goal_pub_.publish(next_goal_);
+    }
+
+    if((((unsigned int)cancel_goal_button < joy_msg->buttons.size()) && joy_msg->buttons[cancel_goal_button]) ) {
+      ROS_INFO("canceling goal!");
+      actionlib_msgs::GoalID gid;
+      gid.stamp = ros::Time::now();
+      //gid.id = "";
+      goal_cancel_pub_.publish(gid);
+    }
+
     // Base
     bool running = (((unsigned int)run_button < joy_msg->buttons.size()) && joy_msg->buttons[run_button]);
     double vx = running ? max_vx_run : max_vx;
