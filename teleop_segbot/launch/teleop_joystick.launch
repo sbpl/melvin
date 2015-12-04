@@ -1,6 +1,6 @@
 <launch>
 
-  <node pkg="ps3joy" type="ps3joy.py" name="ps3joy" output="screen" />
+  <!-- <node pkg="ps3joy" type="ps3joy.py" name="ps3joy" output="screen" /> -->
 
   <node pkg="joy" type="joy_node" name="joy_node" output="screen" >
     <param name="dev" value="/dev/input/js0" />
