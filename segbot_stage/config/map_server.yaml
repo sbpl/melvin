@@ -1,9 +1,10 @@
 # image: path to the image file containing the occupancy data; can be absolute,
 # or relative to the location of the YAML file
-image: ../worlds/basement.bmp   
+# image: ../worlds/basement.bmp  
+image: ../worlds/NSH_A_lvl_clear.png
 
 # resolution of the map, meters/pixel
-resolution: 0.02
+resolution: 0.05
 
 # the 2d pose of the lower-left pixel in the map, as (x, y, yaw) with yaw as
 # counterclockwise rotation. many parts of the system currently ignore yaw

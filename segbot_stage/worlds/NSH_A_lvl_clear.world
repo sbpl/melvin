@@ -1,0 +1,158 @@
+# explicit defaults for World
+name                    "Basement"
+interval_sim            100.0
+quit_time               0
+resolution              0.05
+show_clock              0
+show_clock_interval     100
+
+# documentation says 0 is default but is not 0 when loaded without this
+# specified?
+threads                 1   
+
+# moar defaults
+speedup                 1.000
+
+window
+(
+    size [ 1000 500 ]
+
+    center [ 0.484 -0.109 ]
+    rotate [ 0.000 0.000 ]
+    scale 35.000
+
+    pcam_loc [ 0.000 0.000 10.400 ]
+    pcam_angle [ 0.000 57.296 ]
+    pcam_on 0
+)
+
+define floorplan model
+(
+    origin [ 0.000 0.000 0.000 0.000 ]
+    color "black"
+    gui_move 0
+    boundary 1
+)
+
+define block model
+(
+    size [0.5 0.5 0.5]
+    gui_nose 0
+)
+
+define hokuyo ranger
+(
+    sensor
+    (
+        range_max 30.0
+        fov 270.25 # degs/rads?
+        samples 1081
+        # resolution?
+    )
+
+    # generic model properties
+    color "blue"
+    size [ 0.100 0.100 0.100 ]
+)
+
+define segbot_block_1 model
+(
+    name "segbot_block_1"
+    size [ 0.550 0.320 0.800 ]
+    gui_outline 0
+    gui_nose 1
+)
+
+define segbot_block_2 model
+(
+    name "segbot_block_2"
+    size [ 0.533 0.492 0.800 ]
+)
+
+define segbot_block_3 model
+(
+    name "segbot_block_3"
+    size [ 0.550 0.500 0.800 ]
+)
+
+define segbot_block_4 model
+(
+    name "segbot_block_4"
+    size [ 0.523 0.430 0.800 ]
+)
+
+define segbot_block_5 model
+(
+    name "segbot_block_5"
+    size [ 0.500 0.400 0.800 ]
+)
+
+define segbot_block_6 model
+(
+    name "segbot_block_6"
+    size [ 0.523 0.430 0.800 ]
+)
+
+define segbot_block_7 model
+(
+    name "segbot_block_7"
+    size [ 0.550 0.500 0.800 ]
+)
+
+define segbot_block_8 model
+(
+    name "segbot_block_8"
+    size [ 0.533 0.492 0.800 ]
+)
+
+define segbot_block_9 model
+(
+    name "segbot_block_9"
+    size [ 0.350 0.400 0.600 ]
+)
+
+define segbot position
+(
+    name "segbot"
+
+    size [ 0.100 0.100 0.100 ]
+
+    segbot_block_1(pose [  0.275  0.000 -0.100  0.000   ])
+    segbot_block_2(pose [  0.189 -0.192 -0.100 -37.569  ])
+    segbot_block_3(pose [  0.000 -0.275 -0.100 -90.000  ])
+    segbot_block_4(pose [ -0.162 -0.223 -0.100 -144.462 ])
+    segbot_block_5(pose [ -0.250  0.000 -0.100  180.000 ])
+    segbot_block_6(pose [ -0.162  0.223 -0.100  144.462 ])
+    segbot_block_7(pose [  0.000  0.275 -0.100  90.000  ])
+    segbot_block_8(pose [  0.189  0.192 -0.100  37.569  ])
+    segbot_block_9(pose [ -0.670  0.000 -0.100  0.000   ])
+
+    color "grey"
+
+    drive "diff"
+
+    localization "gps"
+    odom_error [ 0.01 0.01 0.0 0.01 ]
+
+    gui_move 0
+
+    hokuyo
+    (
+        name "base_lidar"
+        pose [0.600 0.000 0.400 0.000]
+    )
+)
+
+floorplan
+( 
+    name "NSH_A_lvl_clear"
+    size [50.000 25.000 1.500]
+    pose [0 0 0 0]
+    bitmap "NSH_A_lvl_clear.png"
+)
+
+segbot
+(
+#    pose [ 1.868 -0.268 0.000 0.325 ]
+    pose [ -16.000 0.000 0.000 0.000 ]
+)
