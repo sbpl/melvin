@@ -19,3 +19,10 @@ target_link_libraries(teleop_keyboard ${catkin_LIBRARIES})
 
 add_executable(teleop_joystick src/teleop_joystick.cpp)
 target_link_libraries(teleop_joystick ${sdl_LIBRARIES} ${catkin_LIBRARIES})
+
+install(
+    TARGETS teleop_keyboard teleop_joystick
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY worlds DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

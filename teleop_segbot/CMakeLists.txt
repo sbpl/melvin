@@ -20,3 +20,9 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(teleop_segbot src/teleop_segbot.cpp)
 target_link_libraries(teleop_segbot ${catkin_LIBRARIES})
+
+install(
+    TARGETS teleop_segbot
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

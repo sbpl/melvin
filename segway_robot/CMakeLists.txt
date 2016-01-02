@@ -4,10 +4,10 @@ project(segway_robot)
 set(CMAKE_BUILD_TYPE Release)
 
 find_package(catkin REQUIRED
-    COMPONENTS 
-        base_sim_controller 
-        convex_decomposition 
-        ivcon 
+    COMPONENTS
+        base_sim_controller
+        convex_decomposition
+        ivcon
         pr2_controller_manager)
 
 catkin_package()
@@ -88,10 +88,30 @@ catkin_package()
 #                COMMAND ivcon
 #                ARGS ${basepath}/convex/${basename}_convex.obj ${basepath}/convex/${basename}_convex.iv
 #                DEPENDS ${it} ${basepath}/convex ${basepath}/convex/${basename}_convex.obj)
-#     
+#
 #        set(segway_robot_gen_files ${segway_robot_gen_files} ${basepath}/iv/${basename}.iv ${basepath}/convex/${basename}_convex.iv)
 #  endif (${basename} MATCHES "_convex")
 #endforeach(it)
 #
 #add_custom_target(media_files ALL DEPENDS ${segway_robot_gen_files})
 #
+
+install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY defs   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY meshes DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY move_base DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(
+    FILES
+        segbot.launch
+        segbot.machine
+        segbot.urdf.xacro
+        segbot_move_base.launch
+        segbot_no_arm.launch
+        segbot_no_arm.urdf.xacro
+        segbot_no_arm_move_base.launch
+        segbot_old_no_arm.urdf.xacro
+        segbot_with_arm.urdf.xacro
+        segbot_with_table_mounted_lidar.urdf.xacro
+        segbot_without_arm.urdf.xacro
+        willowMap.pgm
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

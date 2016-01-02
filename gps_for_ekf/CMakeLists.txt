@@ -12,3 +12,6 @@ include_directories(include)
 
 add_executable(gpsNode src/gps_for_ekf.cpp)
 target_link_libraries(gpsNode ${catkin_LIBRARIES})
+
+install(TARGETS gpsNode DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

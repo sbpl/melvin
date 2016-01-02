@@ -19,3 +19,10 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(controller_manager src/main.cpp)
 target_link_libraries(controller_manager ${catkin_LIBRARIES})
+
+install(
+    TARGETS controller_manager
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY scripts DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY udev-rules DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
