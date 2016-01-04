@@ -3,8 +3,9 @@
     <xacro:include filename="$(find segway_robot)/urdf/base.urdf.xacro"/>
     <xacro:include filename="$(find segway_robot)/urdf/sensors.urdf.xacro"/>
 
+    <xacro:include filename="$(find segway_robot)/urdf/materials.xacro"/>
     <xacro:include filename="$(find segway_robot)/gazebo/gazebo.urdf.xacro"/>
 
     <xacro:base name="base"/>
-    <xacro:sensors name="sensors"/>
+    <!-- <xacro:sensors name="sensors"/> -->
 </robot>
