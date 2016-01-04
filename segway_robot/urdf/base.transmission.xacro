@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="base_transmission" params="name">
+        <transmission name="segway_left_wheel_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="segway_left_wheel_joint">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        <actuator name="segway_left_wheel_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1.0</mechanicalReduction>
+        </actuator>
+        
+        <transmission name="segway_right_wheel_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="segway_right_wheel_joint">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        <actuator name="segway_right_wheel_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1.0</mechanicalReduction>
+        </actuator>
+        
+        <transmission name="segway_trailer_wheel_caster_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="segway_trailer_wheel_caster_joint">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        <actuator name="segway_trailer_wheel_caster_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1.0</mechanicalReduction>
+        </actuator>
+        
+        <transmission name="segway_trailer_wheel_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="segway_trailer_wheel_joint">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        <actuator name="segway_trailer_wheel_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1.0</mechanicalReduction>
+        </actuator>
+        
+        <transmission name="R283_hokuyo_laser1_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="R283_hokuyo_laser1_joint">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        <actuator name="R283_hokuyo_laser1_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1.0</mechanicalReduction>
+        </actuator>
+        
+        <transmission name="R313_hokuyo_laser2_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="R313_hokuyo_laser2_joint">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        <actuator name="R313_hokuyo_laser2_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1.0</mechanicalReduction>
+        </actuator>
+    </xacro:macro>
+</robot>

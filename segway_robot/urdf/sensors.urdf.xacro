@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find segway_robot)/urdf/sensors.gazebo.xacro"/>
+
+    <xacro:macro name="sensors" params="name">
+        <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR
+        <!-- REVOLUTE AND CONTINUOUS JOINTS -->
+
+        <!-- Laser Base Laser -->
+
+        <!-- Joint to world. Simply change the name and parent link when
+        <!-- attaching to own robot -->
+        <joint name="base_laser_joint" type="fixed">
+            <origin xyz="-0.057 0.010 0" rpy="1.57 0 3.14"/>
+            <parent link="R283_hokuyo_laser1"/>
+            <child link="base_laser_link"/>
+        </joint>
+
+        <!-- Laser body. Negligible geometry -->
+        <link name="base_laser_link">
+            <inertial>
+                <mass value="0.000001"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <inertia ixx="0.0001" ixy="0" ixz="0"
+                         iyy="0.000001" iyz="0"
+                         izz="0.0001"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="0.000 0.000 0.000"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="0.0 0.0 0.0"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <!-- Laser Tilt Laser -->
+        <!-- Joint to world. Simply change the name and parent link when
+        <!-- attaching to own robot -->
+        <joint name="tilt_laser_joint" type="fixed">
+            <origin xyz="-0.056 -0.020 0" rpy="-1.57 0 3.14"/>
+            <parent link="R313_hokuyo_laser2"/>
+            <child link="tilt_laser_link"/>
+        </joint>
+
+        <!-- Laser Body. Negligible geometry -->
+        <link name="tilt_laser_link">
+            <inertial>
+                <mass value="0.000001"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <inertia ixx="0.0001" ixy="0" ixz="0"
+                         iyy="0.000001" iyz="0"
+                         izz="0.0001"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                <box size="0 0 0"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="0 0 0"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <xacro:sensors_gazebo name="${name}"/>
+    </xacro:macro>
+</robot>

@@ -1,0 +1,448 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find segway_robot)/urdf/base.gazebo.xacro"/>
+    <xacro:include filename="$(find segway_robot)/urdf/base.transmission.xacro"/>
+
+    <xacro:macro name="base" params="name">
+        <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR
+        <!-- REVOLUTE AND CONTINUOUS JOINTS -->
+    
+        <!-- base_footprint is a fictitious link(frame) that is on the ground
+        <!-- right below base_link origin, navigation stack depends on this
+        <!-- frame -->
+        <link name="base_footprint">
+            <inertial>
+                <mass value="0.000001"/>
+                <origin xyz="0 0 0"/>
+                <inertia ixx="0.01" ixy="0.0" ixz="0.0"
+                        iyy="0.01" iyz="0.0"
+                        izz="0.01"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="0.0 0.0 0.0"/>
+                </geometry>
+                <material name="Green"/>
+            </visual>
+            <collision>
+                <!-- represent base collision with a simple rectangular model,
+                <!-- positioned by base_size_z s.t. top surface of the collision
+                <!-- box matches the top surface of the PR2 base -->
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="0.00 0.00 0.00"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <!-- Base -->
+    
+        <!-- Links -->
+        <link name="base_link">        
+            <inertial>
+                <origin xyz="0 -0.3 0" rpy="0 0 0"/>
+                <mass value="90.72"/>
+                <inertia ixx="1.2285" ixy="0" ixz="0"
+                        iyy="1.961064" iyz="0"
+                        izz="1.337364"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_base_geom">
+                    <mesh filename="package://segway_robot/meshes/segway_base.stl"/>
+                </geometry>
+                <material name="Blue"/>
+            </visual>    
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_base_collision_geom">
+                    <mesh filename="package://segway_robot/meshes/convex/segway_base_convex.stlb"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <link name="segway_left_wheel">        
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="3.87"/>
+                <inertia ixx="0.0852" ixy="0" ixz="0"
+                        iyy="0.0852" iyz="0"
+                        izz="0.1654"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_left_wheel_geom">
+                    <mesh filename="package://segway_robot/meshes/segway_wheel.stl"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>    
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_left_wheel_collision_geom">
+      	             <cylinder radius="0.2365" length="0.093"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <link name="segway_right_wheel">        
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="3.87"/>
+                <inertia ixx="0.0852" ixy="0" ixz="0"
+                        iyy="0.0852" iyz="0"
+                        izz="0.1654"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_right_wheel_geom">
+                    <mesh filename="package://segway_robot/meshes/segway_wheel.stl"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>    
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_right_wheel_collision_geom">
+      	             <cylinder radius="0.2365" length="0.093"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <link name="segway_trailer">
+            <inertial>
+                <origin xyz="0.15 0.075 0" rpy="0 0 0"/>
+                <mass value="34.54"/>
+                <inertia ixx="0.288" ixy="0" ixz="0"
+                        iyy="0.547" iyz="0"
+                        izz="0.446"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_trailer-geom">	  
+                    <mesh filename="package://segway_robot/meshes/trailer.stl"/>
+                </geometry>
+                <material name="Green"/>
+            </visual>
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_trailer_collision_geom">
+                    <mesh filename="package://segway_robot/meshes/convex/trailer_convex.stlb"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <link name="segway_trailer_wheel_caster">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="1.2"/>
+                <inertia ixx="0.01" ixy="0" ixz="0"
+                        iyy="0.01" iyz="0"
+                        izz="0.01"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_trailer_wheel_caster-geom">	  
+                    <mesh filename="package://segway_robot/meshes/trailer_wheel_caster.stl"/>
+                </geometry>
+                <material name="Blue"/>
+            </visual>
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_trailer_wheel_caster_collision_geom">
+                    <mesh filename="package://segway_robot/meshes/convex/trailer_wheel_caster_convex.stlb"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <link name="segway_trailer_wheel">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="2.5"/>
+                <inertia ixx="0.042" ixy="0" ixz="0"
+                        iyy="0.042" iyz="0"
+                        izz="0.082"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_trailer_wheel-geom">	  
+                    <mesh filename="package://segway_robot/meshes/trailer_wheel.stl"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_trailer_wheel_collision_geom">
+                    <!-- <mesh filename="package://segway_robot/meshes/convex/trailer_wheel_convex.stlb" /> -->
+                    <cylinder radius="0.1285" length="0.097"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <link name="battery_one">        
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="22.68"/>
+                <inertia ixx="0.201" ixy="0" ixz="0"
+                        iyy="0.263" iyz="0"
+                        izz="0.182"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="battery_one_geom">
+                <!-- <mesh filename="package://segway_robot/meshes/battery_one.stl" /> -->
+	               <box size="0.254 0.178 0.273"/>
+                </geometry>
+                <material name="Red" />
+            </visual>    
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="battery_one_collision_geom">
+      	             <!-- <mesh filename="package://segway_robot/meshes/convex/battery_one_convex.stlb" /> -->
+                    <box size="0.254 0.178 0.273"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <link name="battery_two">        
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="22.68"/>
+                <inertia ixx="0.201" ixy="0" ixz="0"
+                        iyy="0.263" iyz="0"
+                        izz="0.182"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="battery_two_geom">
+                    <!-- <mesh filename="package://segway_robot/meshes/battery_two.stl" /> -->
+	                   <box size="0.254 0.178 0.273"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>    
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry name="battery_two_collision_geom">
+                    <!-- <mesh filename="package://segway_robot/meshes/convex/battery_two_convex.stlb" /> -->
+                    <box size="0.254 0.178 0.273"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <link name="computer">        
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="4.54"/>
+                <inertia ixx="0.063" ixy="0" ixz="0"
+                        iyy="0.136" iyz="0"
+                        izz="0.103"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="computer_geom">
+                    <!-- <mesh filename="package://segway_robot/meshes/computer.stl" /> -->
+                    <box size="0.484 0.198 0.356"/>
+                </geometry>
+                <material name="Green"/>
+            </visual>    
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_base_collision_geom">
+                    <!-- <mesh filename="package://segway_robot/meshes/convex/computer_convex.stlb" /> -->
+                    <box size="0.484 0.198 0.356"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <link name="segway_laser_bracket">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="2.27"/>
+                <inertia ixx="0.01" ixy="0" ixz="0"
+                        iyy="0.01" iyz="0"
+                        izz="0.01"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_laser_bracket-geom">
+                    <mesh filename="package://segway_robot/meshes/laser_bracket.stl"/>
+                </geometry>
+                <material name="Red"/>
+            </visual>
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="segway_laser_bracket_collision_geom">
+                    <mesh filename="package://segway_robot/meshes/convex/laser_bracket_convex.stlb"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <link name="R283_hokuyo_laser1">
+            <inertial>
+                <origin xyz="-0.025 -0.017 0" rpy="0 0 0"/>
+                <mass value="0.37"/>
+                <inertia ixx="0.0004" ixy="0" ixz="0"
+                        iyy="0.0004" iyz="0"
+                        izz="0.0004"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="R283_hokuyo_laser1-geom">
+                    <mesh filename="package://segway_robot/meshes/R283_hokuyo_laser1.stl"/>
+                </geometry>
+                <material name="Blue"/>
+            </visual>
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry name="R283_hokuyo_laser1_collision_geom">
+                    <mesh filename="package://segway_robot/meshes/convex/R283_hokuyo_laser1_convex.stlb"/>
+                </geometry>
+            </collision>
+        
+        </link>
+    
+        <link name="R313_hokuyo_laser2">
+            <inertial>
+                <origin xyz="-0.023 0 0" rpy="3.14159 0 0"/>
+                <mass value="0.37"/>
+                <inertia ixx="0.0004" ixy="0" ixz="0"
+                        iyy="0.0004" iyz="0"
+                        izz="0.0004"/>
+            </inertial>
+        
+            <visual>
+                <origin xyz="0 0 0" rpy="3.14159 0 0"/>
+                <geometry name="R313_hokuyo_laser2-geom">
+                    <mesh filename="package://segway_robot/meshes/R313_hokuyo_laser2.stl"/>
+                </geometry>
+                <material name="Blue"/>
+            </visual>
+        
+            <collision>
+                <origin xyz="0 0 0" rpy="3.14159 0 0"/>
+                <geometry name="R283_hokuyo_laser1_collision_geom">
+                <mesh filename="package://segway_robot/meshes/convex/R313_hokuyo_laser2_convex.stlb"/>
+                </geometry>
+            </collision>
+        </link>
+    
+        <!-- Joints -->
+
+        <joint name="base_footprint_joint" type="fixed">
+            <origin xyz="0 0 0.55" rpy="1.57 0 3.14159"/>
+            <child link="base_link"/>
+            <parent link="base_footprint"/>
+        </joint>
+  
+        <joint name="segway_left_wheel_joint" type="continuous">
+            <origin xyz="-0.031 -0.353 0.272" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="122" velocity="500"/>
+            <parent link="base_link" />
+            <child link="segway_left_wheel" />
+            <calibration reference_position="0.0"/>
+        </joint>
+    
+        <joint name="segway_right_wheel_joint" type="continuous">
+            <origin xyz="-0.031 -0.353 -0.272" rpy="0 3.14 0"/>    
+            <axis xyz="0 0 1"/>
+            <limit effort="122" velocity="500"/>
+            <parent link="base_link" />
+            <child link="segway_right_wheel"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+    
+        <joint name="segway_trailer_joint" type="fixed">    
+            <origin xyz="0.162 -0.233 0.002" rpy="0 0 0"/>
+            <parent link="base_link"/>
+            <child link="segway_trailer" />
+            <calibration reference_position="0.0"/>
+        </joint>
+        
+        <joint name="segway_trailer_wheel_caster_joint" type="continuous">    
+            <origin xyz="0.244 -0.038 0.002" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+            <parent link="segway_trailer"/>
+            <child link="segway_trailer_wheel_caster"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+
+        <joint name="segway_trailer_wheel_joint" type="continuous">    
+            <origin xyz="0.076 -0.187 0.002" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <parent link="segway_trailer_wheel_caster"/>
+            <child link="segway_trailer_wheel"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+        
+        <joint name="battery_one_joint" type="fixed">    
+            <origin xyz="-0.037 -0.231 0" rpy="0 0 0"/>
+            <parent link="base_link"/>
+            <child link="battery_one"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+
+        <joint name="battery_two_joint" type="fixed">    
+            <origin xyz="0.171 0.074 0" rpy="0 0 0"/>
+            <parent link="segway_trailer"/>
+            <child link="battery_two"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+        
+        <joint name="computer_joint" type="fixed">    
+            <origin xyz="-0.033 0.025 0" rpy="0 0 0"/>
+            <parent link="base_link"/>
+            <child link="computer"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+        
+        <joint name="segway_laser_bracket_joint" type="fixed">    
+            <origin xyz="-0.213 -0.2 0.002" rpy="0 0 0"/>
+            <parent link="base_link"/>
+            <child link="segway_laser_bracket"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+        
+        <joint name="R283_hokuyo_laser1_joint" type="revolute">    
+            <origin xyz="-0.162 -0.062 0" rpy="0 0 -0.1848"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="-1.047" upper="1.047" effort="50" velocity="50"/>
+            <parent link="segway_laser_bracket"/>
+            <child link="R283_hokuyo_laser1"/>
+            <calibration reference_position="0.0"/>
+        </joint>
+        
+        <joint name="R313_hokuyo_laser2_joint" type="revolute">    
+            <origin xyz="-0.162 0.283 0" rpy="1.57 -0.05 0" />
+            <axis xyz="0 0 1"/>
+            <limit lower="-1.047" upper="1.047" effort="50" velocity="50"/>
+            <parent link="segway_laser_bracket" />
+            <child link="R313_hokuyo_laser2" />
+            <calibration reference_position="0.0"/>
+        </joint>
+
+        <xacro:base_gazebo name="${name}"/>
+        <xacro:base_transmission name="${name}"/>
+    </xacro:macro>
+</robot>

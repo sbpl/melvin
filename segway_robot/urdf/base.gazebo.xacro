@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="base_gazebo" params="name">
+        <gazebo reference="base_link">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+    
+        <gazebo reference="segway_left_wheel">
+            <material>Gazebo/Red</material>
+        </gazebo>
+        
+        <gazebo reference="segway_right_wheel">
+            <material>Gazebo/Red</material>
+        </gazebo>
+        
+        <gazebo reference="segway_trailer">
+            <material>Gazebo/Green</material>
+        </gazebo>
+        
+        <gazebo reference="segway_trailer_wheel_caster">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+        
+        <gazebo reference="segway_trailer_wheel">
+            <material>Gazebo/Red</material>
+        </gazebo>
+        
+        <gazebo reference="battery_one">
+            <material>Gazebo/Red</material>
+        </gazebo>
+        
+        <gazebo reference="battery_two">
+            <material>Gazebo/Red</material>
+        </gazebo>
+        
+        <gazebo reference="computer">
+            <material>Gazebo/Green</material>
+        </gazebo>
+        
+        <gazebo reference="segway_laser_bracket">
+            <material>Gazebo/Green</material>
+        </gazebo>
+        
+        <gazebo reference="R283_hokuyo_laser1">
+            <material>Gazebo/Red</material>
+        </gazebo>
+    
+        <gazebo reference="R313_hokuyo_laser2">
+            <material>Gazebo/Red</material>
+        </gazebo>
+        
+        <gazebo>
+            <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+                <alwaysOn>true</alwaysOn>
+                <updateRate>1000.0</updateRate>
+                <leftJoint>segway_left_wheel_joint</leftJoint>
+                <rightJoint>segway_right_wheel_joint</rightJoint>
+                <wheelSeparation>0.544</wheelSeparation>
+                <wheelDiameter>1.35</wheelDiameter> <!-- TODO: measure -->
+                <torque>20</torque>
+                <commandTopic>cmd_vel</commandTopic>
+                <odometryTopic>odom</odometryTopic>
+                <odometryFrame>odom</odometryFrame>
+                <robotBaseFrame>base_footprint</robotBaseFrame>
+            </plugin>
+
+            <plugin name="p3d_base_controller" plugin="libgazebo_ros_p3d.so">
+                <alwaysOn>true</alwaysOn>
+                <robotNamespace></robotNamespace>
+                <bodyName>base_footprint</bodyName>
+                <topicName>base_pose_ground_truth</topicName>
+                <frameName>map</frameName>
+                <xyzOffset>0 0 0</xyzOffset>
+                <rpyOffset>0 0 0</rpyOffset>
+                <gaussianNoise>0.01</gaussianNoise>
+                <updateRate>100.0</updateRate>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+</robot>
