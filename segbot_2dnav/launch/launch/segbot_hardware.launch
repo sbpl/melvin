@@ -9,7 +9,7 @@
   <node pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true" if="$(arg use_camera_)">
   </node>
   
-  <!-- <include file="$(find segway_robot)/segbot.machine" /> -->
+  <!-- <include file="$(find segway_robot)/launch/segbot.machine" /> -->
 
   <node name="base_laser" pkg="hokuyo_node" type="hokuyo_node">
     <param name="port" value="/dev/sensors/hokuyo_H0901182" />
@@ -53,7 +53,7 @@
   <node pkg="tf" type="static_transform_publisher" name="not_moving_segway" args="1 0 0 0 0 0 1 /odom /base_footprint 100" unless="$(arg use_segway_rmp_)" />
 
   <!-- Send urdf to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/segbot_without_arm.urdf.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/robots/segbot_without_arm.urdf.xacro'" />
 
   <!-- Controller manager -->
   <include file="$(find pr2_controller_manager)/controller_manager.launch" />

@@ -5,12 +5,11 @@
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
 
 	<!-- include gazebo defs-->
-	<include filename="$(find segway_robot)/defs/gazebo.urdf" />
+	<include filename="$(find segway_robot)/urdf/gazebo.urdf" />
 	
 	<!-- include base defs-->
-	<include filename="$(find segway_robot)/defs/base.urdf" />
+	<include filename="$(find segway_robot)/urdf/base.urdf" />
 	
 	<!-- include sensors defs-->
-	<include filename="$(find segway_robot)/defs/sensors.urdf" />
-	
+	<include filename="$(find segway_robot)/urdf/sensors.urdf" />
 </robot>

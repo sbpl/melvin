@@ -7,7 +7,7 @@
   <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_footprint segway_base 40" /> -->
 
   <!-- send segbot.xml to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/segbot_with_arm.urdf.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/robots/segbot_with_arm.urdf.xacro'" />
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_segway" pkg="gazebo_tools" type="gazebo_model" args="-z 0.051 -p robot_description spawn robot_description" respawn="false" output="screen" /> 

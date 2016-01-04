@@ -97,21 +97,9 @@ catkin_package()
 #
 
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(DIRECTORY defs   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY gazebo DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY meshes DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(DIRECTORY move_base DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(
-    FILES
-        segbot.launch
-        segbot.machine
-        segbot.urdf.xacro
-        segbot_move_base.launch
-        segbot_no_arm.launch
-        segbot_no_arm.urdf.xacro
-        segbot_no_arm_move_base.launch
-        segbot_old_no_arm.urdf.xacro
-        segbot_with_arm.urdf.xacro
-        segbot_with_table_mounted_lidar.urdf.xacro
-        segbot_without_arm.urdf.xacro
-        willowMap.pgm
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY robots DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY urdf   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY worlds DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
