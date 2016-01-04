@@ -4,12 +4,12 @@
 
     <xacro:macro name="sensors" params="name">
         <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR
-        <!-- REVOLUTE AND CONTINUOUS JOINTS -->
+        REVOLUTE AND CONTINUOUS JOINTS -->
 
         <!-- Laser Base Laser -->
 
         <!-- Joint to world. Simply change the name and parent link when
-        <!-- attaching to own robot -->
+        attaching to own robot -->
         <joint name="base_laser_joint" type="fixed">
             <origin xyz="-0.057 0.010 0" rpy="1.57 0 3.14"/>
             <parent link="R283_hokuyo_laser1"/>
@@ -42,7 +42,7 @@
 
         <!-- Laser Tilt Laser -->
         <!-- Joint to world. Simply change the name and parent link when
-        <!-- attaching to own robot -->
+        attaching to own robot -->
         <joint name="tilt_laser_joint" type="fixed">
             <origin xyz="-0.056 -0.020 0" rpy="-1.57 0 3.14"/>
             <parent link="R313_hokuyo_laser2"/>

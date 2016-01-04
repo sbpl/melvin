@@ -5,11 +5,11 @@
 
     <xacro:macro name="base" params="name">
         <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR
-        <!-- REVOLUTE AND CONTINUOUS JOINTS -->
+        REVOLUTE AND CONTINUOUS JOINTS
+        -->
     
         <!-- base_footprint is a fictitious link(frame) that is on the ground
-        <!-- right below base_link origin, navigation stack depends on this
-        <!-- frame -->
+        right below base_link origin; navigation stack depends on this frame -->
         <link name="base_footprint">
             <inertial>
                 <mass value="0.000001"/>
@@ -18,26 +18,8 @@
                         iyy="0.01" iyz="0.0"
                         izz="0.01"/>
             </inertial>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <box size="0.0 0.0 0.0"/>
-                </geometry>
-                <material name="Green"/>
-            </visual>
-            <collision>
-                <!-- represent base collision with a simple rectangular model,
-                <!-- positioned by base_size_z s.t. top surface of the collision
-                <!-- box matches the top surface of the PR2 base -->
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <box size="0.00 0.00 0.00"/>
-                </geometry>
-            </collision>
         </link>
 
-        <!-- Base -->
-    
         <!-- Links -->
         <link name="base_link">        
             <inertial>
