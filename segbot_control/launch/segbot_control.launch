@@ -1,0 +1,16 @@
+<launch>
+    <arg name="sim" default="false"/>
+
+    <group if="$(arg sim)">
+        <rosparam command="load" file="$(find segbot_control)/config/segbot_control.yaml"/>
+
+        <node name="controller_spawner" pkg="controller_manager" type="spawner"
+                respawn="false"
+                args="joint_state_controller base_laser_controller tilt_laser_controller"/>
+
+        <node name="pub_base_laser_command" pkg="rostopic" type="rostopic"
+                args="pub base_laser_controller/command std_msgs/Float64 0.0"/>
+        <node name="pub_tilt_laser_command" pkg="rostopic" type="rostopic"
+                args="pub tilt_laser_controller/command std_msgs/Float64 0.0"/>
+    </group>
+</launch>

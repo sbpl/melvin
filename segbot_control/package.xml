@@ -1,0 +1,14 @@
+<package format="2">
+  <name>segbot_control</name>
+  <version>0.0.0</version>
+  <description>The segbot_control package</description>
+  <author email="andrew.dornbush@gmail.com">Andrew Dornbush</author>
+  <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>effort_controllers</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+</package>
