@@ -7,5 +7,5 @@
     <xacro:include filename="$(find segway_robot)/gazebo/gazebo.urdf.xacro"/>
 
     <xacro:base name="base"/>
-    <!-- <xacro:sensors name="sensors"/> -->
+    <xacro:sensors name="sensors"/>
 </robot>
