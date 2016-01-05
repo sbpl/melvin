@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<package>
+<package format="2">
   <name>segbot_gazebo</name>
   <version>0.0.0</version>
   <description>The segbot_gazebo package</description>
