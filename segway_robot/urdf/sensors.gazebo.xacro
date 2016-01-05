@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
     <xacro:macro name="sensors_gazebo" params="name">
-        <gazebo reference="base_laser_link">    
+        <gazebo reference="base_laser_link">
             <sensor type="gpu_ray" name="base_laser">
                 <pose>0 0 0 0 0 0</pose>
                 <visualize>false</visualize>
-                <updateRate>20.0</updateRate>
+                <update_rate>20.0</update_rate>
                 <ray>
                     <scan>
                         <horizontal>
@@ -29,17 +29,17 @@
 
                 <plugin name="gazebo_ros_base_laser_controller"
                         filename="libgazebo_ros_gpu_laser.so">
-                    <topicName>scan</topicName>
+                    <topicName>base_scan</topicName>
                     <frameName>base_laser_link</frameName>
                 </plugin>
             </sensor>
         </gazebo>
 
-        <gazebo reference="tilt_laser_link">    
+        <gazebo reference="tilt_laser_link">
             <sensor type="gpu_ray" name="tilt_laser">
                 <pose>0 0 0 0 0 0</pose>
                 <visualize>false</visualize>
-                <updateRate>20.0</updateRate>
+                <update_rate>20.0</update_rate>
                 <ray>
                     <scan>
                         <horizontal>
@@ -63,8 +63,8 @@
 
                 <plugin name="gazebo_ros_tilt_laser_controller"
                         filename="libgazebo_ros_gpu_laser.so">
-                    <topicName>scan</topicName>
-                    <frameName>base_laser_link</frameName>
+                    <topicName>tilt_scan</topicName>
+                    <frameName>tilt_laser_link</frameName>
                 </plugin>
             </sensor>
         </gazebo>

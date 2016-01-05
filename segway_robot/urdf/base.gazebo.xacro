@@ -4,64 +4,72 @@
         <gazebo reference="base_link">
             <material>Gazebo/Blue</material>
         </gazebo>
-    
+
         <gazebo reference="segway_left_wheel">
             <material>Gazebo/Red</material>
         </gazebo>
-        
+
         <gazebo reference="segway_right_wheel">
             <material>Gazebo/Red</material>
         </gazebo>
-        
+
         <gazebo reference="segway_trailer">
             <material>Gazebo/Green</material>
         </gazebo>
-        
+
         <gazebo reference="segway_trailer_wheel_caster">
             <material>Gazebo/Blue</material>
         </gazebo>
-        
+
         <gazebo reference="segway_trailer_wheel">
             <material>Gazebo/Red</material>
         </gazebo>
-        
+
         <gazebo reference="battery_one">
             <material>Gazebo/Red</material>
         </gazebo>
-        
+
         <gazebo reference="battery_two">
             <material>Gazebo/Red</material>
         </gazebo>
-        
+
         <gazebo reference="computer">
             <material>Gazebo/Green</material>
         </gazebo>
-        
+
         <gazebo reference="segway_laser_bracket">
             <material>Gazebo/Green</material>
         </gazebo>
-        
+
         <gazebo reference="R283_hokuyo_laser1">
             <material>Gazebo/Red</material>
         </gazebo>
-    
+
         <gazebo reference="R313_hokuyo_laser2">
             <material>Gazebo/Red</material>
         </gazebo>
-        
+
         <gazebo>
             <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
                 <alwaysOn>true</alwaysOn>
-                <updateRate>1000.0</updateRate>
-                <leftJoint>segway_left_wheel_joint</leftJoint>
-                <rightJoint>segway_right_wheel_joint</rightJoint>
-                <wheelSeparation>0.544</wheelSeparation>
-                <wheelDiameter>1.35</wheelDiameter> <!-- TODO: measure -->
-                <torque>20</torque>
+                <updateRate>100.0</updateRate>
+
+                <rosDebugLevel>info</rosDebugLevel>
                 <commandTopic>cmd_vel</commandTopic>
                 <odometryTopic>odom</odometryTopic>
                 <odometryFrame>odom</odometryFrame>
                 <robotBaseFrame>base_footprint</robotBaseFrame>
+                <publishWheelTF>false</publishWheelTF>
+                <publishWheelJointState>false</publishWheelJointState>
+                <wheelSeparation>0.544</wheelSeparation>
+                <wheelDiameter>0.452574</wheelDiameter>
+
+                <odometrySource>world</odometrySource>
+
+                <leftJoint>segway_left_wheel_joint</leftJoint>
+                <rightJoint>segway_right_wheel_joint</rightJoint>
+
+                <publishTf>true</publishTf>
             </plugin>
 
             <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
