@@ -1,55 +1,58 @@
 <launch>
-  
-  <!-- LIMITS -->
-  <param name="max_xspeed" value="4.0"/>
-  <param name="max_yawspeed" value="2.1"/>  
+    <arg name="sim" default="false"/>
 
-  <!-- HARDWARE -->
-  <arg name="use_tilt_laser" value="true"/>
-  <arg name="use_servos"     value="true"/>
-  <arg name="use_gps"        value="false"/>
-  <arg name="use_camera"     value="true"/>
-  <arg name="use_segway_rmp" value="false"/>
+    <!-- HARDWARE -->
+    <arg name="use_base_laser" default="true"/>
+    <arg name="use_camera"     default="true"/>
+    <arg name="use_gps"        default="false"/>
+    <arg name="use_segway_rmp" default="false"/>
+    <arg name="use_servos"     default="true"/>
+    <arg name="use_tilt_laser" default="true"/>
 
-  <!-- NAVIGATION -->
-  <arg name="use_move_base"  value="true"/>
-  <arg name="use_teleop"     value="true"/>
+    <!-- LOCALIZATION AND MAPPING  -->
+    <arg name="use_slam"       default="true"/>
 
-  <!-- MAP (map_name only applies if we are not using slam) -->
-  <arg name="use_slam"       value="true"/>
-  <arg name="map_name"       value="basement_map.pgm"/>
+    <!-- map_name only applies if we are not using slam -->
+    <arg name="map_name"       default="basement_map.pgm"/>
 
-  <!-- SLAM TYPE (if slam enabled which one/ones do you want to run) -->
-  <arg name="use_gmapping"  value="false"/>
-  <arg name="use_hector_mapping" value="true"/>
+    <!-- if slam enabled which one/ones do you want to run -->
+    <arg name="use_gmapping"          default="false"/>
+    <arg name="use_hector_mapping"    default="true"/>
 
-  <!-- PLANNER (sbpl_planner only applied if we are using sbpl) -->
-  <!-- sbpl_planner options are: SBPLLatticePlanner -->
-  <arg name="use_sbpl"       value="false"/>
-  <arg name="sbpl_planner"   value="SBPLLatticePlanner"/>
+    <!-- NAVIGATION -->
+    <arg name="use_move_base"  default="true"/>
+    <arg name="use_teleop"     default="true"/>
 
+    <!-- PLANNING  -->
+    <arg name="use_sbpl"       default="false"/>
 
-  <!-- ************************************************************ -->
-  
+    <!-- only option currently SBPLLatticePlanner; sbpl_planner only applied -->
+    <!-- if we are using sbpl -->
+    <arg name="sbpl_planner"   default="SBPLLatticePlanner"/>
 
-  <!-- DON'T MODIFY -->
-  <include file="$(find segbot_2dnav)/launch/launch/segbot_hardware.launch"> 
-    <arg name="use_tilt_laser_" value="$(arg use_tilt_laser)" />
-    <arg name="use_servos_" value="$(arg use_servos)" />
-    <arg name="use_gps_" value="$(arg use_gps)" />
-    <arg name="use_teleop_" value="$(arg use_teleop)" />
-    <arg name="use_camera_" value="$(arg use_camera)" />
-    <arg name="use_segway_rmp_" value="$(arg use_segway_rmp)" />
-  </include>
-  <include file="$(find segbot_2dnav)/launch/launch/segbot_move_base.launch"> 
-    <arg name="use_tilt_laser_" value="$(arg use_tilt_laser)" />
-    <arg name="use_gps_" value="$(arg use_gps)" />
-    <arg name="use_move_base_" value="$(arg use_move_base)" />
-    <arg name="use_slam_" value="$(arg use_slam)" />
-    <arg name="use_gmapping_" value="$(arg use_gmapping)" />
-    <arg name="use_hector_mapping_" value="$(arg use_hector_mapping)" />
-    <arg name="map_name_" value="$(arg map_name)" />
-    <arg name="use_sbpl_" value="$(arg use_sbpl)" />
-    <arg name="sbpl_planner_" value="$(arg sbpl_planner)" />
-  </include>
+    <!-- LIMITS -->
+    <param name="max_xspeed" value="4.0"/>
+    <param name="max_yawspeed" value="2.1"/>
+
+    <include unless="$(arg sim)" file="$(find segbot_2dnav)/launch/segbot_hardware.launch">
+        <arg name="sim" value="$(arg sim)"/>
+        <arg name="use_base_laser" value="$(arg use_base_laser)"/>
+        <arg name="use_tilt_laser" value="$(arg use_tilt_laser)"/>
+        <arg name="use_servos" value="$(arg use_servos)"/>
+        <arg name="use_gps" value="$(arg use_gps)"/>
+        <arg name="use_teleop" value="$(arg use_teleop)"/>
+        <arg name="use_camera" value="$(arg use_camera)"/>
+        <arg name="use_segway_rmp" value="$(arg use_segway_rmp)"/>
+    </include>
+    <include file="$(find segbot_2dnav)/launch/segbot_move_base.launch">
+        <arg name="use_tilt_laser" value="$(arg use_tilt_laser)"/>
+        <arg name="use_gps" value="$(arg use_gps)"/>
+        <arg name="use_move_base" value="$(arg use_move_base)"/>
+        <arg name="use_slam" value="$(arg use_slam)"/>
+        <arg name="use_gmapping" value="$(arg use_gmapping)"/>
+        <arg name="use_hector_mapping" value="$(arg use_hector_mapping)"/>
+        <arg name="map_name" value="$(arg map_name)"/>
+        <arg name="use_sbpl" value="$(arg use_sbpl)"/>
+        <arg name="sbpl_planner" value="$(arg sbpl_planner)"/>
+    </include>
 </launch>

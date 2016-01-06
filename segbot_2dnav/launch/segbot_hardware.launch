@@ -1,87 +1,91 @@
 <launch>
-  <arg name="use_tilt_laser_"/>
-  <arg name="use_servos_"/>
-  <arg name="use_teleop_"/>
-  <arg name="use_gps_"/>
-  <arg name="use_camera_"/>
-  <arg name="use_segway_rmp_"/>
+    <arg name="sim">
+    <arg name="use_base_laser"/>
+    <arg name="use_tilt_laser"/>
+    <arg name="use_servos"/>
+    <arg name="use_teleop"/>
+    <arg name="use_gps"/>
+    <arg name="use_camera"/>
+    <arg name="use_segway_rmp"/>
 
-  <node pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true" if="$(arg use_camera_)">
-  </node>
-  
-  <!-- <include file="$(find segway_robot)/launch/segbot.machine" /> -->
+    <!-- Send URDF to param server -->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/robots/segbot_without_arm.urdf.xacro'"/>
 
-  <node name="base_laser" pkg="hokuyo_node" type="hokuyo_node">
-    <param name="port" value="/dev/sensors/hokuyo_H0901182" />
-    <param name="frame_id" value="/base_laser_link" />
-    <param name="min_ang" value="-1.57" />
-    <param name="max_ang" value="1.57" />
-    <remap from="scan" to="base_scan"/>
-  </node>
+    <group unless="$(arg sim)">
+        <node if="$(arg use_camera)" pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true"/>
 
-  <!-- Tilt Laser -->
-  <node name="tilt_laser" pkg="urg_node" type="urg_node" if="$(arg use_tilt_laser_)">
-   <param name="ip_address" value="172.16.106.33" />
-    <param name="publish_multiecho" value="false" />
-    <param name="frame_id" value="tilt_laser_link" />
-    <param name="angle_min" value="-1.00" />
-    <param name="angle_max" value="1.00" />
-    <remap from="scan" to="tilt_scan"/>
-  </node>
+        <!--
+        <include file="$(find segway_robot)/launch/segbot.machine"/>
+        -->
 
-  <!-- Servos -->
-  <node name="servo_node" pkg="servo_node" type="servo_node" if="$(arg use_servos_)" >
-    <param name="device_name" value="/dev/servo" />
-    <param name="baud_rate" value="57600" />
-    <rosparam param="servoID">[1,2]</rosparam>
-    <rosparam param="minAngle">[-8,-57]</rosparam>
-    <rosparam param="maxAngle">[-8,43]</rosparam>
-    <rosparam param="velocity">[10,100]</rosparam>
-  </node>
+        <node if="$(arg use_base_laser)" name="base_laser" pkg="hokuyo_node" type="hokuyo_node">
+            <param name="port" value="/dev/sensors/hokuyo_H0901182"/>
+            <param name="frame_id" value="/base_laser_link"/>
+            <param name="min_ang" value="-1.57"/>
+            <param name="max_ang" value="1.57"/>
+            <remap from="scan" to="base_scan"/>
+        </node>
 
-  <!-- Segway RMP -->
-  <node name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node" output="screen" if="$(arg use_segway_rmp_)" >
-    <param name="interface_type" type="str" value="serial" /> 
-    <param name="serial_port" type="str" value="/dev/segway_rmp" /> 
-    <param name="frame_id" type="str" value="base_footprint" />
-    <remap from="~cmd_vel" to="/cmd_vel" />
-    <param name="linear_odom_scale" type="double" value="0.9" />
-    <param name="angular_odom_scale" type="double" value="0.89" />
-  </node>
+        <!-- Tilt Laser -->
+        <node if="$(arg use_tilt_laser)" name="tilt_laser" pkg="urg_node" type="urg_node">
+        <param name="ip_address" value="172.16.106.33"/>
+            <param name="publish_multiecho" value="false"/>
+            <param name="frame_id" value="tilt_laser_link"/>
+            <param name="angle_min" value="-1.00"/>
+            <param name="angle_max" value="1.00"/>
+            <remap from="scan" to="tilt_scan"/>
+        </node>
 
-  <!--Static odom transform -->
-  <node pkg="tf" type="static_transform_publisher" name="not_moving_segway" args="1 0 0 0 0 0 1 /odom /base_footprint 100" unless="$(arg use_segway_rmp_)" />
+        <!-- Servos -->
+        <node if="$(arg use_servos)" name="servo_node" pkg="servo_node" type="servo_node">
+            <param name="device_name" value="/dev/servo"/>
+            <param name="baud_rate" value="57600"/>
+            <rosparam param="servoID">[1,2]</rosparam>
+            <rosparam param="minAngle">[-8,-57]</rosparam>
+            <rosparam param="maxAngle">[-8,43]</rosparam>
+            <rosparam param="velocity">[10,100]</rosparam>
+        </node>
 
-  <!-- Send urdf to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/robots/segbot_without_arm.urdf.xacro'" />
+        <!-- Segway RMP -->
+        <node if="$(arg use_segway_rmp)" name="segway_rmp" pkg="segway_rmp" type="segway_rmp_node">
+            <param name="interface_type" type="str" value="serial"/>
+            <param name="serial_port" type="str" value="/dev/segway_rmp"/>
+            <param name="frame_id" type="str" value="base_footprint"/>
+            <remap from="~cmd_vel" to="/cmd_vel"/>
+            <param name="linear_odom_scale" type="double" value="0.9"/>
+            <param name="angular_odom_scale" type="double" value="0.89"/>
+        </node>
 
-  <!-- Controller manager -->
-  <include file="$(find pr2_controller_manager)/controller_manager.launch" />
+        <!--Static odom transform -->
+        <node unless="$(arg use_segway_rmp)" name="not_moving_segway" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 /odom /base_footprint 100"/>
 
-  <!-- Load controllers -->
-  <rosparam file="$(find servo_controller)/config/servo_controller.yaml" command="load" />
-  <node pkg="pr2_controller_manager" type="spawner" args="servo_controller_name" name="servo_controller_spawner"/>
+        <!-- Controller manager -->
+        <include file="$(find pr2_controller_manager)/controller_manager.launch"/>
 
-  <!-- Controller loop -->
-  <node name="controller_loop" pkg="segbot_2dnav" type="controller_manager" args="-x robot_description"/> 
+        <!-- Load controllers -->
+        <rosparam file="$(find servo_controller)/config/servo_controller.yaml" command="load"/>
+        <node name="servo_controller_spawner" pkg="pr2_controller_manager" type="spawner" args="servo_controller_name"/>
 
-  <!-- PS3 Controller for teleop -->
-  <include file="$(find teleop_segbot)/launch/teleop_joystick.launch" if="$(arg use_teleop_)" />
+        <!-- Controller loop -->
+        <node name="controller_loop" pkg="segbot_2dnav" type="controller_manager" args="-x robot_description"/>
+    </group>
 
-  <!-- Commanded Velocity Filter -->
-  <include file="$(find command_velocity_filter)/launch/command_velocity_filter.launch" />
+    <!-- PS3 Controller for teleop -->
+    <include file="$(find teleop_segbot)/launch/teleop_joystick.launch" if="$(arg use_teleop)"/>
 
-  <!-- Bring up the GPS -->
-  <include file="$(find gps_for_ekf)/launch/gps_for_ekf_node.launch" if="$(arg use_gps_)" />
+    <!-- Commanded Velocity Filter -->
+    <include file="$(find command_velocity_filter)/launch/command_velocity_filter.launch"/>
 
-  <!-- Run Extended Kalman Filter to combine odometry and GPS data -->
-  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" if="$(arg use_gps_)">
-    <param name="freq" value="30.0"/>
-    <param name="sensor_timeout" value="1.0"/>
-    <param name="publish_tf" value="true"/>
-    <param name="odom_used" value="true"/>
-    <param name="imu_used" value="false"/>
-    <param name="vo_used" value="true"/>
-  </node>
+    <!-- Bring up the GPS -->
+    <include if="$(arg use_gps)" file="$(find gps_for_ekf)/launch/gps_for_ekf_node.launch"/>
 
+    <!-- Run Extended Kalman Filter to combine odometry and GPS data -->
+    <node if="$(arg use_gps)" name="robot_pose_ekf" pkg="robot_pose_ekf" type="robot_pose_ekf">
+        <param name="freq" value="30.0"/>
+        <param name="sensor_timeout" value="1.0"/>
+        <param name="publish_tf" value="true"/>
+        <param name="odom_used" value="true"/>
+        <param name="imu_used" value="false"/>
+        <param name="vo_used" value="true"/>
+    </node>
 </launch>
