@@ -96,8 +96,8 @@ void command_velocity_filter_node::filter_velocities(const geometry_msgs::Twist&
 	double prev_vy = prev_vel.linear.y;
 	double prev_vw = prev_vel.angular.z;
 
-	ROS_INFO("input: vx %f vy %f vw %f", vx,vy,vw);
-	ROS_INFO("prev: vx %f vy %f vw %f", prev_vx, prev_vw, prev_vw);
+	ROS_DEBUG("input: vx %f vy %f vw %f", vx,vy,vw);
+	ROS_DEBUG("prev: vx %f vy %f vw %f", prev_vx, prev_vw, prev_vw);
 
 	// get differences of velocities
 	double vx_diff = vx - prev_vx;
@@ -133,7 +133,7 @@ void command_velocity_filter_node::filter_velocities(const geometry_msgs::Twist&
 	output_vel.linear.y = vy;
 	output_vel.angular.z = vw;
 
-	ROS_INFO("output: vx %f vy %f vw %f\n", vx, vy, vw );
+	ROS_DEBUG("output: vx %f vy %f vw %f", vx, vy, vw);
 
 }
 
