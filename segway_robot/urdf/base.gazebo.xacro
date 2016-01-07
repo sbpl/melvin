@@ -23,6 +23,8 @@
 
         <gazebo reference="segway_trailer_wheel">
             <material>Gazebo/Red</material>
+            <mu1>0.2</mu1>
+            <mu2>0.2</mu2>
         </gazebo>
 
         <gazebo reference="battery_one">
@@ -55,7 +57,7 @@
                 <updateRate>100.0</updateRate>
 
                 <rosDebugLevel>info</rosDebugLevel>
-                <commandTopic>cmd_vel</commandTopic>
+                <commandTopic>cmd_vel_sim</commandTopic>
                 <odometryTopic>odom</odometryTopic>
                 <odometryFrame>odom</odometryFrame>
                 <robotBaseFrame>base_footprint</robotBaseFrame>
