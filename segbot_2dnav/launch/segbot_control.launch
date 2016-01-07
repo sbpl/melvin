@@ -1,0 +1,7 @@
+<launch>
+    <arg name="use_teleop"/>
+
+    <include if="$(arg use_teleop)" file="$(find teleop_segbot)/launch/teleop_joystick.launch"/>
+
+    <include file="$(find command_velocity_filter)/launch/command_velocity_filter.launch"/>
+</launch>
