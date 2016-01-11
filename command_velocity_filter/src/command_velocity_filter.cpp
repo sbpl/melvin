@@ -28,24 +28,23 @@ void command_velocity_filter_node::setup_ros()
 
 	//load private params
 	pn.getParam("frame_name", frame_name);
-	pn.getParam("input_command_vel_topic_name", received_cmd_vel_topic_name);
 	pn.getParam("command_vel_topic_name", publish_cmd_vel_topic_name);
 	pn.getParam("command_vel_pub_rate", cmd_vel_pub_rate);
 	pn.getParam("linear_acc_limit", acc_linear_limit);
 	pn.getParam("angular_acc_limit", acc_angular_limit);
 
-	ROS_INFO("subscribed to %s and publish as %s\n", received_cmd_vel_topic_name.c_str(), publish_cmd_vel_topic_name.c_str());
 	ROS_INFO("linear acc limit %f  , angular acc limit %f \n", acc_linear_limit, acc_angular_limit);
 
 	//setup subscribers
-	cmd_vel_sub = n.subscribe(received_cmd_vel_topic_name, 1, &command_velocity_filter_node::cmd_vel_callback, this);
+	cmd_vel_sub = n.subscribe("cmd_vel_in", 1, &command_velocity_filter_node::cmd_vel_callback, this);
 
 	//setup timers
 	cmd_vel_publish_timer = n.createTimer(ros::Duration(1.0 / cmd_vel_pub_rate), &command_velocity_filter_node::timer_callback, this);
 
 	//setup publishers
-	cmd_vel_pub = pn.advertise<geometry_msgs::Twist>(publish_cmd_vel_topic_name, 1);
+	cmd_vel_pub = n.advertise<geometry_msgs::Twist>("cmd_vel_out", 1);
 
+    ROS_INFO("subscribed to %s and publish as %s\n", cmd_vel_sub.getTopic().c_str(), cmd_vel_pub.getTopic().c_str());
 }
 
 void command_velocity_filter_node::cmd_vel_callback(const geometry_msgs::TwistConstPtr& msg)

@@ -1,9 +1,5 @@
 frame_name: /map
 
-#ros related
-input_command_vel_topic_name: /raw_cmd_vel
-command_vel_topic_name: /cmd_vel
-
 #set this to same rate as node that is publishing.  Will gradually lower velocity to 0 if set too high.
 command_vel_pub_rate: 20
 
