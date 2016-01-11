@@ -29,6 +29,7 @@
 
                 <plugin name="gazebo_ros_base_laser_controller"
                         filename="libgazebo_ros_gpu_laser.so">
+                    <robotNamespace>segbot</robotNamespace>
                     <topicName>base_scan</topicName>
                     <frameName>base_laser_link</frameName>
                 </plugin>
@@ -63,6 +64,7 @@
 
                 <plugin name="gazebo_ros_tilt_laser_controller"
                         filename="libgazebo_ros_gpu_laser.so">
+                    <robotNamespace>segbot</robotNamespace>
                     <topicName>tilt_scan</topicName>
                     <frameName>tilt_laser_link</frameName>
                 </plugin>

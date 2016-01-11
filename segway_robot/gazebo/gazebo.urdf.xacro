@@ -4,7 +4,7 @@
         <static>false</static>
 
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace></robotNamespace>
+            <robotNamespace>segbot</robotNamespace>
             <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
         </plugin>
     </gazebo>
