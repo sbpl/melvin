@@ -50,7 +50,7 @@
             <rosparam param="velocity">[10,100]</rosparam>
         </node>
 
-        <node if="$(arg use_camera)" pkg="usb_cam" type="usb_cam_node" name="segbot_cam" respawn="true"/>
+        <node if="$(arg use_camera)" name="segbot_cam" pkg="usb_cam" type="usb_cam_node" respawn="true"/>
 
         <!--Static odom transform -->
         <node unless="$(arg use_segway_rmp)" name="not_moving_segway" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 /odom /base_footprint 100"/>
