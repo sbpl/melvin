@@ -9,7 +9,7 @@
         <!--<remap from="move_base_simple/goal" to="/goal" />-->
         <param name="controller_frequency" value="20.0"/>
         <param name="planner_frequency" value="0.33"/>
-        <param name="global_costmap/robot_base_frame" value="/base_footprint"/>
+        <param name="global_costmap/robot_base_frame" value="base_footprint"/>
 
         <param name="recovery_behavior_enabled" value="false"/>
         <param if="$(arg use_sbpl)" name="base_global_planner" value="$(arg sbpl_planner)"/>

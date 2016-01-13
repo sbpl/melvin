@@ -1,14 +1,15 @@
-#Independent settings for the planner's costmap
-global_costmap: 
-  global_frame: /map
-  robot_base_frame: base_footprint
-  update_frequency: 0.5
-  publish_frequency: 1.0
-  publish_voxel_map: false
-  static_map: true
-  rolling_window: false
-  track_unknown_space: true
-  unknown_cost_value: 255
-  unknown_threshold: 9
-  mark_threshold: 0
-  map_type: voxel
+# Independent settings for the global costmap
+global_costmap:
+    global_frame: map
+    robot_base_frame: base_footprint
+    update_frequency: 0.5
+    publish_frequency: 1.0
+    publish_voxel_map: false
+    static_map: true
+    rolling_window: false
+    track_unknown_space: true
+    unknown_cost_value: 255
+    unknown_threshold: 9
+    mark_threshold: 0
+    map_type: voxel
+
