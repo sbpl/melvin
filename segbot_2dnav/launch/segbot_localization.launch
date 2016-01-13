@@ -1,5 +1,5 @@
 <launch>
-    <arg name="ns" default=""/>
+    <arg name="ns" default="false"/>
 
     <arg name="use_slam"/>
     <arg name="map_name"/>
@@ -9,12 +9,21 @@
 
     <!-- arguments only applicable towards hector slam -->
     <arg name="tf_map_scanmatch_transform_frame_name"   default="scanmatcher_frame"/>
-    <arg name="base_frame"                              default="base_footprint"/>
+    <arg name="map_frame"                               default="map"/>
     <arg name="odom_frame"                              default="odom"/>
+    <arg name="base_frame"                              default="base_footprint"/>
     <arg name="pub_map_odom_transform"                  default="true"/>
     <arg name="scan_subscriber_queue_size"              default="5"/>
     <arg name="scan_topic"                              default="base_scan"/>
     <arg name="map_size"                                default="2048"/>
+
+    <!-- ...because not every loves tf_prefix :( -->
+    <arg if="$(arg ns)"     name="map_frame_id"  value="segbot/$(arg map_frame)"/>
+    <arg if="$(arg ns)"     name="base_frame_id" value="segbot/$(arg base_frame)"/>
+    <arg if="$(arg ns)"     name="odom_frame_id" value="segbot/$(arg odom_frame)"/>
+    <arg unless="$(arg ns)" name="map_frame_id"  value="$(arg map_frame)"/>
+    <arg unless="$(arg ns)" name="base_frame_id" value="$(arg base_frame)"/>
+    <arg unless="$(arg ns)" name="odom_frame_id" value="$(arg odom_frame)"/>
 
     <!-- map -->
     <node unless="$(arg use_slam)" name="map_server" pkg="map_server" type="map_server" args="$(find segbot_2dnav)/maps/$(arg map_name) 0.05" respawn="false"/>
@@ -22,7 +31,7 @@
     <!-- localization -->
     <node unless="$(arg use_slam)" name="amcl" pkg="amcl" type="amcl" respawn="true">
         <remap from="scan" to="base_scan" />
-        <param name="base_frame_id" value="base_footprint"/>
+        <param name="base_frame_id" value="$(arg base_frame)"/>
         <param name="odom_model_type" value="diff"/>
         <param name="odom_alpha5" value="0.1"/>
         <param name="transform_tolerance" value="0.2" />
@@ -60,7 +69,7 @@
     <group if="$(arg use_slam)">
         <node if="$(arg use_gmapping)" name="slam_gmapping" pkg="gmapping" type="slam_gmapping">
             <remap from="scan" to="base_scan"/>
-            <param name="base_frame" value="base_footprint"/>
+            <param name="base_frame" value="$(arg base_frame)"/>
 
             <param unless="$(arg use_gps)" name="odom_frame" value="odom"/>
             <param if="$(arg use_gps)" name="odom_frame" value="odom_combined"/>
@@ -97,9 +106,9 @@
 
         <node if="$(arg use_hector_mapping)" name="hector_mapping" pkg="hector_mapping" type="hector_mapping">
             <!-- Frame names -->
-            <param name="map_frame" value="$(arg ns)/map"/>
-            <param name="base_frame" value="$(arg ns)/$(arg base_frame)"/>
-            <param name="odom_frame" value="$(arg ns)/$(arg odom_frame)"/>
+            <param name="map_frame" value="$(arg map_frame_id)"/>
+            <param name="odom_frame" value="$(arg odom_frame_id)"/>
+            <param name="base_frame" value="$(arg base_frame_id)"/>
 
             <!-- Tf use -->
             <param name="use_tf_scan_transformation" value="true"/>

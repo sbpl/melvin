@@ -1,29 +1,47 @@
 <launch>
+    <arg name="ns"  default="false"/>
     <arg name="sim" default="false"/>
-    <arg name="ns" default=""/>
 
-    <group ns="$(arg ns)">
+    <group if="$(arg ns)" ns="segbot">
+        <param name="tf_prefix" value="segbot"/>
 
-    <param name="tf_prefix" value="$(arg ns)"/>
+        <group if="$(arg sim)">
+            <rosparam command="load" file="$(find segbot_control)/config/segbot_control.yaml"/>
 
-    <group if="$(arg sim)">
-        <rosparam command="load" file="$(find segbot_control)/config/segbot_control.yaml"/>
+            <node name="controller_spawner" pkg="controller_manager" type="spawner"
+                    args="joint_state_controller base_laser_controller tilt_laser_controller"/>
 
-        <node name="controller_spawner" pkg="controller_manager" type="spawner"
-                args="joint_state_controller base_laser_controller tilt_laser_controller"/>
+            <node name="pub_base_laser_command" pkg="rostopic" type="rostopic"
+                    args="pub base_laser_controller/command std_msgs/Float64 0.18"/>
+            <node name="pub_tilt_laser_command" pkg="rostopic" type="rostopic"
+                    args="pub tilt_laser_controller/command std_msgs/Float64 0.0"/>
 
-        <node name="pub_base_laser_command" pkg="rostopic" type="rostopic"
-                args="pub base_laser_controller/command std_msgs/Float64 0.18"/>
-        <node name="pub_tilt_laser_command" pkg="rostopic" type="rostopic"
-                args="pub tilt_laser_controller/command std_msgs/Float64 0.0"/>
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-
-        <node name="twist_ned_transformer" pkg="segbot_gazebo" type="twist_ned_transformer">
-            <remap from="cmd_vel_in" to="cmd_vel"/>
-            <remap from="cmd_vel_out" to="cmd_vel_sim"/>
-        </node>
+            <node name="twist_ned_transformer" pkg="segbot_gazebo" type="twist_ned_transformer">
+                <remap from="cmd_vel_in" to="cmd_vel"/>
+                <remap from="cmd_vel_out" to="cmd_vel_sim"/>
+            </node>
+        </group>
     </group>
+    <group unless="$(arg ns)">
+        <group if="$(arg sim)">
+            <rosparam command="load" file="$(find segbot_control)/config/segbot_control.yaml"/>
 
+            <node name="controller_spawner" pkg="controller_manager" type="spawner"
+                    args="joint_state_controller base_laser_controller tilt_laser_controller"/>
+
+            <node name="pub_base_laser_command" pkg="rostopic" type="rostopic"
+                    args="pub base_laser_controller/command std_msgs/Float64 0.18"/>
+            <node name="pub_tilt_laser_command" pkg="rostopic" type="rostopic"
+                    args="pub tilt_laser_controller/command std_msgs/Float64 0.0"/>
+
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+            <node name="twist_ned_transformer" pkg="segbot_gazebo" type="twist_ned_transformer">
+                <remap from="cmd_vel_in" to="cmd_vel"/>
+                <remap from="cmd_vel_out" to="cmd_vel_sim"/>
+            </node>
+        </group>
     </group>
 </launch>
