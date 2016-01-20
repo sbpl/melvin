@@ -44,6 +44,13 @@
                     <mesh filename="package://segway_robot/meshes/convex/segway_base_convex.stlb"/>
                 </geometry>
             </collision>
+
+            <collision>
+                <origin xyz="-0.03164 0.12438 0.00167" rpy="1.5708 0 0"/>
+                <geometry name="segway_base_table_geom">
+                    <cylinder radius="0.3054" length="0.01587"/>
+                </geometry>
+            </collision>
         </link>
 
         <link name="segway_left_wheel">
