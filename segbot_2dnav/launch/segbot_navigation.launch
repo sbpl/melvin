@@ -5,8 +5,8 @@
     <arg name="sbpl_planner"/>
 
     <node if="$(arg use_move_base)" pkg="move_base" type="move_base" respawn="false" name="move_base">
-        <remap from="map" to="/map"/>
-        <!--<remap from="move_base_simple/goal" to="/goal" />-->
+        <!--<remap from="move_base_simple/goal" to="goal" />-->
+
         <param name="controller_frequency" value="20.0"/>
         <param name="planner_frequency" value="0.33"/>
         <param name="global_costmap/robot_base_frame" value="base_footprint"/>
