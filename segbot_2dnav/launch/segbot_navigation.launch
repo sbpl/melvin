@@ -17,10 +17,12 @@
         <param unless="$(arg use_sbpl)" name="base_global_planner" value="navfn/NavfnROS"/>
         <rosparam file="$(find segbot_2dnav)/config/sbpl_global_params.yaml" command="load" if="$(arg use_sbpl)"/>
 
-        <rosparam unless="$(arg use_tilt_laser)" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
-        <rosparam unless="$(arg use_tilt_laser)" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
-        <rosparam if="$(arg use_tilt_laser)" file="$(find segbot_2dnav)/config/costmap_common_params_with_tilt.yaml" command="load" ns="global_costmap"/>
-        <rosparam if="$(arg use_tilt_laser)" file="$(find segbot_2dnav)/config/costmap_common_params_with_tilt.yaml" command="load" ns="local_costmap"/>
+        <rosparam command="load" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" ns="global_costmap"/>
+        <rosparam command="load" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" ns="local_costmap"/>
+        <rosparam if="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_and_tilt_params.yaml" ns="global_costmap"/>
+        <rosparam if="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_and_tilt_params.yaml" ns="local_costmap"/>
+        <rosparam unless="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_params.yaml" ns="global_costmap"/>
+        <rosparam unless="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_params.yaml" ns="local_costmap"/>
 
         <rosparam file="$(find segbot_2dnav)/config/local_costmap_params.yaml" command="load"/>
         <rosparam file="$(find segbot_2dnav)/config/global_costmap_params.yaml" command="load"/>
