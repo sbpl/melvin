@@ -1,8 +1,8 @@
 <launch>
   <!-- map -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find segway_robot)/worlds/willowMap.pgm 0.1" respawn="false"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find segbot_description)/worlds/willowMap.pgm 0.1" respawn="false"/>
 
-  <!-- this launch file corresponds to robot model in pkgs/segway_robot for full erratic -->
+  <!-- this launch file corresponds to robot model in pkgs/segbot_description for full erratic -->
   <!-- start up wg world 
   <include file="$(find gazebo)/launch/empty_world.launch"/> -->
   <include file="$(find gazebo)/launch/wg_world.launch"/> 
@@ -11,7 +11,7 @@
   <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_footprint segway_base 40" /> -->
 
   <!-- send segbot.xml to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segway_robot)/robots/segbot_without_arm.urdf.xacro'"/>
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find segbot_description)/robots/segbot_without_arm.urdf.xacro'"/>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_segway" pkg="gazebo_tools" type="gazebo_model" args="-z 0.7 -p robot_description spawn robot_description" respawn="false" output="screen"/>
@@ -37,14 +37,14 @@
     <param name="global_costmap/robot_base_frame" value="/base_footprint"/>
 
     <param name="base_global_planner" value="SBPLGlobalPlanner"/>
-    <param name="SBPLGlobalPlanner/primitive_filename" value="$(find segway_robot)/config/move_base/segbot_10cm.mprim"/>
+    <param name="SBPLGlobalPlanner/primitive_filename" value="$(find segbot_description)/config/move_base/segbot_10cm.mprim"/>
 
-    <rosparam file="$(find segway_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
-    <rosparam file="$(find segway_robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
-    <rosparam file="$(find segway_robot)/config/move_base/local_costmap_params.yaml" command="load"/>
-    <rosparam file="$(find segway_robot)/config/move_base/global_costmap_params.yaml" command="load"/>
-    <rosparam file="$(find segway_robot)/config/move_base/navfn_params.yaml" command="load"/>
-    <rosparam file="$(find segway_robot)/config/move_base/base_local_planner_params.yaml" command="load"/>
+    <rosparam file="$(find segbot_description)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find segbot_description)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find segbot_description)/config/move_base/local_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find segbot_description)/config/move_base/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find segbot_description)/config/move_base/navfn_params.yaml" command="load"/>
+    <rosparam file="$(find segbot_description)/config/move_base/base_local_planner_params.yaml" command="load"/>
   </node>
 
   <!-- localization 

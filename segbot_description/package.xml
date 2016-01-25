@@ -1,7 +1,7 @@
 <package format="2">
-    <name>segway_robot</name>
+    <name>segbot_description</name>
     <version>0.0.0</version>
-    <description>segway_robot</description>
+    <description>segbot_description</description>
     <maintainer email="andrew.dornbush@gmail.com">Andrew Dornbush</maintainer>
     <author>UPenn</author>
     <license>TODO</license>

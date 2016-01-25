@@ -1,16 +1,14 @@
 <launch>
     <arg name="gui" default="false"/>
 
-    <node name="gzclient" pkg="gazebo_ros" type="gzclient" if="$(arg gui)"/>
+    <node if="$(arg gui)" name="gzclient" pkg="gazebo_ros" type="gzclient"/>
 
-    <param name="robot_description"
-            command="$(find xacro)/xacro.py '$(find segway_robot)/robots/segbot_without_arm.urdf.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find segbot_description)/robots/segbot_without_arm.urdf.xacro'"/>
 
     <include file="$(find segbot_gazebo)/launch/empty_world.launch">
         <arg name="world_name" value="$(find segbot_gazebo)/worlds/segbot.world"/>
         <arg name="gui" value="false"/>
     </include>
 
-    <node name="spawn_segbot" pkg="gazebo_ros" type="spawn_model"
-            args="-param robot_description -urdf -model segbot -z 0.2"/>
+    <node name="spawn_segbot" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model segbot -z 0.2"/>
 </launch>

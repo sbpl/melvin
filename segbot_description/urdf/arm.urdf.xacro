@@ -21,7 +21,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="arm_base-geom">
-          <mesh filename="package://segway_robot/meshes/arm_base.stl" />
+          <mesh filename="package://segbot_description/meshes/arm_base.stl" />
         </geometry>
         <material name="Green" />
     </visual>
@@ -29,7 +29,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="arm_base_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/arm_base_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/arm_base_convex.stlb" />
       </geometry>
     </collision>
 
@@ -45,7 +45,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="shoulder_pan-geom">
-          <mesh filename="package://segway_robot/meshes/shoulder_pan.stl" />
+          <mesh filename="package://segbot_description/meshes/shoulder_pan.stl" />
         </geometry>
         <material name="Red" />
     </visual>
@@ -53,7 +53,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="shoulder_pan_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/shoulder_pan_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/shoulder_pan_convex.stlb" />
       </geometry>
     </collision>
 
@@ -69,7 +69,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="shoulder_pitch-geom">
-          <mesh filename="package://segway_robot/meshes/shoulder_pitch.stl" />
+          <mesh filename="package://segbot_description/meshes/shoulder_pitch.stl" />
         </geometry>
         <material name="Blue" />
     </visual>
@@ -77,7 +77,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="shoulder_pitch_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/shoulder_pitch_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/shoulder_pitch_convex.stlb" />
       </geometry>
     </collision>
 
@@ -93,7 +93,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="upper_arm_roll-geom">
-          <mesh filename="package://segway_robot/meshes/upper_arm_roll.stl" />
+          <mesh filename="package://segbot_description/meshes/upper_arm_roll.stl" />
         </geometry>
         <material name="Green" />
     </visual>
@@ -101,7 +101,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="upper_arm_roll_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/upper_arm_roll_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/upper_arm_roll_convex.stlb" />
       </geometry>
     </collision>
 
@@ -117,7 +117,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="elbow_lift-geom">
-          <mesh filename="package://segway_robot/meshes/elbow_lift.stl" />
+          <mesh filename="package://segbot_description/meshes/elbow_lift.stl" />
         </geometry>
         <material name="Red" />
     </visual>
@@ -125,7 +125,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="elbow_lift_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/elbow_lift_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/elbow_lift_convex.stlb" />
       </geometry>
     </collision>
 
@@ -141,7 +141,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="forearm_roll-geom">
-          <mesh filename="package://segway_robot/meshes/forearm_roll.stl" />
+          <mesh filename="package://segbot_description/meshes/forearm_roll.stl" />
         </geometry>
         <material name="Blue" />
     </visual>
@@ -149,7 +149,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="forearm_roll_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/forearm_roll_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/forearm_roll_convex.stlb" />
       </geometry>
     </collision>
 
@@ -165,7 +165,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="wrist_roll-geom">
-          <mesh filename="package://segway_robot/meshes/wrist_roll.stl" />
+          <mesh filename="package://segbot_description/meshes/wrist_roll.stl" />
         </geometry>
         <material name="Green" />
     </visual>
@@ -173,7 +173,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="wrist_roll_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/wrist_roll_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/wrist_roll_convex.stlb" />
       </geometry>
     </collision>
 
@@ -189,7 +189,7 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry name="wrist_pitch-geom">
-          <mesh filename="package://segway_robot/meshes/wrist_pitch.stl" />
+          <mesh filename="package://segbot_description/meshes/wrist_pitch.stl" />
         </geometry>
         <material name="Red" />
     </visual>
@@ -197,7 +197,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="wrist_pitch_collision_geom">
-      <mesh filename="package://segway_robot/meshes/convex/wrist_pitch_convex.stlb" />
+      <mesh filename="package://segbot_description/meshes/convex/wrist_pitch_convex.stlb" />
       </geometry>
     </collision>
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(segway_robot)
+project(segbot_description)
 
 set(CMAKE_BUILD_TYPE Release)
 
@@ -15,13 +15,13 @@ catkin_package()
 # iterate through all the stl files to:
 #  1. convert to *.iv files
 #  2. generate convex decomposed .stl
-file(GLOB segway_robot_stl_files ${CMAKE_CURRENT_SOURCE_DIR}/meshes/*.stl)
-set(segway_robot_gen_files "")
+file(GLOB segbot_description_stl_files ${CMAKE_CURRENT_SOURCE_DIR}/meshes/*.stl)
+set(segbot_description_gen_files "")
 
 set(IV_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/meshes/iv)
 set(CONVEX_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/meshes/convex)
 
-foreach(it ${segway_robot_stl_files})
+foreach(it ${segbot_description_stl_files})
     get_filename_component(basepath ${it} PATH)
     get_filename_component(basename ${it} NAME_WE)
 
@@ -47,7 +47,7 @@ foreach(it ${segway_robot_stl_files})
                 ARGS ${it} ${CONVEX_BINARY_DIR}/${basename}.obj
                 DEPENDS ${it} ${CONVEX_BINARY_DIR})
 
-        set(segway_robot_gen_files ${segway_robot_gen_files} ${CONVEX_BINARY_DIR}/${basename}.obj)
+        set(segbot_description_gen_files ${segbot_description_gen_files} ${CONVEX_BINARY_DIR}/${basename}.obj)
 
         # convex_decomposition: convex/*.obj -> convex/*_convex.obj
         add_custom_command(
@@ -56,7 +56,7 @@ foreach(it ${segway_robot_stl_files})
                 ARGS ${CONVEX_BINARY_DIR}/${basename}.obj -v20 -p10
                 DEPENDS ${CONVEX_BINARY_DIR}/${basename}.obj ${CONVEX_BINARY_DIR})
 
-        set(segway_robot_gen_files ${segway_robot_gen_files} ${CONVEX_BINARY_DIR}/${basename}_convex.obj)
+        set(segbot_description_gen_files ${segbot_description_gen_files} ${CONVEX_BINARY_DIR}/${basename}_convex.obj)
 
         # conversion: convex/*_convex.obj -> convex/*._convex.stlb
         add_custom_command(
@@ -65,7 +65,7 @@ foreach(it ${segway_robot_stl_files})
             ARGS ${CONVEX_BINARY_DIR}/${basename}_convex.obj ${CONVEX_BINARY_DIR}/${basename}_convex.stlb
             DEPENDS ${it} ${CONVEX_BINARY_DIR} ${CONVEX_BINARY_DIR}/${basename}_convex.obj)
 
-        set(segway_robot_gen_files ${segway_robot_gen_files} ${CONVEX_BINARY_DIR}/${basename}_convex.stlb)
+        set(segbot_description_gen_files ${segbot_description_gen_files} ${CONVEX_BINARY_DIR}/${basename}_convex.stlb)
 
         # convesion: convex/*_convex.obj -> convex/*_convex.stla
         add_custom_command(
@@ -74,7 +74,7 @@ foreach(it ${segway_robot_stl_files})
                 ARGS ${CONVEX_BINARY_DIR}/${basename}_convex.obj ${CONVEX_BINARY_DIR}/${basename}_convex.stla
                 DEPENDS ${it} ${CONVEX_BINARY_DIR} ${CONVEX_BINARY_DIR}/${basename}_convex.obj)
 
-        set(segway_robot_gen_files ${segway_robot_gen_files} ${CONVEX_BINARY_DIR}/${basename}_convex.stla)
+        set(segbot_description_gen_files ${segbot_description_gen_files} ${CONVEX_BINARY_DIR}/${basename}_convex.stla)
 
         # conversion: *.stl -> iv/*.iv
         add_custom_command(
@@ -90,11 +90,11 @@ foreach(it ${segway_robot_stl_files})
                 ARGS ${CONVEX_BINARY_DIR}/${basename}_convex.obj ${CONVEX_BINARY_DIR}/${basename}_convex.iv
                 DEPENDS ${it} ${CONVEX_BINARY_DIR} ${CONVEX_BINARY_DIR}/${basename}_convex.obj)
 
-        set(segway_robot_gen_files ${segway_robot_gen_files} ${IV_BINARY_DIR}/${basename}.iv ${CONVEX_BINARY_DIR}/${basename}_convex.iv)
+        set(segbot_description_gen_files ${segbot_description_gen_files} ${IV_BINARY_DIR}/${basename}.iv ${CONVEX_BINARY_DIR}/${basename}_convex.iv)
     endif (${basename} MATCHES "_convex")
 endforeach(it)
 
-add_custom_target(media_files ALL DEPENDS ${segway_robot_gen_files})
+add_custom_target(media_files ALL DEPENDS ${segbot_description_gen_files})
 
 install(DIRECTORY gazebo DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

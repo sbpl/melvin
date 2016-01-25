@@ -8,7 +8,7 @@
     <arg name="use_segway_rmp"/>
 
     <!--
-    <include file="$(find segway_robot)/launch/segbot.machine"/>
+    <include file="$(find segbot_description)/launch/segbot.machine"/>
     -->
 
     <group unless="$(arg sim)">

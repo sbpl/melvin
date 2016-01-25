@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:include filename="$(find segway_robot)/urdf/sensors.gazebo.xacro"/>
+    <xacro:include filename="$(find segbot_description)/urdf/sensors.gazebo.xacro"/>
 
     <xacro:macro name="sensors" params="name">
         <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:include filename="$(find segway_robot)/urdf/base.gazebo.xacro"/>
-    <xacro:include filename="$(find segway_robot)/urdf/base.transmission.xacro"/>
+    <xacro:include filename="$(find segbot_description)/urdf/base.gazebo.xacro"/>
+    <xacro:include filename="$(find segbot_description)/urdf/base.transmission.xacro"/>
 
     <xacro:macro name="base" params="name">
         <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR
@@ -33,7 +33,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_base_geom">
-                    <mesh filename="package://segway_robot/meshes/segway_base.stl"/>
+                    <mesh filename="package://segbot_description/meshes/segway_base.stl"/>
                 </geometry>
                 <material name="Blue"/>
             </visual>
@@ -41,14 +41,15 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_base_collision_geom">
-                    <mesh filename="package://segway_robot/meshes/convex/segway_base_convex.stlb"/>
+                    <mesh filename="package://segbot_description/meshes/convex/segway_base_convex.stlb"/>
                 </geometry>
             </collision>
 
             <collision>
-                <origin xyz="-0.03164 0.12438 0.00167" rpy="1.5708 0 0"/>
+                <origin xyz="-0.03164 0.132315 0.00167" rpy="1.5708 0 0"/>
                 <geometry name="segway_base_table_geom">
-                    <cylinder radius="0.3054" length="0.01587"/>
+<!--                    <cylinder radius="0.3054" length="0.01587"/> -->
+                    <cylinder radius="0.4054" length="0.01587"/>
                 </geometry>
             </collision>
         </link>
@@ -65,7 +66,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_left_wheel_geom">
-                    <mesh filename="package://segway_robot/meshes/segway_wheel.stl"/>
+                    <mesh filename="package://segbot_description/meshes/segway_wheel.stl"/>
                 </geometry>
                 <material name="Red"/>
             </visual>
@@ -90,7 +91,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_right_wheel_geom">
-                    <mesh filename="package://segway_robot/meshes/segway_wheel.stl"/>
+                    <mesh filename="package://segbot_description/meshes/segway_wheel.stl"/>
                 </geometry>
                 <material name="Red"/>
             </visual>
@@ -115,7 +116,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_trailer-geom">
-                    <mesh filename="package://segway_robot/meshes/trailer.stl"/>
+                    <mesh filename="package://segbot_description/meshes/trailer.stl"/>
                 </geometry>
                 <material name="Green"/>
             </visual>
@@ -123,7 +124,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_trailer_collision_geom">
-                    <mesh filename="package://segway_robot/meshes/convex/trailer_convex.stlb"/>
+                    <mesh filename="package://segbot_description/meshes/convex/trailer_convex.stlb"/>
                 </geometry>
             </collision>
         </link>
@@ -140,7 +141,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_trailer_wheel_caster-geom">
-                    <mesh filename="package://segway_robot/meshes/trailer_wheel_caster.stl"/>
+                    <mesh filename="package://segbot_description/meshes/trailer_wheel_caster.stl"/>
                 </geometry>
                 <material name="Blue"/>
             </visual>
@@ -148,7 +149,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_trailer_wheel_caster_collision_geom">
-                    <mesh filename="package://segway_robot/meshes/convex/trailer_wheel_caster_convex.stlb"/>
+                    <mesh filename="package://segbot_description/meshes/convex/trailer_wheel_caster_convex.stlb"/>
                 </geometry>
             </collision>
         </link>
@@ -165,7 +166,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_trailer_wheel-geom">
-                    <mesh filename="package://segway_robot/meshes/trailer_wheel.stl"/>
+                    <mesh filename="package://segbot_description/meshes/trailer_wheel.stl"/>
                 </geometry>
                 <material name="Red"/>
             </visual>
@@ -190,7 +191,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="battery_one_geom">
-                <!-- <mesh filename="package://segway_robot/meshes/battery_one.stl" /> -->
+                <!-- <mesh filename="package://segbot_description/meshes/battery_one.stl" /> -->
 	               <box size="0.254 0.178 0.273"/>
                 </geometry>
                 <material name="Red" />
@@ -199,7 +200,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="battery_one_collision_geom">
-      	             <!-- <mesh filename="package://segway_robot/meshes/convex/battery_one_convex.stlb" /> -->
+      	             <!-- <mesh filename="package://segbot_description/meshes/convex/battery_one_convex.stlb" /> -->
                     <box size="0.254 0.178 0.273"/>
                 </geometry>
             </collision>
@@ -217,7 +218,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="battery_two_geom">
-                    <!-- <mesh filename="package://segway_robot/meshes/battery_two.stl" /> -->
+                    <!-- <mesh filename="package://segbot_description/meshes/battery_two.stl" /> -->
 	                   <box size="0.254 0.178 0.273"/>
                 </geometry>
                 <material name="Red"/>
@@ -226,7 +227,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry name="battery_two_collision_geom">
-                    <!-- <mesh filename="package://segway_robot/meshes/convex/battery_two_convex.stlb" /> -->
+                    <!-- <mesh filename="package://segbot_description/meshes/convex/battery_two_convex.stlb" /> -->
                     <box size="0.254 0.178 0.273"/>
                 </geometry>
             </collision>
@@ -244,7 +245,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="computer_geom">
-                    <!-- <mesh filename="package://segway_robot/meshes/computer.stl" /> -->
+                    <!-- <mesh filename="package://segbot_description/meshes/computer.stl" /> -->
                     <box size="0.484 0.198 0.356"/>
                 </geometry>
                 <material name="Green"/>
@@ -253,7 +254,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_base_collision_geom">
-                    <!-- <mesh filename="package://segway_robot/meshes/convex/computer_convex.stlb" /> -->
+                    <!-- <mesh filename="package://segbot_description/meshes/convex/computer_convex.stlb" /> -->
                     <box size="0.484 0.198 0.356"/>
                 </geometry>
             </collision>
@@ -271,7 +272,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_laser_bracket-geom">
-                    <mesh filename="package://segway_robot/meshes/laser_bracket.stl"/>
+                    <mesh filename="package://segbot_description/meshes/laser_bracket.stl"/>
                 </geometry>
                 <material name="Red"/>
             </visual>
@@ -279,7 +280,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_laser_bracket_collision_geom">
-                    <mesh filename="package://segway_robot/meshes/convex/laser_bracket_convex.stlb"/>
+                    <mesh filename="package://segbot_description/meshes/convex/laser_bracket_convex.stlb"/>
                 </geometry>
             </collision>
         </link>
@@ -296,7 +297,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="R283_hokuyo_laser1-geom">
-                    <mesh filename="package://segway_robot/meshes/R283_hokuyo_laser1.stl"/>
+                    <mesh filename="package://segbot_description/meshes/R283_hokuyo_laser1.stl"/>
                 </geometry>
                 <material name="Blue"/>
             </visual>
@@ -304,7 +305,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="R283_hokuyo_laser1_collision_geom">
-                    <mesh filename="package://segway_robot/meshes/convex/R283_hokuyo_laser1_convex.stlb"/>
+                    <mesh filename="package://segbot_description/meshes/convex/R283_hokuyo_laser1_convex.stlb"/>
                 </geometry>
             </collision>
 
@@ -322,7 +323,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="3.14159 0 0"/>
                 <geometry name="R313_hokuyo_laser2-geom">
-                    <mesh filename="package://segway_robot/meshes/R313_hokuyo_laser2.stl"/>
+                    <mesh filename="package://segbot_description/meshes/R313_hokuyo_laser2.stl"/>
                 </geometry>
                 <material name="Blue"/>
             </visual>
@@ -330,7 +331,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="3.14159 0 0"/>
                 <geometry name="R283_hokuyo_laser1_collision_geom">
-                <mesh filename="package://segway_robot/meshes/convex/R313_hokuyo_laser2_convex.stlb"/>
+                <mesh filename="package://segbot_description/meshes/convex/R313_hokuyo_laser2_convex.stlb"/>
                 </geometry>
             </collision>
         </link>

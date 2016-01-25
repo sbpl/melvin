@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="segbot" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find segbot_description)/urdf/base.urdf.xacro"/>
+    <xacro:include filename="$(find segbot_description)/urdf/sensors.urdf.xacro"/>
+
+    <xacro:include filename="$(find segbot_description)/urdf/materials.xacro"/>
+    <xacro:include filename="$(find segbot_description)/gazebo/gazebo.urdf.xacro"/>
+
+    <xacro:base name="base"/>
+    <xacro:sensors name="sensors"/>
+</robot>
