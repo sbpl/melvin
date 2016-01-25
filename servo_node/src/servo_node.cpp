@@ -51,8 +51,7 @@ ServoNode::ServoNode() :
         minAngle.push_back(-10.0); //was -30
     }
     else if (temp.size() != (int)moduleId.size()) {
-        ROS_ERROR(
-                "Number of minAngle parameters does not match number of servo IDs!");
+        ROS_ERROR("Number of minAngle parameters does not match number of servo IDs!");
         exit(1);
     }
     else {
@@ -70,8 +69,7 @@ ServoNode::ServoNode() :
         maxAngle.push_back(10.0); //was 0
     }
     else if (temp.size() != (int)moduleId.size()) {
-        ROS_ERROR(
-                "Number of maxAngle parameters does not match number of servo IDs!");
+        ROS_ERROR("Number of maxAngle parameters does not match number of servo IDs!");
         exit(1);
     }
     else {
@@ -87,8 +85,7 @@ ServoNode::ServoNode() :
             vel.push_back(90.0);
     }
     else if (temp.size() != (int)moduleId.size()) {
-        ROS_ERROR(
-                "Number of velocity parameters does not match number of servo IDs!");
+        ROS_ERROR("Number of velocity parameters does not match number of servo IDs!");
         exit(1);
     }
     else {
@@ -100,8 +97,7 @@ ServoNode::ServoNode() :
     ROS_INFO("Loaded parameters...");
 
     for (size_t i = 0; i < moduleId.size(); i++) {
-        ROS_INFO("%zu: id %d min angle %f max angle %f velocity %f\n", i,
-                moduleId[i], minAngle[i], maxAngle[i], vel[i]);
+        ROS_INFO("%zu: id %d min angle %f max angle %f velocity %f\n", i, moduleId[i], minAngle[i], maxAngle[i], vel[i]);
     }
 
     reversePoint = 5; //degrees away from the goal to start reversing
@@ -186,9 +182,7 @@ int ServoNode::updateServo()
                 desAngle[i] = dir[i] > 0 ? maxAngle[i] : minAngle[i];
 
                 if (dynamixel[i].MoveToPos(desAngle[i], vel[i])) {
-                    ROS_ERROR(
-                            "servo_node: module %d could not send MoveToPos command\n",
-                            i);
+                    ROS_ERROR("servo_node: module %d could not send MoveToPos command\n", i);
                     return -1;
                 }
 
@@ -217,9 +211,7 @@ int ServoNode::updateServo()
                     break;
                 }
                 else {
-                    ROS_ERROR(
-                            "servo_node: module %d could not get position from the servo\n",
-                            i);
+                    ROS_ERROR("servo_node: module %d could not get position from the servo\n", i);
                     return -1;
                 }
 
@@ -232,9 +224,7 @@ int ServoNode::updateServo()
             switch (state[i]) {
             case DYNAMIXEL_STATE_INITIALIZED:
                 if (dynamixel[i].MoveToPos(maxAngle[i], vel[i])) {
-                    ROS_ERROR(
-                            "servo_node: module %d could not send MoveToPos command\n",
-                            i);
+                    ROS_ERROR("servo_node: module %d could not send MoveToPos command\n", i);
                     return -1;
                 }
                 state[i] = DYNAMIXEL_STATE_MOVE_CMD_SENT;
@@ -247,9 +237,7 @@ int ServoNode::updateServo()
                     break;
                 }
                 else {
-                    ROS_ERROR(
-                            "servo_node: module %d could not get position from the servo\n",
-                            i);
+                    ROS_ERROR("servo_node: module %d could not get position from the servo\n", i);
                     return -1;
                 }
 
