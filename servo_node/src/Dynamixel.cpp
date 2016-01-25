@@ -2,13 +2,14 @@
 //
 //Aleksandr Kushleyev
 //University of Pennsylvania
-//August 2009 
+//August 2009
 //akushley@seas.upenn.edu
 
 #include <servo_node/Dynamixel.h>
 
 #include <time.h>
 #include <math.h>
+#include <iomanip>
 
 #include <unistd.h>
 
@@ -16,69 +17,68 @@
 
 //#define DYNAMIXEL_DEBUG
 
+namespace Upenn {
+
 ////////////////////////////////////////////////////////////////////////////////
 // Constructor
 Dynamixel::Dynamixel()
 {
-  this->sd                = NULL;
-  this->connected         = false;
-  this->moduleId          = DYNAMIXEL_DEFAULT_MODULE_ID;
-  this->lastDeviceError   = 0;
-  this->lastDriverError   = 0;
+    this->sd = NULL;
+    this->connected = false;
+    this->moduleId = DYNAMIXEL_DEFAULT_MODULE_ID;
+    this->lastDeviceError = 0;
+    this->lastDriverError = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Destructor
 Dynamixel::~Dynamixel()
 {
-  if (this->sd) delete this->sd;
+    if (this->sd)
+        delete this->sd;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Connect to the servo. Each should have a unique module id
-int Dynamixel::Connect(string device, int baudRate, int moduleId)
+int Dynamixel::Connect(std::string device, int baudRate, int moduleId)
 {
-  if (this->connected)
+    if (this->connected)
+        return 0;
+
+    if (moduleId < 0) {
+        PRINT_ERROR("module ID must be non-negative \n");
+        return -1;
+    }
+
+    //create instance of serial device
+    this->sd = new SerialDevice();
+
+    if (!this->sd) {
+        PRINT_ERROR("could not create instance of SerialDevice\n");
+        return -1;
+    }
+
+    //connecto to serial device
+    if (this->sd->Connect(device.c_str(), baudRate)) {
+        PRINT_ERROR("could not connect to the device \n");
+        return -1;
+    }
+
+    this->moduleId = moduleId;
+
+    this->connected = true;
     return 0;
-
-  if (moduleId < 0)
-  {
-    PRINT_ERROR("module ID must be non-negative \n");
-    return -1;
-  }
-
-  //create instance of serial device 
-  this->sd = new SerialDevice();
-
-  if (!this->sd)
-  {
-    PRINT_ERROR("could not create instance of SerialDevice\n");
-    return -1;
-  }
-
-  //connecto to serial device
-  if (this->sd->Connect(device.c_str(),baudRate))
-  {
-    PRINT_ERROR("could not connect to the device \n");
-    return -1;
-  }
-
-  this->moduleId = moduleId;
-
-  this->connected = true;
-  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Disconnect from the servo
 int Dynamixel::Disconnect()
 {
-  if (this->connected)
-  {
-    this->sd->Disconnect();
-  }
-  this->connected = false;
-  return 0;
+    if (this->connected) {
+        this->sd->Disconnect();
+    }
+    this->connected = false;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,362 +89,348 @@ int Dynamixel::Disconnect()
 // CHECKSUM = ~ ( ID + Length + Instruction + Parameter1 + ... Parameter N )
 unsigned char Dynamixel::CalcCheckSum(unsigned char * buf, bool writeToBuf)
 {
-  unsigned char length   = buf[3];
-  unsigned char sum      = buf[2] + buf[3];  //id + length
-  unsigned char * ptr    = buf + 4;  
-  unsigned char lenCheck = length - 1;
+    unsigned char length = buf[3];
+    unsigned char sum = buf[2] + buf[3];  //id + length
+    unsigned char * ptr = buf + 4;
+    unsigned char lenCheck = length - 1;
 
-  for (unsigned int ii=0; ii<lenCheck; ii++)
-    sum += *ptr++;
+    for (unsigned int ii = 0; ii < lenCheck; ii++)
+        sum += *ptr++;
 
-  sum  = ~sum;
+    sum = ~sum;
 
-  if (writeToBuf)
-    *ptr = sum;
-  
-  return sum;
+    if (writeToBuf)
+        *ptr = sum;
+
+    return sum;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // pack up the data for shipping out to the device (adds header, length, checksum)
-int Dynamixel::CreateOutgoingPacket(void * payload, unsigned int length, 
-                                       char * packet, unsigned int maxLength)
+int Dynamixel::CreateOutgoingPacket(
+    void * payload,
+    unsigned int length,
+    char * packet,
+    unsigned int maxLength)
 {
 
-  //error checking
-  if ( (length == 0) || (length > 255))
-  {
+    //error checking
+    if ((length == 0) || (length > 255)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("bad payload length: "<<length<<endl);
+        PRINT_ERROR("bad payload length: "<<length<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  if (maxLength < length + 5)
-  {
+    if (maxLength < length + 5) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("ERROR: Trying to create a packet with not enough allocated memory"<<endl);
+        PRINT_ERROR("ERROR: Trying to create a packet with not enough allocated memory"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  //header
-  packet[0] = 0xFF; //first two bytes are 0xFF
-  packet[1] = 0xFF;
-  packet[2] = this->moduleId;
-  packet[3] = (unsigned char)length+1;  //including the checksum
-  
-  //copy payload
-  memcpy( (packet + DYNAMIXEL_PACKET_HEADER_LENGTH), payload, length );
+    //header
+    packet[0] = 0xFF; //first two bytes are 0xFF
+    packet[1] = 0xFF;
+    packet[2] = this->moduleId;
+    packet[3] = (unsigned char)length + 1;  //including the checksum
 
-  //calculate the checksum
-  this->CalcCheckSum((unsigned char *)packet);
+    //copy payload
+    memcpy((packet + DYNAMIXEL_PACKET_HEADER_LENGTH), payload, length);
 
-  int packetLength = length + 5;
+    //calculate the checksum
+    this->CalcCheckSum((unsigned char *)packet);
+
+    int packetLength = length + 5;
 
 #ifdef DYNAMIXEL_DEBUG
-  PRINT_INFO("Sending Packet:");
-  this->PrintPacket(packet,packetLength);
+    PRINT_INFO("Sending Packet:");
+    this->PrintPacket(packet,packetLength);
 #endif
 
-  return packetLength;
+    return packetLength;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Read a packet and verify the checksum
-int Dynamixel::ReadPacket(char * packet, unsigned int maxLength, unsigned int timeoutUs)
+int Dynamixel::ReadPacket(
+    char * packet,
+    unsigned int maxLength,
+    unsigned int timeoutUs)
 {
-  if (!this->connected)
-  {
-    PRINT_ERROR("not connected!\n");
-    return -1;
-  }
-  
-  //read the header
-  unsigned int n = this->sd->ReadChars(packet,4,timeoutUs);
+    if (!this->connected) {
+        PRINT_ERROR("not connected!\n");
+        return -1;
+    }
 
-  if (n!=4)
-  {
+    //read the header
+    unsigned int n = this->sd->ReadChars(packet, 4, timeoutUs);
+
+    if (n != 4) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not read packet header"<<endl);
+        PRINT_ERROR("could not read packet header"<<std::endl);
 #endif
-    this->lastDriverError = DYNAMIXEL_ERROR_TIMEOUT;
-    return -1;
-  }
+        this->lastDriverError = DYNAMIXEL_ERROR_TIMEOUT;
+        return -1;
+    }
 
-  //read the reset of the message based on the size
-  unsigned int nRem = (unsigned int)(((unsigned char *)packet)[3]);
+    //read the reset of the message based on the size
+    unsigned int nRem = (unsigned int)(((unsigned char *)packet)[3]);
 
-  //check to make sure that enough memory is allocated
-  if (maxLength < nRem+4)
-  {
+    //check to make sure that enough memory is allocated
+    if (maxLength < nRem + 4) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("not enough space allocated for the packet"<<endl);
+        PRINT_ERROR("not enough space allocated for the packet"<<std::endl);
 #endif
-    this->lastDriverError = DYNAMIXEL_ERROR_NOT_ENOUGH_SPACE;
-    return -1;
-  }
+        this->lastDriverError = DYNAMIXEL_ERROR_NOT_ENOUGH_SPACE;
+        return -1;
+    }
 
-  n = this->sd->ReadChars(packet+4, nRem, timeoutUs);
+    n = this->sd->ReadChars(packet + 4, nRem, timeoutUs);
 
-  if (n!=nRem)
-  {
+    if (n != nRem) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not read second part of the packet"<<endl);
+        PRINT_ERROR("could not read second part of the packet"<<std::endl);
 #endif
-    this->lastDriverError = DYNAMIXEL_ERROR_INCOMPLETE_PACKET;
-    return -1;
-  }
+        this->lastDriverError = DYNAMIXEL_ERROR_INCOMPLETE_PACKET;
+        return -1;
+    }
 
-  unsigned char crcExpected = *(unsigned char*)(packet+n+3);
-  unsigned char crcActual   = this->CalcCheckSum((unsigned char*)packet,false);
+    unsigned char crcExpected = *(unsigned char*)(packet + n + 3);
+    unsigned char crcActual = this->CalcCheckSum((unsigned char*)packet, false);
 
-  if (crcActual != crcExpected)
-  {
+    if (crcActual != crcExpected) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("Dynamixel::ReadPacket: ERROR: crc mismatch. Packet length="<<n+4<<endl);
-    PRINT_ERROR("Actual: "<<crcActual<<", Expected: "<<crcExpected<<endl);
-    this->PrintPacket(packet,n+4);
+        PRINT_ERROR("Dynamixel::ReadPacket: ERROR: crc mismatch. Packet length="<<n+4<<std::endl);
+        PRINT_ERROR("Actual: "<<crcActual<<", Expected: "<<crcExpected<<std::endl);
+        this->PrintPacket(packet,n+4);
 #endif
-    this->lastDriverError = DYNAMIXEL_ERROR_BAD_CHECKSUM;
-    return -1;
-  }
-  
-  return n+4;
+        this->lastDriverError = DYNAMIXEL_ERROR_BAD_CHECKSUM;
+        return -1;
+    }
+
+    return n + 4;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Write packet to the device
 int Dynamixel::WritePacket(char * packet, unsigned int length)
 {
-  if (!this->connected)
-  {
-    PRINT_ERROR("not connected!\n");
-    return -1;
-  }
+    if (!this->connected) {
+        PRINT_ERROR("not connected!\n");
+        return -1;
+    }
 
-  if ((unsigned int)this->sd->WriteChars(packet,length) != length)
-  {
-    PRINT_ERROR("not write chars!\n");
-    return -1;
-  }
+    if ((unsigned int)this->sd->WriteChars(packet, length) != length) {
+        PRINT_ERROR("not write chars!\n");
+        return -1;
+    }
 
-  return 0;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Print out the packet to the terminal
 void Dynamixel::PrintPacket(char * buf, int length)
 {
-  cout.setf(ios::hex,ios::basefield);
-  cout.setf(ios::showbase);
+    std::cout.setf(std::ios::hex, std::ios::basefield);
+    std::cout.setf(std::ios::showbase);
 
-  for (int ii=0; ii<length; ii++)
-    PRINT_INFO_RAW((unsigned char)buf[ii]<<" ");
-  PRINT_INFO_RAW("\n");
-  
-  resetiosflags (ios_base::basefield);
-  resetiosflags (ios_base::showbase);
+    for (int ii = 0; ii < length; ii++)
+        PRINT_INFO_RAW((unsigned char)buf[ii]<<" ");
+    PRINT_INFO_RAW("\n");
+
+    std::resetiosflags(std::ios_base::basefield);
+    std::resetiosflags(std::ios_base::showbase);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Request and get the position feedback
 int Dynamixel::GetPosition(float & position)
 {
-  char outBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
-  char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
-  const unsigned int cmdLen = 3;
-  unsigned char cmd[cmdLen] = { DYNAMIXEL_READ_DATA_INSTRUCTION,
-                                DYNAMIXEL_PRESENT_POSITION_ADDRESS,
-                                0x02 };
+    char outBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    const unsigned int cmdLen = 3;
+    unsigned char cmd[cmdLen] = { DYNAMIXEL_READ_DATA_INSTRUCTION,
+    DYNAMIXEL_PRESENT_POSITION_ADDRESS, 0x02 };
 
-  int packetLength = this->CreateOutgoingPacket(cmd, cmdLen, outBuffer,DYNAMIXEL_DEF_BUFFER_LENGTH);
+    int packetLength = this->CreateOutgoingPacket(cmd, cmdLen, outBuffer,
+            DYNAMIXEL_DEF_BUFFER_LENGTH);
 
-  if (this->WritePacket(outBuffer,packetLength))
-  {
+    if (this->WritePacket(outBuffer, packetLength)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not write packet"<<endl);
+        PRINT_ERROR("could not write packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  packetLength = this->ReadPacket(inputBuffer,DYNAMIXEL_DEF_BUFFER_LENGTH);
+    packetLength = this->ReadPacket(inputBuffer, DYNAMIXEL_DEF_BUFFER_LENGTH);
 
-   this->AngleVal2AngleDeg(*(uint16_t*)(inputBuffer+5),position);
+    this->AngleVal2AngleDeg(*(uint16_t*)(inputBuffer + 5), position);
 #ifdef DYNAMIXEL_DEBUG
-  PRINT_INFO("Current Position: "<<position<<endl);
+    PRINT_INFO("Current Position: "<<position<<std::endl);
 #endif
 
-  return 0;
+    return 0;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // stop the unit : send the command and wait for the request
 int Dynamixel::StopUnit()
 {
-  //TODO
-  return 0;
+    //TODO
+    return 0;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // send stop command
 int Dynamixel::SendStopCmd()
 {
-  //TODO
-  return 0;
+    //TODO
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Convert the float angle to uint16 representation
 int Dynamixel::AngleDeg2AngleVal(float angle, uint16_t &val)
 {
-  if ( (angle < DYNAMIXEL_MIN_ANGLE ) || (angle > DYNAMIXEL_MAX_ANGLE ) )
-  {
-    PRINT_ERROR("bad angle:"<<angle<<endl);
-    return -1;
-  }
+    if ((angle < DYNAMIXEL_MIN_ANGLE) || (angle > DYNAMIXEL_MAX_ANGLE)) {
+        PRINT_ERROR("bad angle:"<<angle<<std::endl);
+        return -1;
+    }
 
-  val = ((angle-DYNAMIXEL_MIN_ANGLE)/(DYNAMIXEL_MAX_ANGLE-DYNAMIXEL_MIN_ANGLE)*1023);
-  return 0;
+    val = ((angle - DYNAMIXEL_MIN_ANGLE)
+            / (DYNAMIXEL_MAX_ANGLE - DYNAMIXEL_MIN_ANGLE) * 1023);
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Convert the uint16 angle to float representation
 int Dynamixel::AngleVal2AngleDeg(uint16_t val, float &angle)
 {
-  angle = val/1023.0*(DYNAMIXEL_MAX_ANGLE-DYNAMIXEL_MIN_ANGLE) + DYNAMIXEL_MIN_ANGLE;
-  return 0;
+    angle = val / 1023.0
+            * (DYNAMIXEL_MAX_ANGLE - DYNAMIXEL_MIN_ANGLE)+ DYNAMIXEL_MIN_ANGLE;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Convert float velocity to uint16 representation
 int Dynamixel::VelocityDeg2VelocityVal(float velocity, uint16_t &val)
 {
-  if ( (velocity < 0) || (velocity > DYNAMIXEL_AX12_MAX_RPM) )
-  {
-    PRINT_ERROR("bad velocity:"<<velocity<<endl);
-    return -1;
-  }
+    if ((velocity < 0) || (velocity > DYNAMIXEL_AX12_MAX_RPM)) {
+        PRINT_ERROR("bad velocity:"<<velocity<<std::endl);
+        return -1;
+    }
 
-  val = (velocity/DYNAMIXEL_AX12_MAX_VEL*1023);
+    val = (velocity / DYNAMIXEL_AX12_MAX_VEL * 1023);
 
-  //if the value is zero, it means there is no velocity limit
-  if (val == 0)
-    val = 1;
+    //if the value is zero, it means there is no velocity limit
+    if (val == 0)
+        val = 1;
 
-  return 0;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Convert uint16 velocity to float representation
 int Dynamixel::VelocityVal2VelocityDeg(uint16_t val, float &velocity)
 {
-  velocity = val/1023.0*DYNAMIXEL_AX12_MAX_VEL;
-  return 0;
+    velocity = val / 1023.0 * DYNAMIXEL_AX12_MAX_VEL;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Send a command to request motion to a position using provided velocity 
+// Send a command to request motion to a position using provided velocity
 // and stored acceleration
 int Dynamixel::MoveToPos(float position, float velocity)
 {
-  char outBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
-  //char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
-  const char cmdLength=6;
-  
-  //allocated and partially fill in data
-  char cmd[cmdLength] = { DYNAMIXEL_WRITE_DATA_INSTRUCTION,
-                          DYNAMIXEL_GOAL_POSITION_ADDRESS,
-                          0,0,0,0};
+    char outBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    //char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    const char cmdLength = 6;
 
-  uint16_t pos;
-  uint16_t vel;
+    //allocated and partially fill in data
+    char cmd[cmdLength] = { DYNAMIXEL_WRITE_DATA_INSTRUCTION,
+    DYNAMIXEL_GOAL_POSITION_ADDRESS, 0, 0, 0, 0 };
 
-  if (this->AngleDeg2AngleVal(position,pos))
-  {
+    uint16_t pos;
+    uint16_t vel;
+
+    if (this->AngleDeg2AngleVal(position, pos)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("bad target angle command"<<endl);
+        PRINT_ERROR("bad target angle command"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  if (this->VelocityDeg2VelocityVal(velocity,vel))
-  {
+    if (this->VelocityDeg2VelocityVal(velocity, vel)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("bad target velocity command"<<endl);
+        PRINT_ERROR("bad target velocity command"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  //copy position into the packet
-  memcpy(cmd+2,&pos,2);
+    //copy position into the packet
+    memcpy(cmd + 2, &pos, 2);
 
-  //copy velocity into the packet
-  memcpy(cmd+4,&vel,2);
+    //copy velocity into the packet
+    memcpy(cmd + 4, &vel, 2);
 
-  //pack the outgoing packet
-  int packetLength = this->CreateOutgoingPacket(cmd, cmdLength, outBuffer,DYNAMIXEL_DEF_BUFFER_LENGTH);
+    //pack the outgoing packet
+    int packetLength = this->CreateOutgoingPacket(cmd, cmdLength, outBuffer,
+            DYNAMIXEL_DEF_BUFFER_LENGTH);
 
-  if (packetLength < 0)
-  {
+    if (packetLength < 0) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not create packet"<<endl);
+        PRINT_ERROR("could not create packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  if (this->WritePacket(outBuffer,packetLength))
-  {
+    if (this->WritePacket(outBuffer, packetLength)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not write packet"<<endl);
+        PRINT_ERROR("could not write packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  uint16_t status;
-  if (this->GetCmdConfirmation(status))
-  {
+    uint16_t status;
+    if (this->GetCmdConfirmation(status)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not get command confirmation"<<endl);
+        PRINT_ERROR("could not get command confirmation"<<std::endl);
 #endif
-    return -1;
-  }
-  
-  return 0;
+        return -1;
+    }
+
+    return 0;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // make sure that the command has been received
 int Dynamixel::GetCmdConfirmation(uint16_t &status)
 {
-  char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
 
-  int packetLength = this->ReadPacket(inputBuffer,DYNAMIXEL_DEF_BUFFER_LENGTH,100000);
+    int packetLength = this->ReadPacket(inputBuffer,
+            DYNAMIXEL_DEF_BUFFER_LENGTH, 100000);
 
-  if (packetLength < 1)
-  {
+    if (packetLength < 1) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not read packet"<<endl);
+        PRINT_ERROR("could not read packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  status = *(unsigned char*)(inputBuffer+4);
-  
-  if (status == DYNAMIXEL_RESPONSE_NO_ERROR)
-    return 0;
-  else
-  {
+    status = *(unsigned char*)(inputBuffer + 4);
+
+    if (status == DYNAMIXEL_RESPONSE_NO_ERROR)
+        return 0;
+    else {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("error occured"<<status<<endl);
-    this->PrintPacket(inputBuffer,packetLength);
+        PRINT_ERROR("error occured"<<status<<std::endl);
+        this->PrintPacket(inputBuffer,packetLength);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
 }
 
@@ -453,164 +439,154 @@ int Dynamixel::GetCmdConfirmation(uint16_t &status)
 int Dynamixel::HandleOtherMessage(char * packet, unsigned int packetLength)
 {
 #ifdef DYNAMIXEL_DEBUG
-  PRINT_ERROR("Received unexpected message"<<endl);
-  this->PrintPacket(packet,packetLength);
+    PRINT_ERROR("Received unexpected message"<<std::endl);
+    this->PrintPacket(packet,packetLength);
 #endif
-  return 0;
+    return 0;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // get the device information (model number)
-int Dynamixel::GetDeviceInfo(string & info)
+int Dynamixel::GetDeviceInfo(std::string & info)
 {
-  const unsigned int cmdLen = 3;
-  unsigned char cmd[cmdLen] = { DYNAMIXEL_READ_DATA_INSTRUCTION,
-                                DYNAMIXEL_MODEL_NUMBER_ADDRESS,
-                                0x02 };
-  char outBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
-  char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
-  int packetLength = this->CreateOutgoingPacket(cmd, cmdLen, outBuffer, DYNAMIXEL_DEF_BUFFER_LENGTH);
+    const unsigned int cmdLen = 3;
+    unsigned char cmd[cmdLen] = { DYNAMIXEL_READ_DATA_INSTRUCTION,
+    DYNAMIXEL_MODEL_NUMBER_ADDRESS, 0x02 };
+    char outBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    char inputBuffer[DYNAMIXEL_DEF_BUFFER_LENGTH];
+    int packetLength = this->CreateOutgoingPacket(cmd, cmdLen, outBuffer,
+            DYNAMIXEL_DEF_BUFFER_LENGTH);
 
-  if (packetLength < 0)
-  {
+    if (packetLength < 0) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not create packet"<<endl);
+        PRINT_ERROR("could not create packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  if (this->WritePacket(outBuffer,packetLength))
-  {
+    if (this->WritePacket(outBuffer, packetLength)) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not write packet"<<endl);
+        PRINT_ERROR("could not write packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-  packetLength = this->ReadPacket(inputBuffer,DYNAMIXEL_DEF_BUFFER_LENGTH,1000000);
-  if (packetLength < 1)
-  {
+    packetLength = this->ReadPacket(inputBuffer, DYNAMIXEL_DEF_BUFFER_LENGTH,
+            1000000);
+    if (packetLength < 1) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not read packet"<<endl);
+        PRINT_ERROR("could not read packet"<<std::endl);
 #endif
-    return -1;
-  }
+        return -1;
+    }
 
-/*
-  //check to see if the response type matches the request
-  if ( this->GetCmdType(inputBuffer) != cmd)
-  {
-    this->HandleOtherMessage(inputBuffer,packetLength);
-    return -1;
-  }
-*/
-#ifdef DYNAMIXEL_DEBUG  
-  this->PrintPacket(inputBuffer,packetLength);
-  PRINT_INFO(("Device Information: "<<*(unsigned char*)(inputBuffer+5)<<endl);
+    /*
+     //check to see if the response type matches the request
+     if ( this->GetCmdType(inputBuffer) != cmd)
+     {
+     this->HandleOtherMessage(inputBuffer,packetLength);
+     return -1;
+     }
+     */
+#ifdef DYNAMIXEL_DEBUG
+    this->PrintPacket(inputBuffer,packetLength);
+    PRINT_INFO(("Device Information: "<<*(unsigned char*)(inputBuffer+5)<<std::endl);
 #endif
-  info = string(inputBuffer+5);
-  return 0;
+    info = std::string(inputBuffer + 5);
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // get the last stored error code that came from device
 unsigned char Dynamixel::GetLastDeviceError()
 {
-  unsigned char error = this->lastDeviceError;
-  this->lastDeviceError = 0;
-  return error;
+    unsigned char error = this->lastDeviceError;
+    this->lastDeviceError = 0;
+    return error;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // get the last stored error code, set by this driver
 unsigned char Dynamixel::GetLastDriverError()
 {
-  unsigned char error = this->lastDriverError;
-  this->lastDriverError = 0;
-  return error;
+    unsigned char error = this->lastDriverError;
+    this->lastDriverError = 0;
+    return error;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Execute device initialization here
 int Dynamixel::StartDevice()
 {
-  string devInfo;
+    std::string devInfo;
 
-  //set io mode. See SerialDevice.hh for more detail on io modes
-	if (this->sd->Set_IO_BLOCK_W_TIMEOUT())
-  {
+    //set io mode. See SerialDevice.hh for more detail on io modes
+    if (this->sd->Set_IO_BLOCK_W_TIMEOUT()) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("Could not set IO mode"<<endl);
+        PRINT_ERROR("Could not set IO mode"<<std::endl);
 #endif
-    return -1;
-  }
-
-  bool sensorAlive = false;  
-
-  for (int ii=0; ii<DYNAMIXEL_STARTUP_RETRIES; ii++)
-  {
-
-    //make sure there is nothing in the serial buffer
-    this->sd->FlushInputBuffer();
-
-    //read the device name (this wakes up the unit)
-    if (this->GetDeviceInfo(devInfo) )
-    {
-      //if the query failed it can be either due to a timeout or an error code returned
-      if (this->GetLastDriverError() == DYNAMIXEL_ERROR_TIMEOUT)
-      {
-#ifdef DYNAMIXEL_DEBUG
-        PRINT_ERROR("could not get device info"<<endl);
-#endif
-        continue;
-      }
-      //if we got an error code, then the device is alive (sometimes unit responds with an error code
-      //to the first request)
-      else if (this->GetLastDeviceError() != 0)
-      {
-#ifdef DYNAMIXEL_DEBUG
-        PRINT_ERROR("status query returned an error"<<endl);
-#endif
-      }
+        return -1;
     }
-   
-    else
-    {
-      sensorAlive = true;
-      break;
-    }
-  }
 
-  if (!sensorAlive)
-  {
+    bool sensorAlive = false;
+
+    for (int ii = 0; ii < DYNAMIXEL_STARTUP_RETRIES; ii++) {
+
+        //make sure there is nothing in the serial buffer
+        this->sd->FlushInputBuffer();
+
+        //read the device name (this wakes up the unit)
+        if (this->GetDeviceInfo(devInfo)) {
+            //if the query failed it can be either due to a timeout or an error code returned
+            if (this->GetLastDriverError() == DYNAMIXEL_ERROR_TIMEOUT) {
 #ifdef DYNAMIXEL_DEBUG
-    PRINT_ERROR("could not establish communication with the sensor"<<endl);
+                PRINT_ERROR("could not get device info"<<std::endl);
 #endif
-    return -1;
-  }
+                continue;
+            }
+            //if we got an error code, then the device is alive (sometimes unit responds with an error code
+            //to the first request)
+            else if (this->GetLastDeviceError() != 0) {
+#ifdef DYNAMIXEL_DEBUG
+                PRINT_ERROR("status query returned an error"<<std::endl);
+#endif
+            }
+        }
 
-  return 0;
+        else {
+            sensorAlive = true;
+            break;
+        }
+    }
+
+    if (!sensorAlive) {
+#ifdef DYNAMIXEL_DEBUG
+        PRINT_ERROR("could not establish communication with the sensor"<<std::endl);
+#endif
+        return -1;
+    }
+
+    return 0;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Stop the device
 int Dynamixel::StopDevice()
 {
-  this->sd->FlushInputBuffer();
+    this->sd->FlushInputBuffer();
 
-  for (int ii=0; ii<DYNAMIXEL_STOP_UNIT_RETRIES; ii++)
-  {
-    if (this->StopUnit() == 0)
-      return 0;
+    for (int ii = 0; ii < DYNAMIXEL_STOP_UNIT_RETRIES; ii++) {
+        if (this->StopUnit() == 0)
+            return 0;
 
-    usleep(50000);
-  }
+        usleep(50000);
+    }
 
 #ifdef DYNAMIXEL_DEBUG
-  PRINT_ERROR("could not stop the device"<<endl);
+    PRINT_ERROR("could not stop the device"<<std::endl);
 #endif
-  return -1;
+    return -1;
 }
+
+} // namespace Upenn
 

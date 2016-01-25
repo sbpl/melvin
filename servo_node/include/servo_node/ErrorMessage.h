@@ -3,14 +3,16 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
+#include <string>
+
 #include <pthread.h>
+
 #include "Timer.h"
 
-#define FANCY_ERROR_MESSAGE 
+#define FANCY_ERROR_MESSAGE
 
 #ifdef FANCY_ERROR_MESSAGE
 
@@ -19,12 +21,10 @@
 #define PRINT_WARNING( msg ) { std::ostringstream msgStream; msgStream <<"["<<__PRETTY_FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintWarning(msgStream.str()); }
 #define PRINT_ERROR( msg )   { std::ostringstream msgStream; msgStream <<"["<<__PRETTY_FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintError(msgStream.str()); }
 
-/*
-#define PRINT_INFO( msg )    { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
-#define PRINT_INFO_RAW( msg )    { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
-#define PRINT_WARNING( msg ) { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintWarning(msgStream.str()); }
-#define PRINT_ERROR( msg )   { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintError(msgStream.str()); }
-*/
+//#define PRINT_INFO( msg )    { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
+//#define PRINT_INFO_RAW( msg )    { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
+//#define PRINT_WARNING( msg ) { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintWarning(msgStream.str()); }
+//#define PRINT_ERROR( msg )   { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintError(msgStream.str()); }
 
 #define LOG_MESSAGE( msg ) { }
 
@@ -65,76 +65,76 @@
 
 #endif
 
-using namespace std;
+namespace Upenn {
 
-namespace Upenn 
+class ErrorMessage
 {
-  class ErrorMessage
-  {
+public:
+
     //constructor
-    public: ErrorMessage();
-    
+    ErrorMessage();
+
     //destructor
-    public: ~ErrorMessage();
+    ~ErrorMessage();
 
     //print out info message
-    public: static int PrintInfo(string msg);
-    
+    static int PrintInfo(std::string msg);
+
     //print out warning message
-    public: static int PrintWarning(string msg);
-    
+    static int PrintWarning(std::string msg);
+
     //print out error message
-    public: static int PrintError(string msg);
+    static int PrintError(std::string msg);
 
-    public: static int PrintInfoOn();
-    public: static int PrintInfoOff();
-    public: static int PrintWarningsOn();
-    public: static int PrintWarningsOff();
-    public: static int PrintErrorsOn();
-    public: static int PrintErrorsOff();
+    static int PrintInfoOn();
+    static int PrintInfoOff();
+    static int PrintWarningsOn();
+    static int PrintWarningsOff();
+    static int PrintErrorsOn();
+    static int PrintErrorsOff();
 
-    public: static int LogInfoOn();
-    public: static int LogInfoOff();
-    public: static int LogWarningsOn();
-    public: static int LogWarningsOff();
-    public: static int LogErrorsOn();
-    public: static int LogErrorsOff();
-    
+    static int LogInfoOn();
+    static int LogInfoOff();
+    static int LogWarningsOn();
+    static int LogWarningsOff();
+    static int LogErrorsOn();
+    static int LogErrorsOff();
+
+private:
+
     //initialize
-    private: static int Initialize();
+    static int Initialize();
 
-    private: static int LockErrorMutex();
-    private: static int UnlockErrorMutex();
+    static int LockErrorMutex();
+    static int UnlockErrorMutex();
 
-    private: static int InitializeInfoLog();
-    private: static int InitializeWarningLog();
-    private: static int InitializeErrorLog();
+    static int InitializeInfoLog();
+    static int InitializeWarningLog();
+    static int InitializeErrorLog();
 
-    private: static bool logInfo;
-    private: static bool logWarnings;
-    private: static bool logErrors;
-    private: static bool printInfo;
-    private: static bool printWarnings;
-    private: static bool printErrors;
+    static bool logInfo;
+    static bool logWarnings;
+    static bool logErrors;
+    static bool printInfo;
+    static bool printWarnings;
+    static bool printErrors;
 
-    private: static bool initialized;
-    private: static bool initializedInfoLog;
-    private: static bool initializedWarningLog;
-    private: static bool initializedErrorLog;
-    private: static string logInfoFileName;
-    private: static string logWarningFileName;
-    private: static string logErrorFileName;
+    static bool initialized;
+    static bool initializedInfoLog;
+    static bool initializedWarningLog;
+    static bool initializedErrorLog;
+    static std::string logInfoFileName;
+    static std::string logWarningFileName;
+    static std::string logErrorFileName;
 
-    private: static ofstream * logInfoStream;
-    private: static ofstream * logWarningStream;
-    private: static ofstream * logErrorStream;
-    private: static bool threadSafe;
-    private: static pthread_mutex_t errorMutex;
-    private: static Upenn::Timer timer0;
-    
-  };
-}
+    static std::ofstream * logInfoStream;
+    static std::ofstream * logWarningStream;
+    static std::ofstream * logErrorStream;
+    static bool threadSafe;
+    static pthread_mutex_t errorMutex;
+    static Upenn::Timer timer0;
+};
 
+} // namespace Upenn
 
-
-#endif //ERRORMESSAGE_HH 
+#endif //ERRORMESSAGE_HH

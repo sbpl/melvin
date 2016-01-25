@@ -2,21 +2,18 @@
 //
 //Aleksandr Kushleyev
 //University of Pennsylvania
-//June 2009 
+//June 2009
 //akushley@seas.upenn.edu
 
 #ifndef DYNAMIXEL_HH
 #define DYNAMIXEL_HH
 
-#include "iostream"
-#include <string>
-#include <list>
-#include "Timer.h"
-#include <vector>
-#include "SerialDevice.h"
-#include <iomanip>
-#include <string>
 #include <stdint.h>
+#include <list>
+#include <string>
+
+#include "SerialDevice.h"
+#include "Timer.h"
 
 #define DYNAMIXEL_DEFAULT_MODULE_ID         0x00
 #define DYNAMIXEL_PACKET_HEADER_LENGTH      4
@@ -38,7 +35,6 @@
 #define DYNAMIXEL_CMD_BYTE_POS              3
 #define DYNAMIXEL_PARAM_BYTE_POS            4
 
-
 #define DYNAMIXEL_MIN_ANGLE                -150
 #define DYNAMIXEL_MAX_ANGLE                 150
 
@@ -53,122 +49,132 @@
 #define DYNAMIXEL_DEFAULT_MAX_ANGLE        (-7.5+30)
 #define DYNAMIXEL_DEFAULT_REVERSE_POINT    5
 
-using namespace Upenn;
-using namespace std;
+namespace Upenn {
 
-namespace Upenn
+struct ErrorInfo
 {
-  struct ErrorInfo
-  {
     unsigned char cmd;
     unsigned char code;
-    double t;  
-  };
+    double t;
+};
 
+enum
+{
+    DYNAMIXEL_STATUS_OK,
+    DYNAMIXEL_STATUS_WARNING,
+    DYNAMIXEL_STATUS_ERROR,
+    DYNAMIXEL_STATUS_UNKNOWN
+};
 
-  enum { DYNAMIXEL_STATUS_OK,
-         DYNAMIXEL_STATUS_WARNING,
-         DYNAMIXEL_STATUS_ERROR,
-         DYNAMIXEL_STATUS_UNKNOWN};
+//error codes that may be stored into this->lastDriverError.
+enum
+{
+    DYNAMIXEL_ERROR_OK,
+    DYNAMIXEL_ERROR_TIMEOUT,
+    DYNAMIXEL_ERROR_BAD_CHECKSUM,
+    DYNAMIXEL_ERROR_NOT_ENOUGH_SPACE,
+    DYNAMIXEL_ERROR_INCOMPLETE_PACKET
+};
 
-  //error codes that may be stored into this->lastDriverError.
-  enum { DYNAMIXEL_ERROR_OK,
-         DYNAMIXEL_ERROR_TIMEOUT,
-         DYNAMIXEL_ERROR_BAD_CHECKSUM,
-         DYNAMIXEL_ERROR_NOT_ENOUGH_SPACE,
-         DYNAMIXEL_ERROR_INCOMPLETE_PACKET};
+//Class ShunkDriver implements functions for the SerialDeviceReader class
+//It will read packets of specified length and maintain a circular buffer of desired length
+class Dynamixel
+{
+public:
 
-  //Class ShunkDriver implements functions for the SerialDeviceReader class
-  //It will read packets of specified length and maintain a circular buffer of desired length
-  class Dynamixel
-  {	
-    //constructor 
-    public: Dynamixel();
+    //constructor
+    Dynamixel();
 
     //destructor
-    public: ~Dynamixel();
+    ~Dynamixel();
 
     //connect to the device
-    public: int Connect(string device, int baudRate, int moduleId);
+    int Connect(std::string device, int baudRate, int moduleId);
 
     //disconnect from the device
-    public: int Disconnect();
-    
+    int Disconnect();
+
     //start up the device
-    public: int StartDevice();
-	
+    int StartDevice();
+
     //shutdown the device
-    public: int StopDevice();
+    int StopDevice();
 
     //get the status
-    public: int GetStatus();
-
-    //calculate the checksum
-    private: unsigned char CalcCheckSum(unsigned char * buf, bool writeToBuf = true);
-
-    //get the last stored error code that came from device
-    private: unsigned char GetLastDeviceError();
-
-    //get the last stored error code, set by this driver
-    private: unsigned char GetLastDriverError();
-
-    //send the stop command
-    private: int SendStopCmd();
-
-    //convert angle in degrees to position command
-    private: int AngleDeg2AngleVal(float angle, uint16_t &val);
-
-    //convert the position feedback to degrees
-    private: int AngleVal2AngleDeg(uint16_t val, float &angle);
-
-    //convert velocity in degrees per second to velocity command
-    private: int VelocityDeg2VelocityVal(float velocity, uint16_t &val);
-
-    //convert velocity feedback to degrees/second
-    private: int VelocityVal2VelocityDeg(uint16_t val, float &velocity);
-
-    //stop the unit
-    private: int StopUnit();
+    int GetStatus();
 
     //send a command to request motion to a position using provided velocity and stored acceleration
-    public: int MoveToPos(float position, float velocity);
+    int MoveToPos(float position, float velocity);
 
     //request position feedback
-    public: int GetPosition(float & position);
+    int GetPosition(float & position);
+
+private:
+
+    //calculate the checksum
+    unsigned char CalcCheckSum(unsigned char * buf, bool writeToBuf = true);
+
+    //get the last stored error code that came from device
+    unsigned char GetLastDeviceError();
+
+    //get the last stored error code, set by this driver
+    unsigned char GetLastDriverError();
+
+    //send the stop command
+    int SendStopCmd();
+
+    //convert angle in degrees to position command
+    int AngleDeg2AngleVal(float angle, uint16_t &val);
+
+    //convert the position feedback to degrees
+    int AngleVal2AngleDeg(uint16_t val, float &angle);
+
+    //convert velocity in degrees per second to velocity command
+    int VelocityDeg2VelocityVal(float velocity, uint16_t &val);
+
+    //convert velocity feedback to degrees/second
+    int VelocityVal2VelocityDeg(uint16_t val, float &velocity);
+
+    //stop the unit
+    int StopUnit();
 
     //get command confirmation
-    private: int GetCmdConfirmation(uint16_t &status);
-    
-    //get the device information (model number)
-    private: int GetDeviceInfo(string & info);
+    int GetCmdConfirmation(uint16_t &status);
 
+    //get the device information (model number)
+    int GetDeviceInfo(std::string & info);
 
     //handle an unexpected message
-    private: int HandleOtherMessage(char * packet, unsigned int packetLength);
-    
-    //print the packet in 
-    private: void PrintPacket(char * buf, int length);
-    
-    //read a packet and verify the checksum
-    private: int ReadPacket(char * packet, unsigned int maxLength, 
-                          unsigned int timeoutUs = DYNAMIXEL_DEFAULT_TIMEOUT);
+    int HandleOtherMessage(char * packet, unsigned int packetLength);
 
-    private: int WritePacket(char * packet, unsigned int length);
+    //print the packet in
+    void PrintPacket(char * buf, int length);
+
+    //read a packet and verify the checksum
+    int ReadPacket(
+        char * packet,
+        unsigned int maxLength,
+        unsigned int timeoutUs = DYNAMIXEL_DEFAULT_TIMEOUT);
+
+    int WritePacket(char * packet, unsigned int length);
 
     //pack up the data for shipping out to the device (adds header, length, checksum)
-    private: int CreateOutgoingPacket(void * payload, unsigned int length, 
-                                      char * packet, unsigned int maxLength);
+    int CreateOutgoingPacket(
+        void * payload,
+        unsigned int length,
+        char * packet,
+        unsigned int maxLength);
 
-    
-    private: SerialDevice * sd;
-    private: bool connected;
-    private: unsigned char moduleId;          //module id - used to construct the packet
-    private: list<ErrorInfo> errors;          //list of errors
-    private: Timer timer0;                    //just a timer
-    private: unsigned char lastDeviceError;   //last error reported by the device
-    private: unsigned char lastDriverError;   //last error reported by the driver
-    private: static const float DYNAMIXEL_AX12_MAX_VEL = (DYNAMIXEL_AX12_MAX_RPM/60.0*360.0);
-  };
-}
+    SerialDevice * sd;
+    bool connected;
+    unsigned char moduleId;          //module id - used to construct the packet
+    std::list<ErrorInfo> errors;          //list of errors
+    Timer timer0;                    //just a timer
+    unsigned char lastDeviceError;   //last error reported by the device
+    unsigned char lastDriverError;   //last error reported by the driver
+    static const float DYNAMIXEL_AX12_MAX_VEL = (DYNAMIXEL_AX12_MAX_RPM / 60.0 * 360.0);
+};
+
+} // namespace Upenn
 
 #endif //DYNAMIXEL_HH
