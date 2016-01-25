@@ -3,6 +3,8 @@
     <arg name="ns"                  default="false"/>
     <arg name="sim"                 default="false"/>
 
+    <arg name="upload"              default="true"/>
+
     <!-- Hardware -->
     <arg name="use_base_laser"      default="true"/>
     <arg name="use_camera"          default="true"/>
@@ -37,7 +39,7 @@
     <param name="max_yawspeed" value="2.1"/>
 
     <!-- Send URDF to param server -->
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(find segbot_description)/robots/segbot_without_arm.urdf.xacro'"/>
+    <param if="$(arg upload)" name="robot_description" command="$(find xacro)/xacro.py '$(find segbot_description)/robots/segbot_without_arm.urdf.xacro'"/>
 
     <include unless="$(arg sim)" file="$(find segbot_2dnav)/launch/segbot_hardware.launch">
         <arg name="sim"             value="$(arg sim)"/>
