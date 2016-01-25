@@ -4,7 +4,9 @@
         <static>false</static>
 
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>segbot</robotNamespace>
+            <xacro:if value="$(arg namespace)">
+                <robotNamespace>segbot</robotNamespace>
+            </xacro:if>
             <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
         </plugin>
     </gazebo>

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
     <xacro:include filename="$(find segbot_description)/urdf/sensors.gazebo.xacro"/>
 
-    <xacro:macro name="sensors" params="name">
+    <xacro:macro name="sensors" params="name namespace">
         <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR
         REVOLUTE AND CONTINUOUS JOINTS -->
 
@@ -73,6 +73,6 @@
             </collision>
         </link>
 
-        <xacro:sensors_gazebo name="${name}"/>
+        <xacro:sensors_gazebo name="${name}" namespace="${namespace}"/>
     </xacro:macro>
 </robot>

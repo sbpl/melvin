@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:macro name="sensors_gazebo" params="name">
+    <xacro:macro name="sensors_gazebo" params="name namespace">
         <gazebo reference="base_laser_link">
             <sensor type="gpu_ray" name="base_laser">
                 <pose>0 0 0 0 0 0</pose>
@@ -29,7 +29,9 @@
 
                 <plugin name="gazebo_ros_base_laser_controller"
                         filename="libgazebo_ros_gpu_laser.so">
-                    <robotNamespace>segbot</robotNamespace>
+                    <xacro:if value="${namespace}">
+                        <robotNamespace>segbot</robotNamespace>
+                    </xacro:if>
                     <topicName>base_scan</topicName>
                     <frameName>base_laser_link</frameName>
                 </plugin>
@@ -64,7 +66,9 @@
 
                 <plugin name="gazebo_ros_tilt_laser_controller"
                         filename="libgazebo_ros_gpu_laser.so">
-                    <robotNamespace>segbot</robotNamespace>
+                    <xacro:if value="${namespace}">
+                        <robotNamespace>segbot</robotNamespace>
+                    </xacro:if>
                     <topicName>tilt_scan</topicName>
                     <frameName>tilt_laser_link</frameName>
                 </plugin>
@@ -98,7 +102,9 @@
                 </camera>
                 <plugin name="segbot_camera_gazebo_controller"
                         filename="libgazebo_ros_camera.so">
-                    <robotNamespace>segbot</robotNamespace>
+                    <xacro:if value="${namespace}">
+                        <robotNamespace>segbot</robotNamespace>
+                    </xacro:if>
                     <alwaysOn>true</alwaysOn>
                     <updateRate>0.0</updateRate>
                     <cameraName>segbot_cam</cameraName>

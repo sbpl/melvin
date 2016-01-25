@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:macro name="base_gazebo" params="name">
+    <xacro:macro name="base_gazebo" params="name namespace">
         <gazebo reference="base_link">
             <material>Gazebo/Blue</material>
         </gazebo>
@@ -55,7 +55,9 @@
             <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
                 <alwaysOn>true</alwaysOn>
                 <updateRate>100.0</updateRate>
-                <robotNamespace>segbot</robotNamespace>
+                <xacro:if value="${namespace}">
+                    <robotNamespace>segbot</robotNamespace>
+                </xacro:if>
 
                 <rosDebugLevel>info</rosDebugLevel>
                 <commandTopic>cmd_vel_sim</commandTopic>
@@ -78,7 +80,9 @@
             <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
                 <alwaysOn>true</alwaysOn>
                 <updateRate>100.0</updateRate>
-                <robotNamespace>segbot</robotNamespace>
+                <xacro:if value="${namespace}">
+                    <robotNamespace>segbot</robotNamespace>
+                </xacro:if>
 
                 <bodyName>base_footprint</bodyName>
                 <topicName>base_pose_ground_truth</topicName>
