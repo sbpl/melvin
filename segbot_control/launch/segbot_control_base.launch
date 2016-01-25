@@ -6,8 +6,13 @@
 
     <node name="pub_base_laser_command" pkg="rostopic" type="rostopic"
             args="pub base_laser_controller/command std_msgs/Float64 0.18"/>
-    <node name="pub_tilt_laser_command" pkg="rostopic" type="rostopic"
-            args="pub tilt_laser_controller/command std_msgs/Float64 0.0"/>
+
+    <node name="pub_tilt_laser_command" pkg="segbot_gazebo" type="tilt_laser_node">
+        <remap from="command" to="tilt_laser_controller/command"/>
+        <param name="min_angle_rad" value="-0.99"/>
+        <param name="max_angle_rad" value="0.75"/>
+        <param name="velocity_rps" value="1.5707"/>
+    </node>
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
