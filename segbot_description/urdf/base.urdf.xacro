@@ -48,7 +48,6 @@
             <collision>
                 <origin xyz="-0.03164 0.132315 0.00167" rpy="1.5708 0 0"/>
                 <geometry name="segway_base_table_geom">
-<!--                    <cylinder radius="0.3054" length="0.01587"/> -->
                     <cylinder radius="0.4054" length="0.01587"/>
                 </geometry>
             </collision>
