@@ -4,7 +4,14 @@
     <arg name="use_sbpl"/>
     <arg name="sbpl_planner"/>
 
-    <node if="$(arg use_move_base)" pkg="move_base" type="move_base" respawn="false" name="move_base">
+    <!--
+    NOTE: clear_params set to true because of our usage of deprecated pre- Hydro
+    param scheme. move_base now reads in the old parameter scheme, to
+    maintain backwards compatibility, but then reuploads them to the param
+    server under the new scheme. Since we do not set parameters under the new
+    scheme, relaunching this launch file will not update them accordingly
+    -->
+    <node if="$(arg use_move_base)" name="move_base" pkg="move_base" type="move_base" clear_params="true">
         <!--<remap from="move_base_simple/goal" to="goal" />-->
 
         <param name="controller_frequency" value="20.0"/>
