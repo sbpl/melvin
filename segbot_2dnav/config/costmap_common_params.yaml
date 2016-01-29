@@ -1,16 +1,65 @@
+# Parameters common to both the global and local costmap
+
+# PLEASE TRY TO MAKE NOTES, AS SHOWN BELOW, WHEN A PARAMETER IS OVERRIDEN BY
+# EITHER THE GLOBAL OR LOCAL COSTMAP
+
+# footprint parameters
+footprint:
+    - [ 0.55,  0.16]
+    - [ 0.25,  0.55]
+    - [-0.25,  0.55]
+    - [-0.50,  0.20]
+    - [-0.85,  0.20]
+    - [-0.85, -0.20]
+    - [-0.50, -0.20]
+    - [-0.25, -0.55]
+    - [ 0.25, -0.55]
+    - [ 0.55, -0.16]
+# overridden footprint_padding
+
+# coordinate frame parameters
+global_frame: map
+robot_base_frame: base_footprint
+transform_tolerance: 0.3
+
+# rates
+# update_frequency overridden
+# publish_frequency overridden
+
+# map management
+# static_map overridden
+# rolling_window overridden
+# width irrelevant overridden
+# height irrelevant overridden
+# resolution irrelevant overridden
+# origin_x irrelevant overridden
+# origin_y irrelevant overridden
+
+# static layer
+# unknown_cost_value overridden
+lethal_cost_threshold: 100
+map_topic: map
+
+# obstacle layer - sensor management parameters
+# NOTE: observation_sources are common to all costmaps and have been factored
+# out into separate configuration files to realize different sensor
+# configurations while maintaining the same costmap parameters
+
+# obstacle layer - map-type-specific parameters
 map_type: voxel
+# track_unknown_space irrelevant: track_unknown_space: false
 origin_z: 0.0
 z_resolution: 0.2
 z_voxels: 10
-unknown_threshold: 10
+# unknown_threshold overridden
 mark_threshold: 0
+# publish_voxel_map overridden
 
-transform_tolerance: 0.3
-obstacle_range: 3.0
+# obstacle layer - global filtering parameters
 max_obstacle_height: 2.0
+obstacle_range: 3.0
 raytrace_range: 5.0
-footprint: [[0.55, 0.16], [0.25, 0.55], [-0.25, 0.55], [-0.50, 0.20], [-0.85, 0.20], [-0.85, -0.20], [-0.50, -0.20], [-0.25, -0.55], [0.25, -0.55], [0.55, -0.16]]
-footprint_padding: 0.3
-inflation_radius: 2.0
+
+# inflation layer
+# inflation_radius overridden
 cost_scaling_factor: 10.0
-lethal_cost_threshold: 100

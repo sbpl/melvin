@@ -1,12 +1,23 @@
 # Independent settings for the local costmap
+
+# PLEASE TRY TO MAKE NOTES, AS SHOWN BELOW, WHEN A PARAMETER IS COMMON TO BOTH
+# THE GLOBAL OR LOCAL COSTMAP, SO WE CAN EASILY TELL WHEN SOMETHING IS DEFAULT
+
 local_costmap:
-    footprint_padding: 0.2
-    inflation_radius: 1.5
-    publish_voxel_map: true
-    global_frame: map
-    robot_base_frame: base_footprint
+    # footprint parameters
+    # common footprint
+    footprint_padding: 0.05
+
+    # coordinate frame parameters
+    # common global_frame
+    # common robot_base_frame
+    # common transform_tolerance
+
+    # rates
     update_frequency: 5.0
     publish_frequency: 2.0
+
+    # map management
     static_map: false
     rolling_window: true
     width: 10.0
@@ -14,3 +25,32 @@ local_costmap:
     resolution: 0.05
     origin_x: 0.0
     origin_y: 0.0
+
+    # static layer
+    unknown_cost_value: -1
+    # common lethal_cost_threshold
+    # commom map_topic
+
+    # obstacle layer - sensor management parameters
+    # NOTE: observation_sources are common to all costmaps and have been factored
+    # out into separate configuration files to realize different sensor
+    # configurations while maintaining the same costmap parameters
+
+    # obstacle layer - map-type-specific parameters
+    # common map_type
+    # track_unknown_space irrelevant # track_unknown_space: false
+    # common origin_z
+    # common z_resolution
+    # common z_voxels
+    unknown_threshold: 10
+    # common mark_threshold
+    publish_voxel_map: true
+
+    # obstacle layer - global filtering parameters
+    # common max_obstacle_height
+    # common obstacle_range
+    # common raytrace_range
+
+    # inflation_layer
+    inflation_radius: 1.5
+    # common cost_scaling_factor
