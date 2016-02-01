@@ -54,7 +54,7 @@
         </include>
     </group>
     <group unless="$(arg ns)">
-        <include file="$(find segbot_2dnav)/launch/segbot.launch">
+        <include file="$(find segbot_2dnav)/launch/segbot_base.launch">
             <arg name="ns"                  value="$(arg ns)"/>
             <arg name="sim"                 value="$(arg sim)"/>
             <arg name="use_base_laser"      value="$(arg use_base_laser)"/>
