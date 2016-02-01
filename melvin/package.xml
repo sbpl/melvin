@@ -20,7 +20,7 @@
     <exec_depend>exploration_planner</exec_depend>
     <exec_depend>base_sim_controller</exec_depend>
     <exec_depend>servo_controller</exec_depend>
-    <exec_depend>segway_robot</exec_depend>
+    <exec_depend>segbot_description</exec_depend>
     <exec_depend>teleop_segbot</exec_depend>
 
     <export>

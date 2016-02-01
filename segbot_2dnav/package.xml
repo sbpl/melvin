@@ -12,7 +12,7 @@
     <depend>pr2_hardware_interface</depend>
     <depend>segbot_msgs</depend>
     <depend>segway_rmp</depend>
-    <depend>segway_robot</depend>
+    <depend>segbot_description</depend>
     <depend>servo_controller</depend>
     <depend>servo_node</depend>
 </package>
