@@ -3,8 +3,6 @@
     <arg name="ns"                  default="false"/>
     <arg name="sim"                 default="false"/>
 
-    <arg name="upload"              default="true"/>
-
     <!-- Hardware -->
     <arg name="use_base_laser"      default="true"/>
     <arg name="use_camera"          default="true"/>
@@ -34,40 +32,45 @@
     <!-- if we are using sbpl -->
     <arg name="sbpl_planner"        default="SBPLLatticePlanner"/>
 
-    <!-- LIMITS -->
-    <param name="max_xspeed" value="4.0"/>
-    <param name="max_yawspeed" value="2.1"/>
-
-    <!-- Send URDF to param server -->
-    <param if="$(arg upload)" name="robot_description" command="$(find xacro)/xacro.py '$(find segbot_description)/robots/segbot_without_arm.urdf.xacro'"/>
-
-    <include unless="$(arg sim)" file="$(find segbot_2dnav)/launch/segbot_hardware.launch">
-        <arg name="sim"             value="$(arg sim)"/>
-        <arg name="use_base_laser"  value="$(arg use_base_laser)"/>
-        <arg name="use_tilt_laser"  value="$(arg use_tilt_laser)"/>
-        <arg name="use_servos"      value="$(arg use_servos)"/>
-        <arg name="use_gps"         value="$(arg use_gps)"/>
-        <arg name="use_camera"      value="$(arg use_camera)"/>
-        <arg name="use_segway_rmp"  value="$(arg use_segway_rmp)"/>
-    </include>
-
-    <include file="$(find segbot_2dnav)/launch/segbot_localization.launch">
-        <arg name="ns"                  value="$(arg ns)"/>
-        <arg name="use_slam"            value="$(arg use_slam)"/>
-        <arg name="map_name"            value="$(arg map_name)"/>
-        <arg name="use_gps"             value="$(arg use_gps)"/>
-        <arg name="use_gmapping"        value="$(arg use_gmapping)"/>
-        <arg name="use_hector_mapping"  value="$(arg use_hector_mapping)"/>
-    </include>
-
-    <include file="$(find segbot_2dnav)/launch/segbot_control.launch">
-        <arg name="use_teleop" value="$(arg use_teleop)"/>
-    </include>
-
-    <include file="$(find segbot_2dnav)/launch/segbot_navigation.launch">
-        <arg name="use_tilt_laser"  value="$(arg use_tilt_laser)"/>
-        <arg name="use_move_base"   value="$(arg use_move_base)"/>
-        <arg name="use_sbpl"        value="$(arg use_sbpl)"/>
-        <arg name="sbpl_planner"    value="$(arg sbpl_planner)"/>
-    </include>
+    <group if="$(arg ns)" ns="segbot">
+        <param name="tf_prefix" value="segbot"/>
+        <include file="$(find segbot_2dnav)/launch/segbot_base.launch">
+            <arg name="ns"                  value="$(arg ns)"/>
+            <arg name="sim"                 value="$(arg sim)"/>
+            <arg name="use_base_laser"      value="$(arg use_base_laser)"/>
+            <arg name="use_camera"          value="$(arg use_camera)"/>
+            <arg name="use_gps"             value="$(arg use_gps)"/>
+            <arg name="use_segway_rmp"      value="$(arg use_segway_rmp)"/>
+            <arg name="use_servos"          value="$(arg use_servos)"/>
+            <arg name="use_tilt_laser"      value="$(arg use_tilt_laser)"/>
+            <arg name="use_slam"            value="$(arg use_slam)"/>
+            <arg name="map_name"            value="$(arg map_name)"/>
+            <arg name="use_gmapping"        value="$(arg use_gmapping)"/>
+            <arg name="use_hector_mapping"  value="$(arg use_hector_mapping)"/>
+            <arg name="use_move_base"       value="$(arg use_move_base)"/>
+            <arg name="use_teleop"          value="$(arg use_teleop)"/>
+            <arg name="use_sbpl"            value="$(arg use_sbpl)"/>
+            <arg name="sbpl_planner"        value="$(arg sbpl_planner)"/>
+        </include>
+    </group>
+    <group unless="$(arg ns)">
+        <include file="$(find segbot_2dnav)/launch/segbot.launch">
+            <arg name="ns"                  value="$(arg ns)"/>
+            <arg name="sim"                 value="$(arg sim)"/>
+            <arg name="use_base_laser"      value="$(arg use_base_laser)"/>
+            <arg name="use_camera"          value="$(arg use_camera)"/>
+            <arg name="use_gps"             value="$(arg use_gps)"/>
+            <arg name="use_segway_rmp"      value="$(arg use_segway_rmp)"/>
+            <arg name="use_servos"          value="$(arg use_servos)"/>
+            <arg name="use_tilt_laser"      value="$(arg use_tilt_laser)"/>
+            <arg name="use_slam"            value="$(arg use_slam)"/>
+            <arg name="map_name"            value="$(arg map_name)"/>
+            <arg name="use_gmapping"        value="$(arg use_gmapping)"/>
+            <arg name="use_hector_mapping"  value="$(arg use_hector_mapping)"/>
+            <arg name="use_move_base"       value="$(arg use_move_base)"/>
+            <arg name="use_teleop"          value="$(arg use_teleop)"/>
+            <arg name="use_sbpl"            value="$(arg use_sbpl)"/>
+            <arg name="sbpl_planner"        value="$(arg sbpl_planner)"/>
+        </include>
+    </group>
 </launch>
