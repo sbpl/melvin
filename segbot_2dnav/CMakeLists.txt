@@ -9,7 +9,7 @@ find_package(catkin REQUIRED
         pr2_hardware_interface
         segbot_msgs
         segway_rmp
-        segway_robot
+        segbot_description
         servo_controller
         servo_node)
 
