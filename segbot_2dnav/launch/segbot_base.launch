@@ -9,7 +9,7 @@
     <arg name="use_base_laser"      default="true"/>
     <arg name="use_camera"          default="true"/>
     <arg name="use_gps"             default="false"/>
-    <arg name="use_segway_rmp"      default="false"/>
+    <arg name="use_segway_rmp"      default="true"/>
     <arg name="use_servos"          default="true"/>
     <arg name="use_tilt_laser"      default="true"/>
 
