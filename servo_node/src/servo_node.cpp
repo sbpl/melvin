@@ -27,7 +27,7 @@ ServoNode::ServoNode() :
     std::string device_name;
     nh.getParam("device_name", dev);
     nh.getParam("baud_rate", baudRate);
-    ROS_INFO("connecting to device %s with baud rate %d\n", dev.c_str(), baudRate);
+    ROS_INFO("connecting to device %s with baud rate %d", dev.c_str(), baudRate);
 
     std::vector<double> temp;
 
@@ -97,7 +97,7 @@ ServoNode::ServoNode() :
     ROS_INFO("Loaded parameters...");
 
     for (size_t i = 0; i < moduleId.size(); i++) {
-        ROS_INFO("%zu: id %d min angle %f max angle %f velocity %f\n", i, moduleId[i], minAngle[i], maxAngle[i], vel[i]);
+        ROS_INFO("%zu: id %d min angle %f max angle %f velocity %f", i, moduleId[i], minAngle[i], maxAngle[i], vel[i]);
     }
 
     reversePoint = 5; //degrees away from the goal to start reversing
@@ -128,23 +128,23 @@ int ServoNode::initialize()
     for (unsigned int i = 0; i < moduleId.size(); i++) {
         //open the serial port
         if (dynamixel[i].Connect(dev.c_str(), baudRate, moduleId[i])) {
-            ROS_ERROR("servo_node: module %d could not connect\n", i);
+            ROS_ERROR("servo_node: module %d could not connect", i);
             return -1;
         }
 
         //check to see if the servo is hooked up
         if (dynamixel[i].StartDevice()) {
-            ROS_ERROR("servo_node: module %d could not get status\n", i);
+            ROS_ERROR("servo_node: module %d could not get status", i);
             return -1;
         }
 
-        ROS_INFO("servo_node: module %d connected\n", i);
+        ROS_INFO("servo_node: module %d connected", i);
 
         if (dynamixel[i].MoveToPos(0, 50)) {
-            ROS_ERROR("servo_node: module %d could not send move cmd\n", i);
+            ROS_ERROR("servo_node: module %d could not send move cmd", i);
             return -1;
         }
-        ROS_INFO("servo_node: module %d sent move cmd\n", i);
+        ROS_INFO("servo_node: module %d sent move cmd", i);
     }
     ROS_INFO("Init complete!");
     return 0;
@@ -182,7 +182,7 @@ int ServoNode::updateServo()
                 desAngle[i] = dir[i] > 0 ? maxAngle[i] : minAngle[i];
 
                 if (dynamixel[i].MoveToPos(desAngle[i], vel[i])) {
-                    ROS_ERROR("servo_node: module %d could not send MoveToPos command\n", i);
+                    ROS_ERROR("servo_node: module %d could not send MoveToPos command", i);
                     return -1;
                 }
 
@@ -195,7 +195,7 @@ int ServoNode::updateServo()
                 ROS_INFO("sent");
 
                 if (dynamixel[i].GetPosition(position[i]) == 0) {
-                    ROS_INFO("module %d: angle = %f\n", i, position[i]);
+                    ROS_INFO("module %d: angle = %f", i, position[i]);
                     //if we are close to getting to the desired angle, switch the direction without getting there
                     if ((dir[i] > 0)
                             && (position[i] > (desAngle[i] - reversePoint))) {
@@ -211,12 +211,12 @@ int ServoNode::updateServo()
                     break;
                 }
                 else {
-                    ROS_ERROR("servo_node: module %d could not get position from the servo\n", i);
+                    ROS_ERROR("servo_node: module %d could not get position from the servo", i);
                     return -1;
                 }
 
             default:
-                ROS_ERROR("servo_node: module %d unknown state\n", i);
+                ROS_ERROR("servo_node: module %d unknown state", i);
                 return -1;
             }
         }
@@ -224,7 +224,7 @@ int ServoNode::updateServo()
             switch (state[i]) {
             case DYNAMIXEL_STATE_INITIALIZED:
                 if (dynamixel[i].MoveToPos(maxAngle[i], vel[i])) {
-                    ROS_ERROR("servo_node: module %d could not send MoveToPos command\n", i);
+                    ROS_ERROR("servo_node: module %d could not send MoveToPos command", i);
                     return -1;
                 }
                 state[i] = DYNAMIXEL_STATE_MOVE_CMD_SENT;
@@ -233,16 +233,16 @@ int ServoNode::updateServo()
 
             case DYNAMIXEL_STATE_MOVE_CMD_SENT:
                 if (dynamixel[i].GetPosition(position[i]) == 0) {
-                    ROS_INFO("module %d: angle = %f\n", i, position[i]);
+                    ROS_INFO("module %d: angle = %f", i, position[i]);
                     break;
                 }
                 else {
-                    ROS_ERROR("servo_node: module %d could not get position from the servo\n", i);
+                    ROS_ERROR("servo_node: module %d could not get position from the servo", i);
                     return -1;
                 }
 
             default:
-                ROS_ERROR("servo_node: module %d unknown state\n", i);
+                ROS_ERROR("servo_node: module %d unknown state", i);
                 return -1;
             }
         }

@@ -16,10 +16,10 @@
 
 #ifdef FANCY_ERROR_MESSAGE
 
-#define PRINT_INFO( msg )    { std::ostringstream msgStream; msgStream <<"["<<__PRETTY_FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
-#define PRINT_INFO_RAW( msg )    { std::ostringstream msgStream; msgStream <<"["<<__PRETTY_FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
-#define PRINT_WARNING( msg ) { std::ostringstream msgStream; msgStream <<"["<<__PRETTY_FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintWarning(msgStream.str()); }
-#define PRINT_ERROR( msg )   { std::ostringstream msgStream; msgStream <<"["<<__PRETTY_FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintError(msgStream.str()); }
+#define PRINT_INFO(msg)     { std::ostringstream msgStream; msgStream << "[" << __PRETTY_FUNCTION__ << " : " << __LINE__ << "] : " << msg << std::endl; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
+#define PRINT_INFO_RAW(msg) { std::ostringstream msgStream; msgStream << "[" << __PRETTY_FUNCTION__ << " : " << __LINE__ << "] : " << msg << std::endl; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
+#define PRINT_WARNING(msg)  { std::ostringstream msgStream; msgStream << "[" << __PRETTY_FUNCTION__ << " : " << __LINE__ << "] : " << msg << std::endl; Upenn::ErrorMessage::PrintWarning(msgStream.str()); }
+#define PRINT_ERROR(msg)    { std::ostringstream msgStream; msgStream << "[" << __PRETTY_FUNCTION__ << " : " << __LINE__ << "] : " << msg << std::endl; Upenn::ErrorMessage::PrintError(msgStream.str()); }
 
 //#define PRINT_INFO( msg )    { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
 //#define PRINT_INFO_RAW( msg )    { std::ostringstream msgStream; msgStream <<"["<<__FUNCTION__<<" : "<<__LINE__<<"] : "<< msg << std::flush; Upenn::ErrorMessage::PrintInfo(msgStream.str()); }
