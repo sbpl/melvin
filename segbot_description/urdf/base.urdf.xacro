@@ -173,7 +173,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry name="segway_trailer_wheel_collision_geom">
-                    <cylinder radius="0.1285" length="0.097"/>
+                    <sphere radius="0.1285"/>
                 </geometry>
             </collision>
         </link>
