@@ -8,8 +8,8 @@
 
     <buildtool_depend>catkin</buildtool_depend>
 
-    <depend>pr2_controller_manager</depend>
-    <depend>pr2_hardware_interface</depend>
+    <depend>controller_manager</depend>
+    <depend>hardware_interface</depend>
     <depend>segbot_msgs</depend>
     <depend>segway_rmp</depend>
     <depend>segbot_description</depend>

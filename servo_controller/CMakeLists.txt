@@ -5,9 +5,9 @@ set(CMAKE_BUILD_TYPE Release)
 
 find_package(catkin REQUIRED
     COMPONENTS
+        controller_interface
+        hardware_interface
         pluginlib
-        pr2_controller_interface
-        pr2_mechanism_model
         segbot_msgs
         tf)
 

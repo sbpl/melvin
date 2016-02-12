@@ -1,30 +1,36 @@
-#include <pr2_controller_interface/controller.h>
-#include <pr2_mechanism_model/joint.h>
+// system includes
+#include <controller_interface/controller.h>
 #include <geometry_msgs/Twist.h>
-#include <tf/transform_broadcaster.h>
+#include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/robot_hw.h>
+#include <ros/ros.h>
 #include <segbot_msgs/ServoAngle.h>
+#include <tf/transform_broadcaster.h>
 
-namespace servo_controller_ns{
+namespace servo_controller {
 
-	class ServoController: public pr2_controller_interface::Controller
-	{
-		private:
-		  pr2_mechanism_model::JointState* base_servo_joint;
-		  pr2_mechanism_model::JointState* tilt_servo_joint;
-      ros::NodeHandle nh_;
-      float baseAngle;
-      float tiltAngle;
+class ServoController : public controller_interface::Controller<hardware_interface::PositionJointInterface>
+{
+public:
 
-      ros::Subscriber baseServoAngle_sub;
-      ros::Subscriber tiltServoAngle_sub;
-      void baseCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
-      void tiltCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
+    bool init(hardware_interface::PositionJointInterface* robot, ros::NodeHandle& controller_nh);
+    bool init(hardware_interface::PositionJointInterface* robot, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh);
+    void starting();
+    void update(const ros::Time& time, const ros::Duration& period);
+    void stopping();
 
-		public:
-		  bool init(pr2_mechanism_model::RobotState *robot, ros::NodeHandle &n);
-		  void starting();
-		  void update();
-		  void stopping();
-	};
-} 
+private:
 
+    hardware_interface::JointHandle base_servo_joint;
+    hardware_interface::JointHandle tilt_servo_joint;
+    ros::NodeHandle nh_;
+    float baseAngle;
+    float tiltAngle;
+
+    ros::Subscriber baseServoAngle_sub;
+    ros::Subscriber tiltServoAngle_sub;
+    void baseCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
+    void tiltCmdCallback(const segbot_msgs::ServoAngleConstPtr& msg);
+};
+
+} // namespace servo_controller

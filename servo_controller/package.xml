@@ -9,13 +9,13 @@
     <buildtool_depend>catkin</buildtool_depend>
 
     <depend>pluginlib</depend>
-    <depend>pr2_controller_interface</depend>
-    <depend>pr2_mechanism_model</depend>
+    <depend>controller_interface</depend>
+    <depend>hardware_interface</depend>
     <depend>segbot_msgs</depend>
     <depend>tf</depend>
 
     <export>
-        <pr2_controller_interface plugin="${prefix}/controller_plugins.xml" />
+        <controller_interface plugin="${prefix}/controller_plugins.xml"/>
     </export>
 </package>
 

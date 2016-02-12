@@ -3,10 +3,12 @@ project(segbot_2dnav)
 
 set(CMAKE_BUILD_TYPE Release)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 find_package(catkin REQUIRED
     COMPONENTS
-        pr2_controller_manager
-        pr2_hardware_interface
+        controller_manager
+        hardware_interface
         segbot_msgs
         segway_rmp
         segbot_description

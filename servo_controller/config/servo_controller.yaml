@@ -1,3 +1,7 @@
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
 servo_controller_name:
     type: ServoControllerPlugin
     base_servo_joint: R283_hokuyo_laser1_joint

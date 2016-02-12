@@ -1,5 +1,7 @@
 <library path="lib/libservo_controller">
   <class name="ServoControllerPlugin"
-         type="servo_controller_ns::ServoController"
-         base_class_type="pr2_controller_interface::Controller" />
+         type="servo_controller::ServoController"
+         base_class_type="controller_interface::ControllerBase">
+     <description>Controller for the two servos on the Segbot</description>
+  </class>
 </library>
