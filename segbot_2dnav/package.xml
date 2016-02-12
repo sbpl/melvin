@@ -15,4 +15,6 @@
     <depend>segbot_description</depend>
     <depend>servo_controller</depend>
     <depend>servo_node</depend>
+
+    <exec_depend>map_server</exec_depend>
 </package>
