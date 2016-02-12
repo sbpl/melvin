@@ -5,6 +5,6 @@ joint_state_controller:
 servo_controller_name:
     type: ServoControllerPlugin
     base_servo_joint: R283_hokuyo_laser1_joint
-    base_servo_angle_name: /servoAngle1
+    base_servo_angle_name: servoAngle1
     tilt_servo_joint: R313_hokuyo_laser2_joint
-    tilt_servo_angle_name: /servoAngle2
+    tilt_servo_angle_name: servoAngle2
