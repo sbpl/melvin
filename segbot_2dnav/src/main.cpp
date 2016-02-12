@@ -346,7 +346,18 @@ void* controlLoop(void *)
     for (size_t jidx = 0; jidx < joint_names.size(); ++jidx) {
         js_interface.registerHandle(hardware_interface::JointStateHandle(
                 joint_names[jidx],
-                &joint_positions[jidx],
+                // NOTE: using the command buffer for the position state buffer
+                // is pretty 'wrong' here. The current setup on the segbot has
+                // an external node that talks directly to the Dynamixel servos
+                // and receives commands and publishes state via ROS topics. To
+                // have joint_state_controller/JointStateController publish the
+                // correct joint state information, the
+                // servo_controller/ServoControllerPlugin intercepts the
+                // /servoAngle(1|2) state topic, sets the corresponding joint
+                // position variable via a 'command' to the Hardware Interface,
+                // which is then read from this buffer by the
+                // JointStateController. PHEW!
+                &joint_position_commands[jidx],
                 &joint_velocities[jidx],
                 &joint_efforts[jidx]));
 
