@@ -32,7 +32,8 @@
 
         <!-- Tilt Laser -->
         <node if="$(arg use_tilt_laser)" name="tilt_laser" pkg="urg_node" type="urg_node">
-        <param name="ip_address" value="172.16.106.33"/>
+            <!-- <param name="ip_address" value="172.16.106.33"/> -->
+            <param name="ip_address" value="192.168.1.254"/>
             <param name="publish_multiecho" value="false"/>
             <param name="frame_id" value="tilt_laser_link"/>
             <param name="angle_min" value="-1.00"/>
@@ -44,26 +45,36 @@
         <node if="$(arg use_servos)" name="servo_node" pkg="servo_node" type="servo_node">
             <param name="device_name" value="/dev/servo"/>
             <param name="baud_rate" value="57600"/>
+<!--
             <rosparam param="servoID">[1,2]</rosparam>
             <rosparam param="minAngle">[-8,-57]</rosparam>
             <rosparam param="maxAngle">[-8,43]</rosparam>
             <rosparam param="velocity">[10,100]</rosparam>
+-->
+            <rosparam param="servoID">[1]</rosparam>
+            <rosparam param="minAngle">[-8]</rosparam>
+            <rosparam param="maxAngle">[-8]</rosparam>
+            <rosparam param="velocity">[10]</rosparam>
         </node>
 
         <node if="$(arg use_camera)" name="segbot_cam" pkg="usb_cam" type="usb_cam_node" respawn="true"/>
 
-        <!--Static odom transform -->
-        <node unless="$(arg use_segway_rmp)" name="not_moving_segway" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 /odom /base_footprint 100"/>
+        <!--Static Odometry Transform -->
+        <node unless="$(arg use_segway_rmp)" name="not_moving_segway" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 odom base_footprint 100"/>
 
-        <!-- Controller manager -->
-        <include file="$(find pr2_controller_manager)/controller_manager.launch"/>
+        <!-- Controller Manager/Loop -->
+        <node name="controller_loop" pkg="segbot_2dnav" type="controller_manager" args="-x robot_description"/>
 
         <!-- Load controllers -->
         <rosparam file="$(find servo_controller)/config/servo_controller.yaml" command="load"/>
-        <node name="servo_controller_spawner" pkg="pr2_controller_manager" type="spawner" args="servo_controller_name"/>
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" args="servo_controller_name joint_state_controller"/>
 
-        <!-- Controller loop -->
-        <node name="controller_loop" pkg="segbot_2dnav" type="controller_manager" args="-x robot_description"/>
+        <!-- State Information -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+            <param name="publish_frequency" type="double" value="50.0"/>
+        </node>
+
+        <node name="pr2_mechanism_diagnostics" pkg="pr2_mechanism_diagnostics" type="pr2_mechanism_diagnostics"/>
 
         <!-- Bring up the GPS -->
         <include if="$(arg use_gps)" file="$(find gps_for_ekf)/launch/gps_for_ekf_node.launch"/>
