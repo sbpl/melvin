@@ -1,0 +1,7 @@
+<launch>
+	<include file="$(find segbot_stage)/launch/map_server.launch" />
+	<include file="$(find segbot_stage)/launch/segbot_stage.launch" />
+	<include file="$(find segbot_stage)/launch/amcl.launch" />
+	<include file="$(find segbot_stage)/launch/teleop.launch" />
+	<node name="rviz" type="rviz" pkg="rviz" args="-d /home/ben/utacc_ws/src/melvin/segbot_stage/config/NSH_A_lvl_clear.rviz" />
+</launch>

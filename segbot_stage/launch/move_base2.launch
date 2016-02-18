@@ -1,0 +1,29 @@
+<launch>
+    <node name="move_base" type="move_base" pkg="move_base" output="screen">
+        <rosparam file="$(find segbot_stage)/config/move_base2.yaml"
+                command="load"/>
+
+        <!--<param name="SBPLLatticePlanner/primitive_filename"
+                value="$(find segbot_stage)/config/uni_circ_test.mprim"/>-->
+        <param name="SBPLLatticePlanner/primitive_filename"
+                value="$(find segbot_stage)/config/segbot.mprim"/>
+        <rosparam file="$(find segbot_stage)/config/sbpl_global_params.yaml"
+                command="load"/>
+
+        <rosparam file="$(find segbot_stage)/config/base_local_planner_params.yaml"
+                command="load"/>
+
+        <rosparam file="$(find segbot_stage)/config/navfn_params.yaml"
+                command="load"/>
+
+        <rosparam file="$(find segbot_stage)/config/costmap_common.yaml"
+                command="load" ns="global_costmap"/>
+        <rosparam file="$(find segbot_stage)/config/costmap_common.yaml"
+                command="load" ns="local_costmap"/>
+
+        <rosparam file="$(find segbot_stage)/config/costmap_global.yaml"
+                command="load"/>
+        <rosparam file="$(find segbot_stage)/config/costmap_local.yaml"
+                command="load"/>
+    </node>
+</launch>
