@@ -213,7 +213,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /current_goal
+      Marker Topic: /current_goalb
       Name: Marker
       Namespaces:
         {}
@@ -221,7 +221,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /next_goal
+      Marker Topic: /next_goalb
       Name: Marker
       Namespaces:
         {}
@@ -229,7 +229,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /robot_marker
+      Marker Topic: /robot_markerb
       Name: Marker
       Namespaces:
         {}
@@ -237,7 +237,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /last_goal
+      Marker Topic: /last_goalb
       Name: Marker
       Namespaces:
         {}
@@ -245,7 +245,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /first_goal
+      Marker Topic: /first_goalb
       Name: Marker
       Namespaces:
         {}

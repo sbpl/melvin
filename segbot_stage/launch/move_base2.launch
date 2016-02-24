@@ -2,11 +2,11 @@
     <node name="move_base" type="move_base" pkg="move_base" output="screen">
         <rosparam file="$(find segbot_stage)/config/move_base2.yaml"
                 command="load"/>
-
-        <!--<param name="SBPLLatticePlanner/primitive_filename"
-                value="$(find segbot_stage)/config/uni_circ_test.mprim"/>-->
-        <param name="SBPLLatticePlanner/primitive_filename"
-                value="$(find segbot_stage)/config/segbot.mprim"/>
+        <!-- <param name="SBPLLatticePlanner/primitive_filename"
+                value="$(find segbot_stage)/config/non-uniform_circular_1_1_er0p1.mprim"/> -->
+        <param name="SBPLLatticePlanner/primitive_filename" value="$(find segbot_stage)/config/uni_circ_test.mprim"/>
+        <!-- <param name="SBPLLatticePlanner/primitive_filename"
+                value="$(find segbot_stage)/config/segbot.mprim"/> -->
         <rosparam file="$(find segbot_stage)/config/sbpl_global_params.yaml"
                 command="load"/>
 
