@@ -1,0 +1,7 @@
+<library path="lib/libpd_local_planner">
+  <class name="pd_local_planner/PDPlannerROS" type="pd_local_planner::PDPlannerROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      A implementation of a local planner using _______ based on configuration parameters.
+    </description>
+  </class>
+</library>
