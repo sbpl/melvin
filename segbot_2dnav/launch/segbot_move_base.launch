@@ -14,7 +14,8 @@
         <param name="recovery_behavior_enabled" value="false"/>
         <param name="base_global_planner" value="$(arg sbpl_planner)" if="$(arg use_sbpl)"/>
         <param name="base_global_planner" value="navfn/NavfnROS" unless="$(arg use_sbpl)"/>
-        <param name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/segbot.mprim" if="$(arg use_sbpl)"/>
+        <!-- <param name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/non-uniform_circular_1_1_er0p1.mprim" if="$(arg use_sbpl)"/> -->
+        <param name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/uni_circ_test.mprim" if="$(arg use_sbpl)"/>
         <rosparam file="$(find segbot_2dnav)/config/sbpl_global_params.yaml" command="load" if="$(arg use_sbpl)"/>
 
         <rosparam file="$(find segbot_2dnav)/config/costmap_common_params.yaml" command="load" ns="global_costmap" unless="$(arg use_tilt_laser)"/>
