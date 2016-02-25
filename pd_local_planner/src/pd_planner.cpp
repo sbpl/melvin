@@ -355,11 +355,22 @@ namespace pd_local_planner {
     // Get vector from pose to next point
     Eigen::Vector3f current(goal2(0)-pos(0),goal2(1)-pos(1),goal2(2)-pos(2));
 
-    // IF DISTANCE IS SMALL BUT YAW ERROR IS BIG THEN TURN ONLY
-    // ROS_INFO("ORIGINAL VELOCITIES: %.4f %.4f %.4f", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
-    // ROS_INFO("IDEAL VELOCITIES: %.4f %.4f %.4f", result_traj_.xv_, result_traj_.yv_, ideal(2)/scale_/0.1);
+    // result_traj_.xv_ = 0.2; //current(0)/scale_/0.1;
+    // result_traj_.yv_ = 0.0; //current(1)/scale_/0.1;
+    double remaining_theta = atan2(current(1), current(0)) - pos(2);
+    if(remaining_theta > PI)
+    {
+      remaining_theta -= 2*PI;
+    }
+    else if(remaining_theta < -PI)
+    {
+      remaining_theta += 2*PI;
+    }
+
+    result_traj_.thetav_ = remaining_theta/scale_/0.1;
+
     // TODO: Handle moving backwards.
-    // TODO: Handle near goal behavior
+
     // TODO: Fix this and add back in
     // double heading = PI - abs(abs(goal2(2) - pos(2)) - PI);
     // if(heading > PI/2)
@@ -368,24 +379,23 @@ namespace pd_local_planner {
     //   result_traj_.xv_ = 0.0;
     // }
 
-    // result_traj_.xv_ = 0.2; //current(0)/scale_/0.1;
-    // result_traj_.yv_ = 0.0; //current(1)/scale_/0.1;
-    result_traj_.thetav_ = 1.5*current(2)/scale_/0.1;
-
     double err = ideal(0)*current(1) - ideal(1)*current(0);
-    // Heading error + position angle error
-    // double de1 = sqrt(ideal(0)*ideal(0) + ideal(1)*ideal(1));
-    // double de2 = sqrt(current(0)*current(0) + current(1)*current(1));
-    // ROS_INFO("Heading off %.4f Angle off %.4f", heading, atan2(de1,de2));
-    // double err = heading + err1; //atan2(de1,de2);
-    ROS_INFO("err %.4f P_contrib %.4f", err, err*path_p_);
+
+    ROS_INFO("err %.4f p_gain %.4f P_contrib %.4f", err, path_p_, err*path_p_);
 
     // Use error in PD control to modify result_traj
     double derr = (err - last_err)/0.05;
 
     // TODO: Scale forward vel better.
-    // result_traj_.xv_ *= (1 - 2*abs(err)*path_p_); //Using error
-    result_traj_.xv_ *= (1 - abs(2*current(2)/PI)); //Using angle off
+    if(step_ > scale_ && remaining_theta > PI/8)
+    {
+      result_traj_.xv_ = 0.0;
+    }
+    else
+    {
+      result_traj_.xv_ *= (1 - abs(2*remaining_theta/PI)); //Using angle off
+    }
+
     result_traj_.thetav_ += err*path_p_ + derr*path_d_;
 
     Eigen::Vector3f vel_samples(result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
@@ -394,11 +404,11 @@ namespace pd_local_planner {
     if(!checkTrajectory(pos, vel, vel_samples))
     {
       ROS_INFO("DETECTED A COLLISION AHEAD!");
+      // TODO make this have some kind of recovery behavior
       result_traj_.xv_ = 0.0;
       result_traj_.yv_ = 0.0;
       result_traj_.thetav_ = 0.0;
     }
-    // ROS_INFO("CORRECTED VELOCITIES: %.4f %.4f %.4f", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
 
     last_err = err;
 
