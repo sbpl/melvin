@@ -370,7 +370,7 @@ namespace pd_local_planner {
 
     // result_traj_.xv_ = 0.2; //current(0)/scale_/0.1;
     // result_traj_.yv_ = 0.0; //current(1)/scale_/0.1;
-    result_traj_.thetav_ = current(2)/scale_/0.1;
+    result_traj_.thetav_ = 1.5*current(2)/scale_/0.1;
 
     double err = ideal(0)*current(1) - ideal(1)*current(0);
     // Heading error + position angle error
@@ -384,7 +384,8 @@ namespace pd_local_planner {
     double derr = (err - last_err)/0.05;
 
     // TODO: Scale forward vel better.
-    result_traj_.xv_ *= (1 - 2*abs(err)*path_p_);
+    // result_traj_.xv_ *= (1 - 2*abs(err)*path_p_); //Using error
+    result_traj_.xv_ *= (1 - abs(2*current(2)/PI)); //Using angle off
     result_traj_.thetav_ += err*path_p_ + derr*path_d_;
 
     Eigen::Vector3f vel_samples(result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
