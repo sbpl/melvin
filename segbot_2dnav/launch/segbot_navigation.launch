@@ -16,7 +16,7 @@
 
         <param name="controller_frequency" value="20.0"/>
         <param name="planner_frequency" value="0.33"/>
-        <!-- <param name="base_local_planner" value="pd_local_planner/PDPlannerROS"/> -->
+        <param name="base_local_planner" value="pd_local_planner/PDPlannerROS"/>
         <param name="global_costmap/robot_base_frame" value="base_footprint"/>
 
         <param name="recovery_behavior_enabled" value="false"/>

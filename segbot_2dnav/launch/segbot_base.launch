@@ -28,7 +28,7 @@
     <arg name="use_teleop"          default="true"/>
 
     <!-- Planning -->
-    <arg name="use_sbpl"            default="false"/>
+    <arg name="use_sbpl"            default="true"/>
 
     <!-- only option currently SBPLLatticePlanner; sbpl_planner only applied -->
     <!-- if we are using sbpl -->
