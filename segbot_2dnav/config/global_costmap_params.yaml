@@ -6,7 +6,7 @@
 global_costmap:
     # footprint parameters
     # common footprint
-    footprint_padding: 0.06
+    footprint_padding: 0.12
 
     # coordinate frame parameters
     # common global_frame
@@ -15,7 +15,7 @@ global_costmap:
 
     # rates
     update_frequency: 0.5
-    publish_frequency: 1.0
+    publish_frequency: 2.0
 
     # map management
     static_map: true
@@ -52,5 +52,6 @@ global_costmap:
     # common raytrace_range
 
     # inflation layer
-    inflation_radius: 2.0
+    inflation_radius: 0.6
     # common cost_scaling_factor
+    mark_threshold: 0

@@ -160,6 +160,7 @@ namespace pd_local_planner {
       double cheat_factor_;
 
       int index_;
+      Eigen::Vector3f last_point;
       double last_err;
       double path_p_;
       double path_d_;

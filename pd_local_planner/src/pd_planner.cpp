@@ -180,6 +180,9 @@ namespace pd_local_planner {
     private_nh.param("cheat_factor", cheat_factor_, 1.0);
 
     index_ = 0;
+    last_point(0) = -1;
+    last_point(1) = -1;
+    last_point(2) = -10;
     last_err = 0.0;
     // nh();
     robot_pub = nh.advertise<visualization_msgs::Marker>( "robot_markerb", 1 );
@@ -306,19 +309,24 @@ namespace pd_local_planner {
     scored_sampling_planner_.findBestTrajectory(result_traj_, &all_explored);
 
     ////////
+    if(fabs(last_point(2) + 10) < 0.01)
+    {
+      last_point = pos;
+    }
+
     index_ = 0;
     geometry_msgs::PoseStamped goal_pose1 = global_plan_.at(index_);
     Eigen::Vector3f goal1(goal_pose1.pose.position.x, goal_pose1.pose.position.y, tf::getYaw(goal_pose1.pose.orientation));
-    double x1 = (goal1(0) - pos(0))*(goal1(0) - pos(0));
-    double y1 = (goal1(1) - pos(1))*(goal1(1) - pos(1));
+    double x1 = (goal1(0) - last_point(0))*(goal1(0) - last_point(0));
+    double y1 = (goal1(1) - last_point(1))*(goal1(1) - last_point(1));
     double d1 = x1 + y1;
 
-    for(int i = 1; i < global_plan_.size()-1; i++)
+    for(int i = 1; i < global_plan_.size() - 1; i++) // Find point that we are currently on
     {
       geometry_msgs::PoseStamped goal_pose2 = global_plan_.at(i);
       Eigen::Vector3f goal2(goal_pose2.pose.position.x, goal_pose2.pose.position.y, tf::getYaw(goal_pose2.pose.orientation));
-      double x2 = (goal2(0) - pos(0))*(goal2(0) - pos(0));
-      double y2 = (goal2(1) - pos(1))*(goal2(1) - pos(1));
+      double x2 = (goal2(0) - last_point(0))*(goal2(0) - last_point(0));
+      double y2 = (goal2(1) - last_point(1))*(goal2(1) - last_point(1));
       if(x2+y2 < x1+y1)
       {
         index_ = i;
@@ -326,6 +334,47 @@ namespace pd_local_planner {
         y1 = y2;
       }
     }
+
+    if(index_ < global_plan_.size() - 2)
+    {
+      goal_pose1 = global_plan_.at(index_);
+      goal1[0] = goal_pose1.pose.position.x;
+      goal1[1] = goal_pose1.pose.position.y; 
+      goal1[2] = tf::getYaw(goal_pose1.pose.orientation);
+      x1 = (goal1(0) - pos(0))*(goal1(0) - pos(0));
+      y1 = (goal1(1) - pos(1))*(goal1(1) - pos(1)); 
+
+      geometry_msgs::PoseStamped goal_pose2 = global_plan_.at(index_ + 1);
+      Eigen::Vector3f goal2(goal_pose2.pose.position.x, goal_pose2.pose.position.y, tf::getYaw(goal_pose2.pose.orientation));
+      double x2 = (goal2(0) - pos(0))*(goal2(0) - pos(0));
+      double y2 = (goal2(1) - pos(1))*(goal2(1) - pos(1)); 
+
+      if(x2 + y2 < x1 + y1)
+      {
+        index_ ++;
+      }
+    }
+
+    // index_ = 0;
+    // geometry_msgs::PoseStamped goal_pose1 = global_plan_.at(index_);
+    // Eigen::Vector3f goal1(goal_pose1.pose.position.x, goal_pose1.pose.position.y, tf::getYaw(goal_pose1.pose.orientation));
+    // double x1 = (goal1(0) - pos(0))*(goal1(0) - pos(0));
+    // double y1 = (goal1(1) - pos(1))*(goal1(1) - pos(1));
+    // double d1 = x1 + y1;
+
+    // for(int i = 1; i < global_plan_.size()-1; i++) // Find point that we are currently on... TODO: MAKE BETTER WITH BACKWARDS MPRIM
+    // {
+    //   geometry_msgs::PoseStamped goal_pose2 = global_plan_.at(i);
+    //   Eigen::Vector3f goal2(goal_pose2.pose.position.x, goal_pose2.pose.position.y, tf::getYaw(goal_pose2.pose.orientation));
+    //   double x2 = (goal2(0) - pos(0))*(goal2(0) - pos(0));
+    //   double y2 = (goal2(1) - pos(1))*(goal2(1) - pos(1));
+    //   if(x2+y2 < x1+y1)
+    //   {
+    //     index_ = i;
+    //     x1 = x2;
+    //     y1 = y2;
+    //   }
+    // }
 
     double scale_ = 1.0;
     int index0_ = index_;
@@ -346,6 +395,8 @@ namespace pd_local_planner {
     goal1[1] = goal_pose1.pose.position.y; 
     goal1[2] = tf::getYaw(goal_pose1.pose.orientation);
 
+    last_point = goal1;
+
     geometry_msgs::PoseStamped goal_pose2 = global_plan_.at(index_ + 1);
     Eigen::Vector3f goal2(goal_pose2.pose.position.x, goal_pose2.pose.position.y, tf::getYaw(goal_pose2.pose.orientation));
 
@@ -355,8 +406,6 @@ namespace pd_local_planner {
     // Get vector from pose to next point
     Eigen::Vector3f current(goal2(0)-pos(0),goal2(1)-pos(1),goal2(2)-pos(2));
 
-    // result_traj_.xv_ = 0.2; //current(0)/scale_/0.1;
-    // result_traj_.yv_ = 0.0; //current(1)/scale_/0.1;
     double remaining_theta = atan2(current(1), current(0)) - pos(2);
     if(remaining_theta > PI)
     {
@@ -369,32 +418,45 @@ namespace pd_local_planner {
 
     result_traj_.thetav_ = remaining_theta/scale_/0.1;
 
-    // TODO: Handle moving backwards.
-
-    // TODO: Fix this and add back in
-    // double heading = PI - abs(abs(goal2(2) - pos(2)) - PI);
-    // if(heading > PI/2)
-    // {
-    //   ROS_INFO("HUGE HEADING DISCREPANCY");
-    //   result_traj_.xv_ = 0.0;
-    // }
-
-    double err = ideal(0)*current(1) - ideal(1)*current(0);
-
-    ROS_INFO("err %.4f p_gain %.4f P_contrib %.4f", err, path_p_, err*path_p_);
-
-    // Use error in PD control to modify result_traj
-    double derr = (err - last_err)/0.05;
+    ROS_INFO("xv: %.4f dt: %.2f robott: %.4f nextt: %.4f", result_traj_.xv_, remaining_theta*180/PI, pos(2)*180/PI, goal2(2)*180/PI);
 
     // TODO: Scale forward vel better.
-    if(step_ > scale_ && remaining_theta > PI/8)
+    if(step_ > scale_ && remaining_theta > PI/10) // If close to the end turn to get there
     {
       result_traj_.xv_ = 0.0;
     }
-    else
+    else if(fabs(pos(2)-goal2(2)) < PI/4.0 && fabs(remaining_theta) > 3.0*PI/4.0) // If need to move backwards ... do it
     {
-      result_traj_.xv_ *= (1 - abs(2*remaining_theta/PI)); //Using angle off
+      if(remaining_theta > 3.0*PI/4.0)
+      {
+        remaining_theta -= PI;
+      }
+      else
+      {
+        remaining_theta += PI;
+      }
+      result_traj_.thetav_ = remaining_theta/scale_/0.1;
+      result_traj_.xv_ = -0.2; //Using angle off
+      ROS_INFO("new vel (reverse): %.4f newt: %.4f remaining_theta: %.4f", result_traj_.xv_, result_traj_.thetav_, remaining_theta);
     }
+    else // If normal forward operation (also handles needing to turn)
+    {
+      double scale_xv = 1.0f - fabs(4.5*remaining_theta/PI);
+      if(scale_xv < 0.0)
+      {
+        result_traj_.xv_ = 0.0;
+      }
+      else
+      {
+        result_traj_.xv_ *= scale_xv; //Using angle off        
+      }
+      ROS_INFO("Percent max speed (forward): %.4f new vel: %.4f", scale_xv, result_traj_.xv_);
+    }
+
+    double err = ideal(0)*current(1) - ideal(1)*current(0);
+
+    // Use error in PD control to modify result_traj
+    double derr = (err - last_err)/0.05;
 
     result_traj_.thetav_ += err*path_p_ + derr*path_d_;
 

@@ -4,7 +4,7 @@
     <arg name="use_sbpl"/>
     <arg name="sbpl_planner"/>
 
-    <node pkg="move_base" type="move_base" respawn="false" name="move_base" if="$(arg use_move_base)">
+    <node pkg="move_base" type="move_base" respawn="false" output="screen" name="move_base" if="$(arg use_move_base)">
         <remap from="map" to="/map" />
         <!--<remap from="move_base_simple/goal" to="/goal" />-->
         <param name="controller_frequency" value="20.0" />
