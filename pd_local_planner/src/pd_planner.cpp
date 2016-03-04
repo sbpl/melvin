@@ -184,14 +184,6 @@ namespace pd_local_planner {
     last_point(1) = -1;
     last_point(2) = -10;
     last_err = 0.0;
-    // nh();
-    robot_pub = nh.advertise<visualization_msgs::Marker>( "robot_markerb", 1 );
-    current_pub = nh.advertise<visualization_msgs::Marker>( "current_goalb", 1 );
-    next_pub = nh.advertise<visualization_msgs::Marker>( "next_goalb", 1 );
-    first_pub = nh.advertise<visualization_msgs::Marker>( "first_goalb", 1 );
-    last_pub = nh.advertise<visualization_msgs::Marker>( "last_goalb", 1 );
-
-    // ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
   }
 
   // used for visualization only, total_costs are not really total costs
@@ -245,8 +237,6 @@ namespace pd_local_planner {
     for (unsigned int i = 0; i < new_plan.size(); ++i) {
       global_plan_[i] = new_plan[i];
     }
-    // index_ = 0;
-    // ROS_INFO("NEW PLAN");
 
     // costs for going away from path
     path_costs_.setTargetPoses(global_plan_);
@@ -355,27 +345,6 @@ namespace pd_local_planner {
       }
     }
 
-    // index_ = 0;
-    // geometry_msgs::PoseStamped goal_pose1 = global_plan_.at(index_);
-    // Eigen::Vector3f goal1(goal_pose1.pose.position.x, goal_pose1.pose.position.y, tf::getYaw(goal_pose1.pose.orientation));
-    // double x1 = (goal1(0) - pos(0))*(goal1(0) - pos(0));
-    // double y1 = (goal1(1) - pos(1))*(goal1(1) - pos(1));
-    // double d1 = x1 + y1;
-
-    // for(int i = 1; i < global_plan_.size()-1; i++) // Find point that we are currently on... TODO: MAKE BETTER WITH BACKWARDS MPRIM
-    // {
-    //   geometry_msgs::PoseStamped goal_pose2 = global_plan_.at(i);
-    //   Eigen::Vector3f goal2(goal_pose2.pose.position.x, goal_pose2.pose.position.y, tf::getYaw(goal_pose2.pose.orientation));
-    //   double x2 = (goal2(0) - pos(0))*(goal2(0) - pos(0));
-    //   double y2 = (goal2(1) - pos(1))*(goal2(1) - pos(1));
-    //   if(x2+y2 < x1+y1)
-    //   {
-    //     index_ = i;
-    //     x1 = x2;
-    //     y1 = y2;
-    //   }
-    // }
-
     double scale_ = 1.0;
     int index0_ = index_;
     int step_ = 20;
@@ -420,7 +389,6 @@ namespace pd_local_planner {
 
     ROS_INFO("xv: %.4f dt: %.2f robott: %.4f nextt: %.4f", result_traj_.xv_, remaining_theta*180/PI, pos(2)*180/PI, goal2(2)*180/PI);
 
-    // TODO: Scale forward vel better.
     if(step_ > scale_ && remaining_theta > PI/10) // If close to the end turn to get there
     {
       result_traj_.xv_ = 0.0;
@@ -473,66 +441,6 @@ namespace pd_local_planner {
     }
 
     last_err = err;
-
-    visualization_msgs::Marker marker;
-    marker.header.frame_id = "map";
-    marker.header.stamp = ros::Time();
-    marker.ns = "my_namespace";
-    marker.id = 0;
-    marker.type = visualization_msgs::Marker::SPHERE;
-    marker.action = visualization_msgs::Marker::ADD;
-    marker.pose.position.x = pos(0);
-    marker.pose.position.y = pos(1);
-    marker.pose.position.z = 0;
-    marker.pose.orientation.x = 0.0;
-    marker.pose.orientation.y = 0.0;
-    marker.pose.orientation.z = 0.0;
-    marker.pose.orientation.w = 1.0;
-    marker.scale.x = 0.05;
-    marker.scale.y = 0.05;
-    marker.scale.z = 0.05;
-    marker.color.a = 1.0; // Don't forget to set the alpha!
-    marker.color.r = 0.0;
-    marker.color.g = 1.0;
-    marker.color.b = 0.0;
-    robot_pub.publish( marker );
-    marker.pose.position.x = goal1(0);
-    marker.pose.position.y = goal1(1);
-    marker.scale.x = 0.05;
-    marker.scale.y = 0.05;
-    marker.scale.z = 0.05;
-    marker.color.r = 1.0;
-    marker.color.g = 0.0;
-    marker.color.b = 0.0;
-    current_pub.publish( marker );
-    marker.pose.position.x = goal2(0);
-    marker.pose.position.y = goal2(1);
-    marker.scale.x = 0.05;
-    marker.scale.y = 0.05;
-    marker.scale.z = 0.05;
-    marker.color.r = 0.0;
-    marker.color.g = 0.0;
-    marker.color.b = 1.0;
-    next_pub.publish( marker );
-
-    marker.pose.position.x = global_plan_.back().pose.position.x;
-    marker.pose.position.y = global_plan_.back().pose.position.y;
-    marker.scale.x = 0.05;
-    marker.scale.y = 0.05;
-    marker.scale.z = 0.05;
-    marker.color.r = 1.0;
-    marker.color.g = 0.0;
-    marker.color.b = 1.0;
-    last_pub.publish( marker );
-    marker.pose.position.x = global_plan_.front().pose.position.x;
-    marker.pose.position.y = global_plan_.front().pose.position.y;
-    marker.scale.x = 0.05;
-    marker.scale.y = 0.05;
-    marker.scale.z = 0.05;
-    marker.color.r = 1.0;
-    marker.color.g = 0.0;
-    marker.color.b = 1.0;
-    first_pub.publish( marker );
     ////////
 
     if(publish_traj_pc_)
