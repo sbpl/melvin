@@ -409,7 +409,7 @@ namespace pd_local_planner {
     }
     else // If normal forward operation (also handles needing to turn)
     {
-      double scale_xv = 1.0f - fabs(4.5*remaining_theta/PI);
+      double scale_xv = 1.0f - fabs(4.0*remaining_theta/PI);
       if(scale_xv < 0.0)
       {
         result_traj_.xv_ = 0.0;
@@ -417,6 +417,10 @@ namespace pd_local_planner {
       else
       {
         result_traj_.xv_ *= scale_xv; //Using angle off        
+        if(result_traj_.xv_ > 0.1 && result_traj_.xv_ < 0.2)
+        {
+            result_traj_.xv_ = 0.2;
+        }
       }
       ROS_INFO("Percent max speed (forward): %.4f new vel: %.4f", scale_xv, result_traj_.xv_);
     }
