@@ -45,16 +45,16 @@
         <node if="$(arg use_servos)" name="servo_node" pkg="servo_node" type="servo_node">
             <param name="device_name" value="/dev/servo"/>
             <param name="baud_rate" value="57600"/>
-<!--
             <rosparam param="servoID">[1,2]</rosparam>
             <rosparam param="minAngle">[-8,-57]</rosparam>
             <rosparam param="maxAngle">[-8,43]</rosparam>
             <rosparam param="velocity">[10,100]</rosparam>
--->
+<!--
             <rosparam param="servoID">[1]</rosparam>
             <rosparam param="minAngle">[-8]</rosparam>
             <rosparam param="maxAngle">[-8]</rosparam>
             <rosparam param="velocity">[10]</rosparam>
+-->
         </node>
 
         <node if="$(arg use_camera)" name="segbot_cam" pkg="usb_cam" type="usb_cam_node" respawn="true"/>
