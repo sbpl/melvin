@@ -6,7 +6,7 @@
 global_costmap:
     # footprint parameters
     # common footprint
-    footprint_padding: 0.12
+    footprint_padding: 0.10
 
     # coordinate frame parameters
     # common global_frame
