@@ -13,31 +13,34 @@
     -->
     <node if="$(arg use_move_base)" name="move_base" pkg="move_base" type="move_base" clear_params="true" output="screen">
         <!--<remap from="move_base_simple/goal" to="goal" />-->
+        <remap from="cmd_vel" to="raw_cmd_vel"/>
 
-        <param name="controller_frequency" value="20.0"/>
-        <param name="planner_frequency" value="0.2"/>
-        <param name="base_local_planner" value="pd_local_planner/PDPlannerROS"/>
-        <param name="global_costmap/robot_base_frame" value="base_footprint"/>
-
-        <param name="recovery_behavior_enabled" value="false"/>
-        <param if="$(arg use_sbpl)" name="base_global_planner" value="$(arg sbpl_planner)"/>
-        <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/non-uniform_circular_1_1_er0p1.mprim"/>
-        <!-- <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/uni_circ_test.mprim"/> -->
-        <param unless="$(arg use_sbpl)" name="base_global_planner" value="navfn/NavfnROS"/>
-        <rosparam file="$(find segbot_2dnav)/config/sbpl_global_params.yaml" command="load" if="$(arg use_sbpl)"/>
-
-        <rosparam command="load" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" ns="global_costmap"/>
         <rosparam command="load" file="$(find segbot_2dnav)/config/move_base.yaml"/>
+
+        <!-- Costmaps -->
+        <rosparam command="load" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" ns="global_costmap"/>
         <rosparam command="load" file="$(find segbot_2dnav)/config/costmap_common_params.yaml" ns="local_costmap"/>
         <rosparam if="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_and_tilt_params.yaml" ns="global_costmap"/>
         <rosparam if="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_and_tilt_params.yaml" ns="local_costmap"/>
         <rosparam unless="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_params.yaml" ns="global_costmap"/>
         <rosparam unless="$(arg use_tilt_laser)" command="load" file="$(find segbot_2dnav)/config/costmap_common_base_params.yaml" ns="local_costmap"/>
 
-        <rosparam file="$(find segbot_2dnav)/config/local_costmap_params.yaml" command="load"/>
-        <rosparam file="$(find segbot_2dnav)/config/global_costmap_params.yaml" command="load"/>
-        <rosparam file="$(find segbot_2dnav)/config/base_local_planner_params.yaml" command="load"/>
+        <rosparam command="load" file="$(find segbot_2dnav)/config/local_costmap_params.yaml"/>
+        <rosparam command="load" file="$(find segbot_2dnav)/config/global_costmap_params.yaml"/>
 
-        <remap from="cmd_vel" to="raw_cmd_vel"/>
+        <!-- Recovery Behaviors -->
+        <param name="recovery_behavior_enabled" value="false"/>
+
+        <!-- Global Planner -->
+        <param unless="$(arg use_sbpl)" name="base_global_planner" value="navfn/NavfnROS"/>
+
+        <param if="$(arg use_sbpl)" name="base_global_planner" value="$(arg sbpl_planner)"/>
+        <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/non-uniform_circular_1_1_er0p1.mprim"/>
+        <!-- <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/uni_circ_test.mprim"/> -->
+        <rosparam if="$(arg use_sbpl)" command="load" file="$(find segbot_2dnav)/config/sbpl_global_params.yaml"/>
+
+        <!-- Local Planner -->
+        <param name="base_local_planner" value="pd_local_planner/PDPlannerROS"/>
+        <rosparam command="load" file="$(find segbot_2dnav)/config/base_local_planner_params.yaml"/>
     </node>
 </launch>
