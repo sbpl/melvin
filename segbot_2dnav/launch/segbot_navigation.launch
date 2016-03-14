@@ -35,8 +35,9 @@
         <param unless="$(arg use_sbpl)" name="base_global_planner" value="navfn/NavfnROS"/>
 
         <param if="$(arg use_sbpl)" name="base_global_planner" value="$(arg sbpl_planner)"/>
-        <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/non-uniform_circular_1_1_er0p1.mprim"/>
-        <!-- <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/uni_circ_test.mprim"/> -->
+        <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/segbot-nonuniform.mprim"/>
+<!--        <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/non-uniform_circular_1_1_er0p1.mprim"/> -->
+<!--        <param if="$(arg use_sbpl)" name="$(arg sbpl_planner)/primitive_filename" value="$(find segbot_2dnav)/config/uni_circ_test.mprim"/> -->
         <rosparam if="$(arg use_sbpl)" command="load" file="$(find segbot_2dnav)/config/sbpl_global_params.yaml"/>
 
         <!-- Local Planner -->
