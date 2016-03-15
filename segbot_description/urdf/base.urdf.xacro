@@ -45,10 +45,37 @@
                 </geometry>
             </collision>
 
+            <!-- cover/expand the table on top of the segbot to (hopefully) -->
+            <!-- catch the hexacopter more robustly in simulation -->
             <collision>
                 <origin xyz="-0.03164 0.132315 0.00167" rpy="1.5708 0 0"/>
                 <geometry name="segway_base_table_geom">
-                    <cylinder radius="0.4054" length="0.01587"/>
+<!--                    <cylinder radius="0.4054" length="0.01587"/> -->
+                    <box size="0.8108 0.8108 0.01587"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="0.381535 0.17438 0.00167" rpy="0 0 0"/>
+                <geometry name="segway_base_basket_east">
+                    <box size="0.01587 0.1 0.8108"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="-0.444975 0.17438 0.00167" rpy="0 0 0"/>
+                <geometry name="segbot_base_basket_west">
+                    <box size="0.01587 0.1 0.8108"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="-0.03164 0.17438 0.415005" rpy="0 0 0"/>
+                <geometry name="segbot_base_basket_north">
+                    <box size="0.8108 0.1 0.01587"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="-0.03164 0.17438 -0.411665" rpy="0 0 0"/>
+                <geometry name="segbot_base_basket_south">>
+                    <box size="0.8108 0.1 0.01587"/>
                 </geometry>
             </collision>
         </link>
