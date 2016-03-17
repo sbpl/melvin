@@ -61,6 +61,13 @@ namespace pd_local_planner {
     generator_.setParameters(config.sim_time, config.sim_granularity, config.angular_sim_granularity, config.use_dwa, sim_period_);
     path_p_ = config.path_p;
     path_d_ = config.path_d;
+    max_vel_x_ = config.max_vel_x;
+    min_vel_x_ = config.min_vel_x;
+    max_vel_y_ = config.max_vel_y;
+    min_vel_y_ = config.min_vel_y;
+    // TODO read in param correctly
+    max_rot_vel_ = 0.3;//config.max_rot_vel;
+    min_rot_vel_ = -0.3;//config.min_rot_vel;
 
     double resolution = planner_util_->getCostmap()->getResolution();
     pdist_scale_ = config.path_distance_bias;
@@ -387,7 +394,9 @@ namespace pd_local_planner {
 
     result_traj_.thetav_ = remaining_theta/scale_/0.1;
 
-    ROS_INFO("xv: %.4f dt: %.2f robott: %.4f nextt: %.4f", result_traj_.xv_, remaining_theta*180/PI, pos(2)*180/PI, goal2(2)*180/PI);
+    // TODO: set own xv (max forward or max reverse) and change based on the curvature
+
+    ROS_DEBUG("xv: %.4f dt: %.2f robott: %.4f nextt: %.4f", result_traj_.xv_, remaining_theta*180/PI, pos(2)*180/PI, goal2(2)*180/PI);
 
     if(step_ > scale_ && remaining_theta > PI/10) // If close to the end turn to get there
     {
@@ -395,6 +404,7 @@ namespace pd_local_planner {
     }
     else if(fabs(pos(2)-goal2(2)) < PI/4.0 && fabs(remaining_theta) > 3.0*PI/4.0) // If need to move backwards ... do it
     {
+      result_traj_.xv_ = -min_vel_x_;
       if(remaining_theta > 3.0*PI/4.0)
       {
         remaining_theta -= PI;
@@ -404,25 +414,31 @@ namespace pd_local_planner {
         remaining_theta += PI;
       }
       result_traj_.thetav_ = remaining_theta/scale_/0.1;
+      // Read in param for escape_velocity
       result_traj_.xv_ = -0.2; //Using angle off
-      ROS_INFO("new vel (reverse): %.4f newt: %.4f remaining_theta: %.4f", result_traj_.xv_, result_traj_.thetav_, remaining_theta);
+      ROS_DEBUG("new vel (reverse): %.4f newt: %.4f remaining_theta: %.4f", result_traj_.xv_, result_traj_.thetav_, remaining_theta);
     }
     else // If normal forward operation (also handles needing to turn)
     {
-      double scale_xv = 1.0f - fabs(4.0*remaining_theta/PI);
-      if(scale_xv < 0.0)
+      if(step_ > scale_)
+      {
+        result_traj_.xv_ = min_vel_x_;
+      }
+      else
+      {
+        result_traj_.xv_ = max_vel_x_;
+      }
+      double range = PI/5.0;
+      double scale_xv = 1.0f - fabs(remaining_theta/range);
+      if(scale_xv < 0.0 || remaining_theta > range)
       {
         result_traj_.xv_ = 0.0;
       }
       else
       {
         result_traj_.xv_ *= scale_xv; //Using angle off        
-        if(result_traj_.xv_ > 0.1 && result_traj_.xv_ < 0.2)
-        {
-            result_traj_.xv_ = 0.2;
-        }
       }
-      ROS_INFO("Percent max speed (forward): %.4f new vel: %.4f", scale_xv, result_traj_.xv_);
+      ROS_DEBUG("Percent max speed (forward): %.4f new vel: %.4f", scale_xv, result_traj_.xv_);
     }
 
     double err = ideal(0)*current(1) - ideal(1)*current(0);
@@ -432,17 +448,56 @@ namespace pd_local_planner {
 
     result_traj_.thetav_ += err*path_p_ + derr*path_d_;
 
+    ROS_INFO("pre_throttled_cmd_vel: (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
+
+    // vx bounds
+    if(result_traj_.xv_ > max_vel_x_)
+    {
+      ROS_INFO("vx+ too big");
+      result_traj_.xv_ = max_vel_x_;
+    }
+    else if(result_traj_.xv_ > min_vel_x_/2 && result_traj_.xv_ < min_vel_x_)
+    {
+      ROS_INFO("vx+ too small");
+      result_traj_.xv_ = min_vel_x_;
+    }
+    else if(result_traj_.xv_ < -min_vel_x_/2 && result_traj_.xv_ > -min_vel_x_)
+    {
+      ROS_INFO("vx- too small");
+      result_traj_.xv_ = -min_vel_x_;
+    }
+    // Read in param for escape_velocity
+    else if(result_traj_.xv_ < -min_vel_x_)
+    {
+      ROS_INFO("vx- too big");
+      result_traj_.xv_ = -min_vel_x_;
+    }
+
+    // vt bounds
+    if(result_traj_.thetav_ > max_rot_vel_)
+    {
+      ROS_INFO("vt+ too big");
+      result_traj_.thetav_ = max_rot_vel_;
+    }
+    else if(result_traj_.thetav_ < min_rot_vel_) 
+    {
+      ROS_INFO("vt- too big");
+      result_traj_.thetav_ = min_rot_vel_;
+    }
+
     Eigen::Vector3f vel_samples(result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
 
     // Check for collisions
     if(!checkTrajectory(pos, vel, vel_samples))
     {
-      ROS_INFO("DETECTED A COLLISION AHEAD!");
+      ROS_WARN("DETECTED A COLLISION AHEAD! (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.xv_, result_traj_.thetav_);
       // TODO make this have some kind of recovery behavior
       result_traj_.xv_ = 0.0;
       result_traj_.yv_ = 0.0;
       result_traj_.thetav_ = 0.0;
     }
+    
+    ROS_INFO("cmd_vel: (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
 
     last_err = err;
     ////////
