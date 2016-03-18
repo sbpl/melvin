@@ -66,8 +66,8 @@ namespace pd_local_planner {
     max_vel_y_ = config.max_vel_y;
     min_vel_y_ = config.min_vel_y;
     // TODO read in param correctly
-    max_rot_vel_ = 0.3;//config.max_rot_vel;
-    min_rot_vel_ = -0.3;//config.min_rot_vel;
+    max_rot_vel_ = 0.2;//config.max_rot_vel;
+    min_rot_vel_ = -0.2;//config.min_rot_vel;
 
     double resolution = planner_util_->getCostmap()->getResolution();
     pdist_scale_ = config.path_distance_bias;
@@ -306,6 +306,7 @@ namespace pd_local_planner {
     scored_sampling_planner_.findBestTrajectory(result_traj_, &all_explored);
 
     ////////
+    // TODO: carrot at time ahead
     if(fabs(last_point(2) + 10) < 0.01)
     {
       last_point = pos;
@@ -354,7 +355,7 @@ namespace pd_local_planner {
 
     double scale_ = 1.0;
     int index0_ = index_;
-    int step_ = 20;
+    int step_ = 30;
     if(index_ + step_ < global_plan_.size() - 2)
     {
       index_ = index_ + step_;
@@ -448,40 +449,40 @@ namespace pd_local_planner {
 
     result_traj_.thetav_ += err*path_p_ + derr*path_d_;
 
-    ROS_INFO("pre_throttled_cmd_vel: (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
+    ROS_DEBUG("pre_throttled_cmd_vel: (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
 
     // vx bounds
     if(result_traj_.xv_ > max_vel_x_)
     {
-      ROS_INFO("vx+ too big");
+      ROS_DEBUG("vx+ too big");
       result_traj_.xv_ = max_vel_x_;
     }
     else if(result_traj_.xv_ > min_vel_x_/2 && result_traj_.xv_ < min_vel_x_)
     {
-      ROS_INFO("vx+ too small");
+      ROS_DEBUG("vx+ too small");
       result_traj_.xv_ = min_vel_x_;
     }
     else if(result_traj_.xv_ < -min_vel_x_/2 && result_traj_.xv_ > -min_vel_x_)
     {
-      ROS_INFO("vx- too small");
+      ROS_DEBUG("vx- too small");
       result_traj_.xv_ = -min_vel_x_;
     }
     // Read in param for escape_velocity
     else if(result_traj_.xv_ < -min_vel_x_)
     {
-      ROS_INFO("vx- too big");
+      ROS_DEBUG("vx- too big");
       result_traj_.xv_ = -min_vel_x_;
     }
 
     // vt bounds
     if(result_traj_.thetav_ > max_rot_vel_)
     {
-      ROS_INFO("vt+ too big");
+      ROS_DEBUG("vt+ too big");
       result_traj_.thetav_ = max_rot_vel_;
     }
     else if(result_traj_.thetav_ < min_rot_vel_) 
     {
-      ROS_INFO("vt- too big");
+      ROS_DEBUG("vt- too big");
       result_traj_.thetav_ = min_rot_vel_;
     }
 

@@ -31,7 +31,7 @@ PDPlannerROS:
     dwa: false
     vx_samples: 3
     vtheta_samples: 20
-    max_vel_x: 0.5
+    max_vel_x: 0.6
     min_vel_x: 0.2
     max_vel_theta: 0.2
     min_vel_theta: -0.2
@@ -61,5 +61,5 @@ PDPlannerROS:
     prune_plan: true
     publish_cost_grid_pc: false
     y_vels: [-0.3, -0.1, 0.1, 0.3]  # unused unless holonomic_robot == true
-    path_p: 1.0
-    path_d: 0.5
+    path_p: 0.2
+    path_d: 0.6
