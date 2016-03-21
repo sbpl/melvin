@@ -352,6 +352,7 @@ namespace pd_local_planner {
       }
     }
 
+    // TODO: Forward simulate in time not points
     double scale_ = 1.0;
     int index0_ = index_;
     int step_ = 20;
@@ -393,8 +394,6 @@ namespace pd_local_planner {
     }
 
     result_traj_.thetav_ = remaining_theta/scale_/0.1;
-
-    // TODO: set own xv (max forward or max reverse) and change based on the curvature
 
     ROS_DEBUG("xv: %.4f dt: %.2f robott: %.4f nextt: %.4f", result_traj_.xv_, remaining_theta*180/PI, pos(2)*180/PI, goal2(2)*180/PI);
 
