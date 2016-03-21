@@ -4,3 +4,12 @@ SBPLLatticePlanner:
   allocated_time: 3.0
   initial_epsilon: 3.0
   forward_search: false
+
+  check_replan: true
+  replan_margin: 1.2
+  goal_x_tol: 0.1
+  goal_y_tol: 0.1
+  goal_t_tol: 0.393
+  start_x_tol: 0.4
+  start_y_tol: 0.4
+  start_t_tol: 0.785
