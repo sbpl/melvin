@@ -10,11 +10,25 @@
 
     <depend>controller_manager</depend>
     <depend>hardware_interface</depend>
+    <depend>roscpp</depend>
     <depend>segbot_msgs</depend>
-    <depend>segway_rmp</depend>
-    <depend>segbot_description</depend>
-    <depend>servo_controller</depend>
-    <depend>servo_node</depend>
 
+    <exec_depend>amcl</exec_depend>
+    <exec_depend>command_velocity_filter</exec_depend>
+    <exec_depend>gps_for_ekf</exec_depend>
+    <exec_depend>hector_mapping</exec_depend>
+    <exec_depend>hokuyo_node</exec_depend>
     <exec_depend>map_server</exec_depend>
+    <exec_depend>pr2_mechanism_diagnostics</exec_depend>
+    <exec_depend>robot_state_publisher</exec_depend>
+    <exec_depend>segbot_description</exec_depend>
+    <exec_depend>segway_rmp</exec_depend>
+    <exec_depend>servo_controller</exec_depend>
+    <exec_depend>servo_node</exec_depend>
+    <exec_depend>slam_gmapping</exec_depend>
+    <exec_depend>teleop_segbot</exec_depend>
+    <exec_depend>tf</exec_depend>
+    <exec_depend>urg_node</exec_depend>
+    <exec_depend>usb_cam</exec_depend>
+    <exec_depend>xacro</exec_depend>
 </package>

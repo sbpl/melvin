@@ -9,21 +9,18 @@ find_package(catkin REQUIRED
     COMPONENTS
         controller_manager
         hardware_interface
-        segbot_msgs
-        segway_rmp
-        segbot_description
-        servo_controller
-        servo_node)
+        roscpp
+        segbot_msgs)
 
 catkin_package()
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-add_executable(controller_manager src/main.cpp)
-target_link_libraries(controller_manager ${catkin_LIBRARIES})
+add_executable(control_loop src/main.cpp)
+target_link_libraries(control_loop ${catkin_LIBRARIES})
 
 install(
-    TARGETS controller_manager
+    TARGETS control_loop
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
