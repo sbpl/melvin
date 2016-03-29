@@ -23,7 +23,7 @@
 
     <!-- Navigation -->
     <arg name="use_move_base"       default="true"/>
-    <arg name="use_teleop"          default="true"/>
+    <arg name="use_teleop"          default="false"/>
 
     <!-- Planning -->
     <arg name="use_sbpl"            default="true"/>
