@@ -31,8 +31,17 @@
         </node>
 
         <!-- Tilt Laser -->
+        <node if="$(arg use_tilt_laser)" name="tilt_laser" pkg="hokuyo_node" type="hokuyo_node">
+            <remap from="scan" to="tilt_scan"/>
+            <param name="port" value="/dev/sensors/hokuyo_H0904022"/>
+            <param name="frame_id" value="tilt_laser_link"/>
+            <param name="min_ang" value="-1.0"/>
+            <param name="max_ang" value="1.0"/>
+        </node>
+
+        <!-- <param name="ip_address" value="172.16.106.33"/> -->
+<!--
         <node if="$(arg use_tilt_laser)" name="tilt_laser" pkg="urg_node" type="urg_node">
-            <!-- <param name="ip_address" value="172.16.106.33"/> -->
             <param name="ip_address" value="192.168.1.254"/>
             <param name="publish_multiecho" value="false"/>
             <param name="frame_id" value="tilt_laser_link"/>
@@ -40,8 +49,9 @@
             <param name="angle_max" value="1.00"/>
             <remap from="scan" to="tilt_scan"/>
         </node>
+-->
 
-        <!-- Servos -->
+        <!-- Servos (-57 43) -->
         <node if="$(arg use_servos)" name="servo_node" pkg="servo_node" type="servo_node">
             <param name="device_name" value="/dev/servo"/>
             <param name="baud_rate" value="57600"/>
