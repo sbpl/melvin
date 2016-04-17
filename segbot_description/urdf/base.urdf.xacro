@@ -449,7 +449,7 @@
         </joint>
 
         <joint name="R313_hokuyo_laser2_joint" type="revolute">
-            <origin xyz="-0.162 0.283 0" rpy="1.57 -0.05 0" />
+            <origin xyz="-0.162 0.283 0" rpy="1.57 -0.01 0" />
             <axis xyz="0 0 1"/>
             <limit lower="-1.047" upper="1.047" effort="50" velocity="50"/>
             <parent link="segway_laser_bracket" />
