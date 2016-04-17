@@ -73,7 +73,7 @@ void ServoController::starting()
 void ServoController::update(const ros::Time& time, const ros::Duration& period)
 {
     base_servo_joint.setCommand(-baseAngle);
-    tilt_servo_joint.setCommand(tiltAngle + M_PI / 180 * 4);
+    tilt_servo_joint.setCommand(tiltAngle); // + M_PI / 180 * 4);
 }
 
 /// Controller stopping in realtime
