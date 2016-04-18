@@ -23,7 +23,7 @@
 *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
 *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-*  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  
+*  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
@@ -37,7 +37,7 @@
 #include <pd_local_planner/pd_planner.h>
 #include <base_local_planner/goal_functions.h>
 #include <base_local_planner/map_grid_cost_point.h>
-#include <cmath>  
+#include <cmath>
 
 //for computing path distance
 #include <queue>
@@ -87,7 +87,7 @@ namespace pd_local_planner {
     forward_point_distance_ = config.forward_point_distance;
     goal_front_costs_.setXShift(forward_point_distance_);
     alignment_costs_.setXShift(forward_point_distance_);
- 
+
     // obstacle costs can vary due to scaling footprint feature
     obstacle_costs_.setParams(config.max_trans_vel, config.max_scaling_factor, config.scaling_speed);
 
@@ -95,25 +95,25 @@ namespace pd_local_planner {
     vx_samp = config.vx_samples;
     vy_samp = config.vy_samples;
     vth_samp = config.vth_samples;
- 
+
     if (vx_samp <= 0) {
       ROS_WARN("You've specified that you don't want any samples in the x dimension. We'll at least assume that you want to sample one value... so we're going to set vx_samples to 1 instead");
       vx_samp = 1;
       config.vx_samples = vx_samp;
     }
- 
+
     if (vy_samp <= 0) {
       ROS_WARN("You've specified that you don't want any samples in the y dimension. We'll at least assume that you want to sample one value... so we're going to set vy_samples to 1 instead");
       vy_samp = 1;
       config.vy_samples = vy_samp;
     }
- 
+
     if (vth_samp <= 0) {
       ROS_WARN("You've specified that you don't want any samples in the th dimension. We'll at least assume that you want to sample one value... so we're going to set vth_samples to 1 instead");
       vth_samp = 1;
       config.vth_samples = vth_samp;
     }
- 
+
     vsamples_[0] = vx_samp;
     vsamples_[1] = vy_samp;
     vsamples_[2] = vth_samp;
@@ -238,7 +238,7 @@ namespace pd_local_planner {
   }
 
 
-  void PDPlanner::updatePlanAndLocalCosts(tf::Stamped<tf::Pose> global_pose, const std::vector<geometry_msgs::PoseStamped>& new_plan) 
+  void PDPlanner::updatePlanAndLocalCosts(tf::Stamped<tf::Pose> global_pose, const std::vector<geometry_msgs::PoseStamped>& new_plan)
   {
     global_plan_.resize(new_plan.size());
     for (unsigned int i = 0; i < new_plan.size(); ++i) {
@@ -268,7 +268,7 @@ namespace pd_local_planner {
     front_global_plan.back().pose.position.y = front_global_plan.back().pose.position.y + forward_point_distance_ * sin(angle_to_goal);
 
     goal_front_costs_.setTargetPoses(front_global_plan);
-    
+
     // keeping the nose on the path
     if (sq_dist > forward_point_distance_ * forward_point_distance_ * cheat_factor_) {
       double resolution = planner_util_->getCostmap()->getResolution();
@@ -284,7 +284,7 @@ namespace pd_local_planner {
   /*
    * given the current state of the robot, find a good trajectory
    */
-  base_local_planner::Trajectory PDPlanner::findBestPath(tf::Stamped<tf::Pose> global_pose, tf::Stamped<tf::Pose> global_vel, tf::Stamped<tf::Pose>& drive_velocities, std::vector<geometry_msgs::Point> footprint_spec) 
+  base_local_planner::Trajectory PDPlanner::findBestPath(tf::Stamped<tf::Pose> global_pose, tf::Stamped<tf::Pose> global_vel, tf::Stamped<tf::Pose>& drive_velocities, std::vector<geometry_msgs::Point> footprint_spec)
   {
     obstacle_costs_.setFootprint(footprint_spec);
 
@@ -306,12 +306,6 @@ namespace pd_local_planner {
     scored_sampling_planner_.findBestTrajectory(result_traj_, &all_explored);
 
     ////////
-    // TODO: carrot at time ahead
-    if(fabs(last_point(2) + 10) < 0.01)
-    {
-      last_point = pos;
-    }
-
     index_ = 0;
     geometry_msgs::PoseStamped goal_pose1 = global_plan_.at(index_);
     Eigen::Vector3f goal1(goal_pose1.pose.position.x, goal_pose1.pose.position.y, tf::getYaw(goal_pose1.pose.orientation));
@@ -337,15 +331,15 @@ namespace pd_local_planner {
     {
       goal_pose1 = global_plan_.at(index_);
       goal1[0] = goal_pose1.pose.position.x;
-      goal1[1] = goal_pose1.pose.position.y; 
+      goal1[1] = goal_pose1.pose.position.y;
       goal1[2] = tf::getYaw(goal_pose1.pose.orientation);
       x1 = (goal1(0) - pos(0))*(goal1(0) - pos(0));
-      y1 = (goal1(1) - pos(1))*(goal1(1) - pos(1)); 
+      y1 = (goal1(1) - pos(1))*(goal1(1) - pos(1));
 
       geometry_msgs::PoseStamped goal_pose2 = global_plan_.at(index_ + 1);
       Eigen::Vector3f goal2(goal_pose2.pose.position.x, goal_pose2.pose.position.y, tf::getYaw(goal_pose2.pose.orientation));
       double x2 = (goal2(0) - pos(0))*(goal2(0) - pos(0));
-      double y2 = (goal2(1) - pos(1))*(goal2(1) - pos(1)); 
+      double y2 = (goal2(1) - pos(1))*(goal2(1) - pos(1));
 
       if(x2 + y2 < x1 + y1)
       {
@@ -353,11 +347,29 @@ namespace pd_local_planner {
       }
     }
 
-    // TODO: Forward simulate in time not points
+    // TODO: Forward simulate in time not distance
     double scale_ = 1.0;
     int index0_ = index_;
-    int step_ = 30;
-    if(index_ + step_ < global_plan_.size() - 2)
+    int step_ = -1;
+
+    geometry_msgs::PoseStamped pose1 = global_plan_.at(index_);
+    Eigen::Vector3f pose1v(pose1.pose.position.x, pose1.pose.position.y, tf::getYaw(pose1.pose.orientation));
+    for(int i = index_ + 1; i < global_plan_.size() - 2; i++)
+    {
+      geometry_msgs::PoseStamped pose2 = global_plan_.at(i);
+      Eigen::Vector3f pose2v(pose2.pose.position.x, pose2.pose.position.y, tf::getYaw(pose2.pose.orientation));
+      double dx = pose1v(0) - pose2v(0);
+      double dy = pose1v(1) - pose2v(1);
+      // double dt = pose1v(2) - pose2v(2);
+      double dr = sqrt(dx*dx + dy*dy);
+      if(dr > 0.3) // TODO: Configure carrot distance
+      {
+        step_ = i - index_;
+        break;
+      }
+    }
+
+    if(step_ > 0)
     {
       index_ = index_ + step_;
       scale_ = step_;
@@ -370,7 +382,7 @@ namespace pd_local_planner {
 
     goal_pose1 = global_plan_.at(index0_);
     goal1[0] = goal_pose1.pose.position.x;
-    goal1[1] = goal_pose1.pose.position.y; 
+    goal1[1] = goal_pose1.pose.position.y;
     goal1[2] = tf::getYaw(goal_pose1.pose.orientation);
 
     last_point = goal1;
@@ -436,7 +448,7 @@ namespace pd_local_planner {
       }
       else
       {
-        result_traj_.xv_ *= scale_xv; //Using angle off        
+        result_traj_.xv_ *= scale_xv; //Using angle off
       }
       ROS_DEBUG("Percent max speed (forward): %.4f new vel: %.4f", scale_xv, result_traj_.xv_);
     }
@@ -479,7 +491,7 @@ namespace pd_local_planner {
       ROS_DEBUG("vt+ too big");
       result_traj_.thetav_ = max_rot_vel_;
     }
-    else if(result_traj_.thetav_ < min_rot_vel_) 
+    else if(result_traj_.thetav_ < min_rot_vel_)
     {
       ROS_DEBUG("vt- too big");
       result_traj_.thetav_ = min_rot_vel_;
@@ -496,7 +508,7 @@ namespace pd_local_planner {
       result_traj_.yv_ = 0.0;
       result_traj_.thetav_ = 0.0;
     }
-    
+
     ROS_INFO("cmd_vel: (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
 
     last_err = err;
