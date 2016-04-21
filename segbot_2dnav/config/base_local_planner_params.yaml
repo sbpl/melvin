@@ -61,5 +61,5 @@ PDPlannerROS:
     prune_plan: true
     publish_cost_grid_pc: false
     y_vels: [-0.3, -0.1, 0.1, 0.3]  # unused unless holonomic_robot == true
-    path_p: 0.2
-    path_d: 0.3
+    path_p: 2.0
+    path_d: 7.0

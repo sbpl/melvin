@@ -66,8 +66,8 @@ namespace pd_local_planner {
     max_vel_y_ = config.max_vel_y;
     min_vel_y_ = config.min_vel_y;
     // TODO read in param correctly
-    max_rot_vel_ = 0.2;//config.max_rot_vel;
-    min_rot_vel_ = -0.2;//config.min_rot_vel;
+    max_rot_vel_ = 0.15;//config.max_rot_vel;
+    min_rot_vel_ = -0.15;//config.min_rot_vel;
 
     double resolution = planner_util_->getCostmap()->getResolution();
     pdist_scale_ = config.path_distance_bias;
@@ -307,6 +307,7 @@ namespace pd_local_planner {
 
     ////////
     index_ = 0;
+    double dist_path = 0;
     geometry_msgs::PoseStamped goal_pose1 = global_plan_.at(index_);
     Eigen::Vector3f goal1(goal_pose1.pose.position.x, goal_pose1.pose.position.y, tf::getYaw(goal_pose1.pose.orientation));
     double x1 = (goal1(0) - last_point(0))*(goal1(0) - last_point(0));
@@ -324,8 +325,10 @@ namespace pd_local_planner {
         index_ = i;
         x1 = x2;
         y1 = y2;
+        dist_path = sqrt(x1 + y1);
       }
     }
+
 
     if(index_ < global_plan_.size() - 2)
     {
@@ -461,6 +464,12 @@ namespace pd_local_planner {
     result_traj_.thetav_ += err*path_p_ + derr*path_d_;
 
     ROS_DEBUG("pre_throttled_cmd_vel: (%.4f %.4f %.4f)", result_traj_.xv_, result_traj_.yv_, result_traj_.thetav_);
+
+    Eigen::Vector3f vel_test(result_traj_.xv_, result_traj_.yv_, 0);
+    if(fabs(remaining_theta) < PI/18 && dist_path < 0.2 && checkTrajectory(pos, vel, vel_test))
+    {
+      result_traj_.thetav_ = 0;
+    }
 
     // vx bounds
     if(result_traj_.xv_ > max_vel_x_)
