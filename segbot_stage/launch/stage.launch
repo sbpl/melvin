@@ -4,5 +4,4 @@
 	<include file="$(find segbot_stage)/launch/move_base.launch" />
 	<include file="$(find segbot_stage)/launch/amcl.launch" />
 	<include file="$(find segbot_stage)/launch/teleop.launch" />
-	<node name="rviz" type="rviz" pkg="rviz" args="-d utacc_ws/src/segbot_stage/config/NSH_A_lvl_clear.rviz" />
 </launch>
