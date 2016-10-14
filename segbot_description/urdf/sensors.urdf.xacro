@@ -25,19 +25,6 @@
                          iyy="0.000001" iyz="0"
                          izz="0.0001"/>
             </inertial>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <box size="0.000 0.000 0.000"/>
-                </geometry>
-                <material name="Red"/>
-            </visual>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <box size="0.0 0.0 0.0"/>
-                </geometry>
-            </collision>
         </link>
 
         <!-- Laser Tilt Laser -->
@@ -58,19 +45,6 @@
                          iyy="0.000001" iyz="0"
                          izz="0.0001"/>
             </inertial>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                <box size="0 0 0"/>
-                </geometry>
-                <material name="Red"/>
-            </visual>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <box size="0 0 0"/>
-                </geometry>
-            </collision>
         </link>
 
         <xacro:sensors_gazebo name="${name}" namespace="${namespace}"/>

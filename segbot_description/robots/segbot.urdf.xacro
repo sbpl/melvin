@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot name="segway_bot"
-       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" 
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:xacro="http://ros.org/wiki/fixme"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">>  
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">>
 
 <!-- JOINT LIMIT VALUES FOR EFFORT AND VELOCITY NEED TO BE ADDED FOR REVOLUTE AND CONTINUOUS JOINTS -->
 
@@ -29,25 +29,9 @@
       <inertia ixx="0.01" ixy="0.0" ixz="0.0"
                iyy="0.01" iyz="0.0" izz="0.01" />
     </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.0 0.0 0.0" />
-      </geometry>
-      
-      <material name="Green" />
-    </visual>
-    <collision>
-      <!-- represent base collision with a simple rectangular model, positioned by base_size_z s.t. top
-           surface of the collision box matches the top surface of the PR2 base -->
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.00 0.00 0.00" />
-      </geometry>
-    </collision>
   </link>
 
-  <link name="base_link">        
+  <link name="base_link">
     <inertial>
       <origin xyz="0 -0.3 0" rpy="0 0 0" />
       <mass value="90.72"/>
@@ -60,7 +44,7 @@
         <mesh filename="package://segbot_description/meshes/segway_base.stl" />
       </geometry>
       <material name="Blue" />
-    </visual>    
+    </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -71,7 +55,7 @@
 
   </link>
 
-  <link name="segway_left_wheel">        
+  <link name="segway_left_wheel">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="3.87"/>
@@ -84,7 +68,7 @@
         <mesh filename="package://segbot_description/meshes/segway_wheel.stl" />
       </geometry>
       <material name="Red" />
-    </visual>    
+    </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -95,7 +79,7 @@
 
   </link>
 
-  <link name="segway_right_wheel">        
+  <link name="segway_right_wheel">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="3.87"/>
@@ -108,7 +92,7 @@
         <mesh filename="package://segbot_description/meshes/segway_wheel.stl" />
       </geometry>
       <material name="Red" />
-    </visual>    
+    </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -128,7 +112,7 @@
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry name="segway_trailer-geom">	  
+      <geometry name="segway_trailer-geom">
           <mesh filename="package://segbot_description/meshes/trailer.stl" />
       </geometry>
       <material name="Green" />
@@ -152,7 +136,7 @@
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry name="segway_trailer_wheel_caster-geom">	  
+      <geometry name="segway_trailer_wheel_caster-geom">
           <mesh filename="package://segbot_description/meshes/trailer_wheel_caster.stl" />
       </geometry>
       <material name="Blue" />
@@ -176,7 +160,7 @@
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry name="segway_trailer_wheel-geom">	  
+      <geometry name="segway_trailer_wheel-geom">
           <mesh filename="package://segbot_description/meshes/trailer_wheel.stl" />
       </geometry>
       <material name="Red" />
@@ -192,7 +176,7 @@
 
   </link>
 
-  <link name="battery_one">        
+  <link name="battery_one">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="22.68"/>
@@ -205,7 +189,7 @@
         <mesh filename="package://segbot_description/meshes/battery_one.stl" />
       </geometry>
       <material name="Red" />
-    </visual>    
+    </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -216,7 +200,7 @@
 
   </link>
 
-  <link name="battery_two">        
+  <link name="battery_two">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="22.68"/>
@@ -229,7 +213,7 @@
         <mesh filename="package://segbot_description/meshes/battery_two.stl" />
       </geometry>
       <material name="Red" />
-    </visual>    
+    </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -240,7 +224,7 @@
 
   </link>
 
-  <link name="computer">        
+  <link name="computer">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="4.54"/>
@@ -253,7 +237,7 @@
         <mesh filename="package://segbot_description/meshes/computer.stl" />
       </geometry>
       <material name="Green" />
-    </visual>    
+    </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -342,7 +326,7 @@
     <child link="base_link" />
     <parent link="base_footprint"/>
   </joint>
-  
+
   <joint name="segway_left_wheel_joint" type="continuous" >
     <origin xyz="-0.031 -0.353 0.272" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
@@ -353,7 +337,7 @@
   </joint>
 
   <joint name="segway_right_wheel_joint" type="continuous" >
-    <origin xyz="-0.031 -0.353 -0.272" rpy="0 3.14 0"/>    
+    <origin xyz="-0.031 -0.353 -0.272" rpy="0 3.14 0"/>
     <axis xyz="0 0 1"/>
     <limit effort="122" velocity="500"/>
     <parent link="base_link" />
@@ -361,14 +345,14 @@
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="segway_trailer_joint" type="fixed">    
+  <joint name="segway_trailer_joint" type="fixed">
     <origin xyz="0.162 -0.233 0.002" rpy="0 0 0" />
     <parent link="base_link" />
     <child link="segway_trailer" />
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="segway_trailer_wheel_caster_joint" type="continuous">    
+  <joint name="segway_trailer_wheel_caster_joint" type="continuous">
     <origin xyz="0.244 -0.038 0.002" rpy="0 0 0" />
     <axis xyz="0 1 0"/>
     <parent link="segway_trailer" />
@@ -376,7 +360,7 @@
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="segway_trailer_wheel_joint" type="continuous">    
+  <joint name="segway_trailer_wheel_joint" type="continuous">
     <origin xyz="0.076 -0.187 0.002" rpy="0 0 0" />
     <axis xyz="0 0 1"/>
     <parent link="segway_trailer_wheel_caster" />
@@ -384,35 +368,35 @@
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="battery_one_joint" type="fixed">    
+  <joint name="battery_one_joint" type="fixed">
     <origin xyz="-0.037 -0.231 0" rpy="0 0 0" />
     <parent link="base_link" />
     <child link="battery_one" />
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="battery_two_joint" type="fixed">    
+  <joint name="battery_two_joint" type="fixed">
     <origin xyz="0.171 0.074 0" rpy="0 0 0" />
     <parent link="segway_trailer" />
     <child link="battery_two" />
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="computer_joint" type="fixed">    
+  <joint name="computer_joint" type="fixed">
     <origin xyz="-0.033 0.025 0" rpy="0 0 0" />
     <parent link="base_link" />
     <child link="computer" />
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="segway_laser_bracket_joint" type="fixed">    
+  <joint name="segway_laser_bracket_joint" type="fixed">
     <origin xyz="-0.213 -0.2 0.002" rpy="0 0 0" />
     <parent link="base_link" />
     <child link="segway_laser_bracket" />
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="R283_hokuyo_laser1_joint" type="revolute">    
+  <joint name="R283_hokuyo_laser1_joint" type="revolute">
     <origin xyz="-0.162 -0.062 0" rpy="0 0 0" />
     <axis xyz="0 0 1"/>
     <limit lower="-1.047" upper="1.047" effort="50" velocity="50"/>
@@ -421,7 +405,7 @@
     <calibration reference_position="0.0"/>
   </joint>
 
-  <joint name="R313_hokuyo_laser2_joint" type="revolute">    
+  <joint name="R313_hokuyo_laser2_joint" type="revolute">
     <origin xyz="-0.162 0.103 0" rpy="0 0 0" />
     <axis xyz="0 0 1"/>
     <limit lower="-1.047" upper="1.047" effort="50" velocity="50"/>
@@ -1487,24 +1471,10 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001" />
       </inertial>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <box size="0.000 0.000 0.000" />
-        </geometry>
-        <material name="Red" />
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <box size=".000 .000 .00" />
-        </geometry>
-      </collision>
-
     </link>
 
 <!-- 			Actual laser		 -->
-    <gazebo reference="base_laser_link">    
+    <gazebo reference="base_laser_link">
       <sensor:ray name="base_laser">
         <rayCount>1080</rayCount>
         <rangeCount>1080</rangeCount>
@@ -1548,24 +1518,10 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001" />
       </inertial>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <box size="0 0 0" />
-        </geometry>
-        <material name="Red" />
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <box size="0 0 0" />
-        </geometry>
-      </collision>
-
     </link>
 
 <!-- 			Actual laser		 -->
-<gazebo reference="tilt_laser_link">    
+<gazebo reference="tilt_laser_link">
       <sensor:ray name="tilt_laser">
         <rayCount>1080</rayCount>
         <rangeCount>1080</rangeCount>
